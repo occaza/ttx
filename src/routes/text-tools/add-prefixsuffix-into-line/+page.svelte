@@ -63,7 +63,6 @@
 	<label class="form-control">
 		<textarea
 			bind:value={input}
-			bind:this={inputEl}
 			rows="10"
 			class="textarea-bordered textarea w-full"
 			placeholder="Paste text here..."
@@ -75,7 +74,7 @@
 		<input
 			type="text"
 			bind:value={prefix}
-			placeholder="enter prefix here"
+			placeholder="Enter prefix here"
 			class="input-bordered input w-full"
 		/>
 	</label>
@@ -85,19 +84,26 @@
 		<input
 			type="text"
 			bind:value={suffix}
-			placeholder="enter suffix here"
+			placeholder="Enter suffix here"
 			class="input-bordered input w-full"
 		/>
 	</label>
 
-	<button class="btn btn-sm btn-primary" on:click={applyFix}>Apply</button>
+	<div class="my-2">
+		<button class="btn btn-sm btn-primary" on:click={applyFix}>Add prefix and/or suffix</button>
+	</div>
 
 	<label class="form-control">
-		<textarea bind:value={output} rows="10" class="textarea-bordered textarea w-full" readonly
+		<textarea
+			bind:this={inputEl}
+			bind:value={output}
+			rows="10"
+			class="textarea-bordered textarea w-full"
+			readonly
 		></textarea>
 	</label>
 
-	<div class="flex items-center gap-2">
+	<div class="my-2 flex items-center gap-2">
 		<button class="btn btn-sm" on:click={saveAs}>Save as</button>
 		<input type="text" bind:value={fileName} class="input-bordered input input-sm w-48" />
 	</div>

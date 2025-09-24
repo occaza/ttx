@@ -5,10 +5,7 @@
 </script>
 
 <div>
-	<a
-		{href}
-		class="flex h-24 w-64 flex-col justify-center rounded border p-3 hover:bg-gray-50 hover:text-gray-600"
-	>
+	<a {href} class="block h-24 w-full rounded border p-3 hover:bg-gray-50 hover:text-gray-600">
 		<h3 class="truncate font-bold">{title}</h3>
 		<p class="line-clamp-2 text-sm text-gray-600">{desc}</p>
 	</a>
