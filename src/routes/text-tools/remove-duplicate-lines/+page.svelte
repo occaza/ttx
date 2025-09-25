@@ -90,23 +90,8 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 
 <svelte:head><title>Remove Duplicate Lines</title></svelte:head>
 
-<div class="max-w-4xl space-y-3">
+<div class="mx-auto max-w-4xl space-y-3">
 	<h2 class="text-lg font-bold">Remove Duplicate Lines</h2>
-
-	<div class="flex flex-wrap items-center gap-4">
-		<label class="label cursor-pointer">
-			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
-			<span class="label-text ml-2">Case sensitive</span>
-		</label>
-		<label class="label cursor-pointer">
-			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
-			<span class="label-text ml-2">Remove empty lines</span>
-		</label>
-		<label class="label cursor-pointer">
-			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={showRemoved} />
-			<span class="label-text ml-2">Display removed</span>
-		</label>
-	</div>
 
 	<div class="flex items-center gap-2">
 		<input
@@ -126,14 +111,27 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 			<span class="label-text">{removedCount} lines removed</span>
 		{/if}
 	</div>
-
+	<div class="flex flex-wrap items-center gap-4">
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
+			<span class="label-text ml-2">Case sensitive</span>
+		</label>
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
+			<span class="label-text ml-2">Remove empty lines</span>
+		</label>
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={showRemoved} />
+			<span class="label-text ml-2">Display removed</span>
+		</label>
+	</div>
 	<div>
 		<label class="form-control">
 			<textarea
 				bind:value={input}
 				bind:this={inputEl}
 				rows="16"
-				class="textarea-bordered textarea w-full"
+				class="textarea-bordered textarea w-full resize-none"
 				placeholder=""
 			></textarea>
 		</label>

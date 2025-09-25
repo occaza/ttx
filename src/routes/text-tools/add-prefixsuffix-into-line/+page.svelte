@@ -41,7 +41,7 @@
 
 <svelte:head><title>Add Prefix/Suffix into Line</title></svelte:head>
 
-<div class="max-w-4xl space-y-3">
+<div class="mx-auto max-w-4xl space-y-3">
 	<h2 class="text-lg font-bold">Add Prefix/Suffix into Line</h2>
 
 	<div class="flex items-center gap-2">
@@ -50,7 +50,7 @@
 			accept="text/plain"
 			bind:this={fileInput}
 			on:change={handleFile}
-			class="file-input-bordered file-input w-full max-w-xs file-input-sm"
+			class="file-input-bordered file-input w-full max-w-sm file-input-sm"
 		/>
 		<div class="tooltip" data-tip="Select all">
 			<button class="btn btn-square btn-sm" on:click={selectAll}>S</button>
@@ -59,35 +59,27 @@
 			<button class="btn btn-square btn-sm" on:click={clear}>C</button>
 		</div>
 	</div>
+	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2">
+		<label class="input w-full">
+			<span class="label">Prefix </span>
+			<input type="text" bind:value={prefix} placeholder="Enter prefix here" />
+		</label>
 
-	<label class="form-control">
-		<textarea
-			bind:value={input}
-			rows="10"
-			class="textarea-bordered textarea w-full"
-			placeholder="Paste text here..."
-		></textarea>
-	</label>
-
-	<label class="form-control">
-		<span class="label-text">Add this prefix into the beginning of each line:</span>
-		<input
-			type="text"
-			bind:value={prefix}
-			placeholder="Enter prefix here"
-			class="input-bordered input w-full"
-		/>
-	</label>
-
-	<label class="form-control">
-		<span class="label-text">Add this suffix into the end of each line:</span>
-		<input
-			type="text"
-			bind:value={suffix}
-			placeholder="Enter suffix here"
-			class="input-bordered input w-full"
-		/>
-	</label>
+		<label class="input w-full">
+			<span class="label">Suffix </span>
+			<input type="text" bind:value={suffix} placeholder="Enter suffix here" />
+		</label>
+	</div>
+	<div>
+		<label class="form-control">
+			<textarea
+				bind:value={input}
+				rows="10"
+				class="textarea-bordered textarea w-full resize-none"
+				placeholder="Paste text here..."
+			></textarea>
+		</label>
+	</div>
 
 	<div class="my-2">
 		<button class="btn btn-sm btn-primary" on:click={applyFix}>Add prefix and/or suffix</button>
@@ -98,7 +90,7 @@
 			bind:this={inputEl}
 			bind:value={output}
 			rows="10"
-			class="textarea-bordered textarea w-full"
+			class="textarea-bordered textarea w-full resize-none"
 			readonly
 		></textarea>
 	</label>

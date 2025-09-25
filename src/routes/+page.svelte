@@ -18,4 +18,9 @@
 		desc="Pecah teks menjadi beberapa file"
 		href="/text-tools/split-files"
 	/>
+	<ToolCard
+		title="Random Number Generator"
+		desc="Buat angka acak"
+		href="/text-tools/random-number-generator"
+	/>
 </div>
