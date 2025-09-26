@@ -2,7 +2,7 @@
 	import ToolCard from '$lib/components/ToolCard.svelte';
 </script>
 
-<div class="grid grid-cols-2 gap-2 md:grid-cols-2 lg:grid-cols-3">
+<div class="m-2 mx-auto grid w-fit grid-cols-1 gap-2 md:grid-cols-2">
 	<ToolCard
 		title="Remove Duplicate Lines"
 		desc="Hapus baris duplikat dari teks Anda"

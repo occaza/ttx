@@ -90,7 +90,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 
 <svelte:head><title>Remove Duplicate Lines</title></svelte:head>
 
-<div class="mx-auto max-w-4xl space-y-3">
+<div class="mx-auto max-w-4xl space-y-3 rounded-2xl bg-base-200 p-10 shadow-lg">
 	<h2 class="text-lg font-bold">Remove Duplicate Lines</h2>
 
 	<div class="flex items-center gap-2">
@@ -142,9 +142,12 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 	<div>
 		{#if showRemoved}
 			<label class="form-control">
-				<textarea bind:value={removed} rows="6" class="textarea-bordered textarea w-full" readonly
-					>asdasd</textarea
-				>
+				<textarea
+					bind:value={removed}
+					rows="4"
+					class="textarea-bordered textarea w-full resize-none"
+					readonly
+				></textarea>
 			</label>
 		{/if}
 	</div>

@@ -29,14 +29,14 @@
 
 <svelte:window on:click={handleClickOutside} />
 <nav
-	class="fixed top-4 right-0 left-0 z-40 mx-auto navbar border-b border-base-300 bg-base-100/80 shadow-sm backdrop-blur-sm md:max-w-8/12"
+	class="fixed top-1 right-0 left-0 z-40 mx-auto navbar rounded border-b border-base-300 bg-base-100/80 shadow-sm backdrop-blur-sm md:top-3 md:max-w-8/12"
 >
 	<div class="navbar-start">
 		<a
 			href="/"
 			class="btn text-xl font-bold normal-case btn-ghost transition-colors hover:bg-primary/10"
 		>
-			TEXY
+			TEXY.
 		</a>
 	</div>
 

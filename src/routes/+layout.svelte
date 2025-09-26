@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	// import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Nav from '$lib/components/Nav.svelte';
 
@@ -12,10 +11,10 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="min-h-screen bg-gray-50/15">
-	<div class="mx-auto max-w-full px-2 md:max-w-8/12">
+<div class="animated-gradient">
+	<div class="mx-2 max-w-full px-2 md:mx-auto md:max-w-8/12">
 		<Nav />
-		<main class="h-[1820px] pt-24">
+		<main class="h-dvh place-content-center pt-24 md:bg-white/70">
 			{@render children?.()}
 		</main>
 		<Footer />
