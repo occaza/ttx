@@ -7,7 +7,7 @@
 		{ title: 'Add Prefix/Suffix', href: '/text-tools/add-prefixsuffix-into-line' },
 		{ title: 'Split Text File', href: '/text-tools/split-files' },
 		{ title: 'Random Number Generator', href: '/text-tools/random-number-generator' },
-		{ title: 'Count Lines & Duplicates', href: '/text-tools/line-counter' }
+		{ title: 'Count Lines & Duplicates', href: '/text-tools/lines-counter' }
 	];
 
 	// Close mobile menu when clicking outside
