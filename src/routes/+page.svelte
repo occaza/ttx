@@ -23,4 +23,5 @@
 		desc="Buat angka acak"
 		href="/text-tools/random-number-generator"
 	/>
+	<ToolCard title="Line Counter" desc="Hitung jumlah line" href="/text-tools/lines-counter" />
 </div>

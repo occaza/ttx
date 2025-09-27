@@ -6,7 +6,8 @@
 		{ title: 'Remove Duplicate Lines', href: '/text-tools/remove-duplicate-lines' },
 		{ title: 'Add Prefix/Suffix', href: '/text-tools/add-prefixsuffix-into-line' },
 		{ title: 'Split Text File', href: '/text-tools/split-files' },
-		{ title: 'Random Number Generator', href: '/text-tools/random-number-generator' }
+		{ title: 'Random Number Generator', href: '/text-tools/random-number-generator' },
+		{ title: 'Count Lines & Duplicates', href: '/text-tools/line-counter' }
 	];
 
 	// Close mobile menu when clicking outside
