@@ -66,7 +66,7 @@
 
 <svelte:head><title>Count Lines & Duplicates</title></svelte:head>
 
-<div class="mx-auto max-w-4xl space-y-3 rounded-2xl bg-base-200 p-10 shadow-lg">
+<div class="mx-auto max-w-5xl space-y-3 rounded-2xl bg-base-200 p-10 shadow-lg">
 	<h2 class="text-lg font-bold">Count Lines & Duplicates</h2>
 
 	<div class="flex flex-wrap items-center gap-3">

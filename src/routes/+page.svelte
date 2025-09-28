@@ -24,4 +24,9 @@
 		href="/text-tools/random-number-generator"
 	/>
 	<ToolCard title="Line Counter" desc="Hitung jumlah line" href="/text-tools/lines-counter" />
+	<ToolCard
+		title="File Comparation"
+		desc="Bandingkan file dan cek duplikat"
+		href="/text-tools/files-comparation"
+	/>
 </div>
