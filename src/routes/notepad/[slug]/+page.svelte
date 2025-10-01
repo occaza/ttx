@@ -80,9 +80,6 @@
 	<p class="text-sm text-gray-500">
 		Slug: <code>{data.slug}</code> — semua orang dengan link ini bisa lihat & edit.
 	</p>
-	{#if data.updatedAt}
-		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
-	{/if}
 
 	{#if form?.error}
 		<div class="alert alert-error">
@@ -91,7 +88,7 @@
 	{/if}
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
-		<div class="mt-2 flex gap-2">
+		<div class="mb-2 flex gap-2">
 			<button class="btn btn-sm btn-primary">Save</button>
 			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
 				{refreshing ? 'Refreshing...' : 'Refresh'}
@@ -104,9 +101,11 @@
 			bind:value={text}
 			bind:this={ta}
 			rows="20"
-			class="textarea-bordered textarea w-full"
+			class="textarea-bordered textarea w-full resize-none"
 		></textarea>
-
+		{#if data.updatedAt}
+			<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
+		{/if}
 		<!-- Turnstile Widget -->
 		<div class="mt-3">
 			<div class="cf-turnstile" data-sitekey={data.turnstileSiteKey} data-theme="light"></div>
@@ -114,15 +113,21 @@
 	</form>
 
 	<div class="flex gap-2 text-sm">
-		<input
-			type="text"
-			readonly
-			value="{$page.url.origin}/notepad/{data.slug}"
-			class="input-bordered input input-sm flex-1"
-		/>
+		<div class="w-full">
+			<label class="input w-full">
+				<span class="label">Link</span>
+				<input
+					type="text"
+					readonly
+					value="{$page.url.origin}/notepad/{data.slug}"
+					class="grow"
+					placeholder="URL"
+				/>
+			</label>
+		</div>
 		<button
 			type="button"
-			class="btn btn-sm"
+			class="btn btn-md"
 			on:click={() => {
 				navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
 			}}
