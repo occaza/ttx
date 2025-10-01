@@ -104,10 +104,10 @@
 			class="textarea-bordered textarea w-full resize-none"
 		></textarea>
 		{#if data.updatedAt}
-			<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
+			<p class="my-3 text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
 		{/if}
 		<!-- Turnstile Widget -->
-		<div class="mt-3">
+		<div class="my-3">
 			<div class="cf-turnstile" data-sitekey={data.turnstileSiteKey} data-theme="light"></div>
 		</div>
 	</form>
