@@ -16,9 +16,8 @@
 	function formatDate(dateString: string | null) {
 		if (!dateString) return 'Never';
 		const date = new Date(dateString);
-		return date.toLocaleString('id-ID', {
-			timeZone: 'Asia/Jakarta', // ← pakai zona WIB
-			dateStyle: 'medium',
+		return date.toLocaleString('en-EN', {
+			dateStyle: 'long',
 			timeStyle: 'short'
 		});
 	}
