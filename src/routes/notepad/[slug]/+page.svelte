@@ -17,6 +17,7 @@
 		if (!dateString) return 'Never';
 		const date = new Date(dateString);
 		return date.toLocaleString('id-ID', {
+			timeZone: 'Asia/Jakarta', // ← pakai zona WIB
 			dateStyle: 'medium',
 			timeStyle: 'short'
 		});
