@@ -36,6 +36,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@vercel/kv": "^3.0.0",
 		"daisyui": "^5.1.14"
 	}
 }

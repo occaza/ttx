@@ -1,11 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
-
-const DIR = 'data/notepad';
-function path(slug: string) {
-	return join(DIR, `${slug}.json`);
-}
+import { kv } from '@vercel/kv';
 
 export async function load({ params }) {
 	const slug = params.slug;
@@ -14,14 +8,7 @@ export async function load({ params }) {
 		throw error(400, 'Slug harus 12 karakter alfanumerik');
 	}
 
-	if (!existsSync(DIR)) mkdirSync(DIR, { recursive: true });
-	const file = path(slug);
-	let text = '';
-	if (existsSync(file)) {
-		try {
-			text = JSON.parse(readFileSync(file, 'utf-8')).text;
-		} catch {}
-	}
+	const text = (await kv.get(`notepad:${slug}`)) || '';
 	return { slug, text };
 }
 
@@ -35,7 +22,7 @@ export const actions = {
 
 		const data = await request.formData();
 		const text = (data.get('text') || '').toString();
-		writeFileSync(path(slug), JSON.stringify({ text }, null, 2));
+		await kv.set(`notepad:${slug}`, text);
 		return { ok: true };
 	}
 };
