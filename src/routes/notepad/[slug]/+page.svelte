@@ -91,6 +91,13 @@
 	{/if}
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
+		<div class="mt-2 flex gap-2">
+			<button class="btn btn-sm btn-primary">Save</button>
+			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
+				{refreshing ? 'Refreshing...' : 'Refresh'}
+			</button>
+			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
+		</div>
 		<textarea
 			id="note"
 			name="text"
@@ -103,14 +110,6 @@
 		<!-- Turnstile Widget -->
 		<div class="mt-3">
 			<div class="cf-turnstile" data-sitekey={data.turnstileSiteKey} data-theme="light"></div>
-		</div>
-
-		<div class="mt-2 flex gap-2">
-			<button class="btn btn-sm btn-primary">Save</button>
-			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
-				{refreshing ? 'Refreshing...' : 'Refresh'}
-			</button>
-			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
 		</div>
 	</form>
 
