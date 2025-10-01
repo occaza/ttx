@@ -8,7 +8,8 @@
 		{ title: 'Split Text File', href: '/text-tools/split-files' },
 		{ title: 'Random Number Generator', href: '/text-tools/random-number-generator' },
 		{ title: 'Count Lines & Duplicates', href: '/text-tools/lines-counter' },
-		{ title: 'Compare Two Files', href: '/text-tools/files-comparation' }
+		{ title: 'Compare Two Files', href: '/text-tools/files-comparation' },
+		{ title: 'Notepad', href: '/notepad' }
 	];
 
 	// Close mobile menu when clicking outside

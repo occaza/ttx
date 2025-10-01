@@ -29,4 +29,9 @@
 		desc="Bandingkan file dan cek duplikat"
 		href="/text-tools/files-comparation"
 	/>
+	<ToolCard
+		title="Shared Notepad"
+		desc="Catatan online bisa dibuka di browser lain"
+		href="/notepad"
+	/>
 </div>
