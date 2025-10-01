@@ -20,9 +20,22 @@
 
 	onMount(() => {
 		const script = document.createElement('script');
-		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 		script.async = true;
 		script.defer = true;
+		script.onload = () => {
+			if (window.turnstile) {
+				window.turnstile.ready(() => {
+					const container = document.getElementById('turnstile-container');
+					if (container) {
+						turnstileWidget = window.turnstile.render(container, {
+							sitekey: data.turnstileSiteKey,
+							theme: 'light'
+						});
+					}
+				});
+			}
+		};
 		document.head.appendChild(script);
 	});
 
