@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { kv } from '@vercel/kv';
+import { supabase } from '$lib/server/supabase.server';
 
 export async function load({ params }) {
 	const slug = params.slug;
@@ -8,8 +8,9 @@ export async function load({ params }) {
 		throw error(400, 'Slug harus 12 karakter alfanumerik');
 	}
 
-	const text = (await kv.get(`notepad:${slug}`)) || '';
-	return { slug, text };
+	const { data } = await supabase.from('notepad').select('text').eq('slug', slug).single();
+
+	return { slug, text: data?.text || '' };
 }
 
 export const actions = {
@@ -20,9 +21,16 @@ export const actions = {
 			throw error(400, 'Slug harus 12 karakter alfanumerik');
 		}
 
-		const data = await request.formData();
-		const text = (data.get('text') || '').toString();
-		await kv.set(`notepad:${slug}`, text);
+		const formData = await request.formData();
+		const text = (formData.get('text') || '').toString();
+
+		// Batasi 1MB (sekitar 1 juta karakter)
+		if (text.length > 1000000) {
+			throw error(400, 'Text terlalu panjang. Maksimal 1MB');
+		}
+
+		await supabase.from('notepad').upsert({ slug, text });
+
 		return { ok: true };
 	}
 };
