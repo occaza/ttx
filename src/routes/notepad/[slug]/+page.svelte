@@ -3,9 +3,8 @@
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
 	import { onMount } from 'svelte';
-
 	import type { SubmitFunction } from '@sveltejs/kit';
-	import type { PageData } from './$types';
+	import type { PageData, ActionData } from './$types';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -30,9 +29,10 @@
 	function formatDate(dateString: string | null) {
 		if (!dateString) return 'Never';
 		const date = new Date(dateString);
-		return date.toLocaleString('en-EN', {
-			dateStyle: 'long',
-			timeStyle: 'short'
+		return date.toLocaleString('id-ID', {
+			dateStyle: 'medium',
+			timeStyle: 'short',
+			timeZone: 'Asia/Jakarta'
 		});
 	}
 
@@ -60,7 +60,9 @@
 	}
 </script>
 
-<svelte:head><title>Notepad - {data.slug}</title></svelte:head>
+<svelte:head>
+	<title>Notepad - {data.slug}</title>
+</svelte:head>
 
 <div class="mx-auto max-w-4xl space-y-3 p-4">
 	<h2 class="text-lg font-bold">Shared Notepad</h2>
@@ -69,6 +71,12 @@
 	</p>
 	{#if data.updatedAt}
 		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
+	{/if}
+
+	{#if form?.error}
+		<div class="alert alert-error">
+			<span>{form.error}</span>
+		</div>
 	{/if}
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
