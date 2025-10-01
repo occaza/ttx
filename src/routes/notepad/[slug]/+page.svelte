@@ -20,22 +20,9 @@
 
 	onMount(() => {
 		const script = document.createElement('script');
-		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
 		script.async = true;
 		script.defer = true;
-		script.onload = () => {
-			if (window.turnstile) {
-				window.turnstile.ready(() => {
-					const container = document.getElementById('turnstile-container');
-					if (container) {
-						turnstileWidget = window.turnstile.render(container, {
-							sitekey: data.turnstileSiteKey,
-							theme: 'light'
-						});
-					}
-				});
-			}
-		};
 		document.head.appendChild(script);
 	});
 
@@ -60,9 +47,7 @@
 			}
 
 			// Reset Turnstile setelah submit
-			if (window.turnstile && turnstileWidget) {
-				window.turnstile.reset(turnstileWidget);
-			}
+			// Auto-render akan handle reset otomatis
 		};
 	};
 
@@ -104,12 +89,7 @@
 
 		<!-- Turnstile Widget -->
 		<div class="mt-3">
-			<div
-				class="cf-turnstile"
-				data-sitekey={data.turnstileSiteKey}
-				data-callback="onTurnstileSuccess"
-				data-theme="light"
-			></div>
+			<div class="cf-turnstile" data-sitekey={data.turnstileSiteKey} data-theme="light"></div>
 		</div>
 
 		<div class="mt-2 flex gap-2">
