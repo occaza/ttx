@@ -13,8 +13,7 @@
 	let ta: HTMLTextAreaElement;
 	let saved = false;
 	let refreshing = false;
-	let turnstileToken = '';
-	let turnstileWidget: string | null = null;
+	let turnstileWidget: HTMLElement | null = null;
 
 	$: text = data.text;
 
@@ -24,6 +23,9 @@
 		script.async = true;
 		script.defer = true;
 		document.head.appendChild(script);
+
+		// Simpan reference ke widget container
+		turnstileWidget = document.querySelector('.cf-turnstile');
 	});
 
 	function formatDate(dateString: string | null) {
@@ -44,10 +46,21 @@
 				saved = true;
 				setTimeout(() => (saved = false), 1000);
 				ta.focus();
-			}
 
-			// Reset Turnstile setelah submit
-			// Auto-render akan handle reset otomatis
+				// Reset Turnstile widget untuk generate token baru
+				setTimeout(() => {
+					if (turnstileWidget && 'turnstile' in window) {
+						(window as any).turnstile.reset(turnstileWidget);
+					}
+				}, 100);
+			} else {
+				// Kalau gagal juga reset biar bisa coba lagi
+				setTimeout(() => {
+					if (turnstileWidget && 'turnstile' in window) {
+						(window as any).turnstile.reset(turnstileWidget);
+					}
+				}, 100);
+			}
 		};
 	};
 
