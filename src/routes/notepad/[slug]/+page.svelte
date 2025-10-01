@@ -13,6 +13,15 @@
 
 	$: text = data.text;
 
+	function formatDate(dateString: string | null) {
+		if (!dateString) return 'Never';
+		const date = new Date(dateString);
+		return date.toLocaleString('id-ID', {
+			dateStyle: 'medium',
+			timeStyle: 'short'
+		});
+	}
+
 	const afterSave: SubmitFunction = () => {
 		return async ({ update }) => {
 			await update({ reset: false });
@@ -32,47 +41,47 @@
 <svelte:head><title>Notepad - {data.slug}</title></svelte:head>
 
 <div class="mx-auto max-w-4xl space-y-3 p-4">
-	<h2 class="text-lg font-bold">Online Notepad</h2>
+	<h2 class="text-lg font-bold">Shared Notepad</h2>
+	<p class="text-sm text-gray-500">
+		Slug: <code>{data.slug}</code> — semua orang dengan link ini bisa lihat & edit.
+	</p>
+	{#if data.updatedAt}
+		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
+	{/if}
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
-		<div class="mb-2 flex place-items-center gap-2">
-			<button class="btn btn-sm btn-primary">Save</button>
-			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
-				{refreshing ? 'Refreshing...' : 'Refresh'}
-			</button>
-			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
-		</div>
 		<textarea
 			id="note"
 			name="text"
 			bind:value={text}
 			bind:this={ta}
 			rows="20"
-			class="textarea-bordered textarea w-full resize-none"
+			class="textarea-bordered textarea w-full"
 		></textarea>
+		<div class="mt-2 flex gap-2">
+			<button class="btn btn-sm btn-primary">Save</button>
+			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
+				{refreshing ? 'Refreshing...' : 'Refresh'}
+			</button>
+			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
+		</div>
 	</form>
 
-	<div class="text-sm">
-		<div class="flex gap-2 text-sm">
-			<input
-				type="text"
-				readonly
-				value="{$page.url.origin}/notepad/{data.slug}"
-				class="input-bordered input input-sm flex-1"
-			/>
-			<button
-				type="button"
-				class="btn btn-sm"
-				on:click={() => {
-					navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
-				}}
-			>
-				Copy
-			</button>
-		</div>
-		<p class="text-sm text-gray-500">
-			<code>{$page.url.origin}/notepad/{data.slug}</code> — semua orang dengan link ini bisa lihat &
-			edit.
-		</p>
+	<div class="flex gap-2 text-sm">
+		<input
+			type="text"
+			readonly
+			value="{$page.url.origin}/notepad/{data.slug}"
+			class="input-bordered input input-sm flex-1"
+		/>
+		<button
+			type="button"
+			class="btn btn-sm"
+			on:click={() => {
+				navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
+			}}
+		>
+			Copy
+		</button>
 	</div>
 </div>
