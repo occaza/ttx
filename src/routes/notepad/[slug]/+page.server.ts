@@ -30,7 +30,11 @@ export const actions = {
 		}
 
 		const formData = await request.formData();
-		const text = (formData.get('text') || '').toString();
+		const text = (formData.get('text') || '').toString().trim();
+
+		if (!text) {
+			throw error(400, 'Text tidak boleh kosong');
+		}
 
 		await supabase.from('notepad').upsert({ slug, text, updated_at: new Date().toISOString() });
 

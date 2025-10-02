@@ -9,7 +9,8 @@
 		{ title: 'Random Number Generator', href: '/text-tools/random-number-generator' },
 		{ title: 'Count Lines & Duplicates', href: '/text-tools/lines-counter' },
 		{ title: 'Compare Two Files', href: '/text-tools/files-comparation' },
-		{ title: 'Notepad', href: '/notepad' }
+		{ title: 'Notepad', href: '/notepad' },
+		{ title: 'IG Caption Formatter', href: '/text-tools/captions-formatter' }
 	];
 
 	// Close mobile menu when clicking outside

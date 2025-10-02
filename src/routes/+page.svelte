@@ -34,4 +34,9 @@
 		desc="Catatan online bisa dibuka di browser lain"
 		href="/notepad"
 	/>
+	<ToolCard
+		title="Caption Formater"
+		desc="Beautify your instagram captions"
+		href="/text-tools/captions-formatter"
+	/>
 </div>

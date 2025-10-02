@@ -13,12 +13,13 @@
 	let linkInput: HTMLInputElement;
 
 	$: text = data.text;
+	$: isEmpty = !text.trim();
 
 	function formatDate(dateString: string | null) {
 		if (!dateString) return 'Never';
 		const date = new Date(dateString);
-		return date.toLocaleString('id-ID', {
-			dateStyle: 'medium',
+		return date.toLocaleString('en-EN', {
+			dateStyle: 'long',
 			timeStyle: 'short',
 			timeZone: 'Asia/Jakarta'
 		});
@@ -47,13 +48,10 @@
 	<p class="text-sm text-gray-500">
 		Slug: <code>{data.slug}</code> — semua orang dengan link ini bisa lihat & edit.
 	</p>
-	{#if data.updatedAt}
-		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
-	{/if}
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
 		<div class="my-2 flex gap-2">
-			<button class="btn btn-sm btn-primary">Save</button>
+			<button class="btn btn-sm btn-primary" disabled={isEmpty}>Save</button>
 			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
 				{refreshing ? 'Refreshing...' : 'Refresh'}
 			</button>
@@ -68,7 +66,9 @@
 			class="textarea-bordered textarea w-full"
 		></textarea>
 	</form>
-
+	{#if data.updatedAt}
+		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
+	{/if}
 	<div class="text-md flex gap-2">
 		<label class="input w-full">
 			<span class="label">https://</span>
@@ -77,7 +77,7 @@
 				readonly
 				bind:this={linkInput}
 				value="{$page.url.host}/notepad/{data.slug}"
-				class=" input-md"
+				class="input-md"
 			/>
 		</label>
 		<button
