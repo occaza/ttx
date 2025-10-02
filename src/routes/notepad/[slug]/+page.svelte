@@ -2,31 +2,17 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
-	import { onMount } from 'svelte';
 	import type { SubmitFunction } from '@sveltejs/kit';
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
-	export let form: ActionData;
-
 	let text = data.text;
 	let ta: HTMLTextAreaElement;
 	let saved = false;
 	let refreshing = false;
-	let turnstileWidget: HTMLElement | null = null;
+	let linkInput: HTMLInputElement;
 
 	$: text = data.text;
-
-	onMount(() => {
-		const script = document.createElement('script');
-		script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
-		script.async = true;
-		script.defer = true;
-		document.head.appendChild(script);
-
-		// Simpan reference ke widget container
-		turnstileWidget = document.querySelector('.cf-turnstile');
-	});
 
 	function formatDate(dateString: string | null) {
 		if (!dateString) return 'Never';
@@ -39,28 +25,11 @@
 	}
 
 	const afterSave: SubmitFunction = () => {
-		return async ({ result, update }) => {
+		return async ({ update }) => {
 			await update({ reset: false });
-
-			if (result.type === 'success') {
-				saved = true;
-				setTimeout(() => (saved = false), 1000);
-				ta.focus();
-
-				// Reset Turnstile widget untuk generate token baru
-				setTimeout(() => {
-					if (turnstileWidget && 'turnstile' in window) {
-						(window as any).turnstile.reset(turnstileWidget);
-					}
-				}, 100);
-			} else {
-				// Kalau gagal juga reset biar bisa coba lagi
-				setTimeout(() => {
-					if (turnstileWidget && 'turnstile' in window) {
-						(window as any).turnstile.reset(turnstileWidget);
-					}
-				}, 100);
-			}
+			saved = true;
+			setTimeout(() => (saved = false), 1000);
+			ta.focus();
 		};
 	};
 
@@ -71,24 +40,19 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Notepad - {data.slug}</title>
-</svelte:head>
+<svelte:head><title>Notepad - {data.slug}</title></svelte:head>
 
 <div class="mx-auto max-w-4xl space-y-3 p-4">
 	<h2 class="text-lg font-bold">Shared Notepad</h2>
 	<p class="text-sm text-gray-500">
 		Slug: <code>{data.slug}</code> — semua orang dengan link ini bisa lihat & edit.
 	</p>
-
-	{#if form?.error}
-		<div class="alert alert-error">
-			<span>{form.error}</span>
-		</div>
+	{#if data.updatedAt}
+		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
 	{/if}
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
-		<div class="mb-2 flex gap-2">
+		<div class="my-2 flex gap-2">
 			<button class="btn btn-sm btn-primary">Save</button>
 			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
 				{refreshing ? 'Refreshing...' : 'Refresh'}
@@ -101,34 +65,26 @@
 			bind:value={text}
 			bind:this={ta}
 			rows="20"
-			class="textarea-bordered textarea w-full resize-none"
+			class="textarea-bordered textarea w-full"
 		></textarea>
-		{#if data.updatedAt}
-			<p class="my-3 text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
-		{/if}
-		<!-- Turnstile Widget -->
-		<div class="my-3">
-			<div class="cf-turnstile" data-sitekey={data.turnstileSiteKey} data-theme="light"></div>
-		</div>
 	</form>
 
-	<div class="flex gap-2 text-sm">
-		<div class="w-full">
-			<label class="input w-full">
-				<span class="label">Link</span>
-				<input
-					type="text"
-					readonly
-					value="{$page.url.origin}/notepad/{data.slug}"
-					class="grow"
-					placeholder="URL"
-				/>
-			</label>
-		</div>
+	<div class="text-md flex gap-2">
+		<label class="input w-full">
+			<span class="label">https://</span>
+			<input
+				type="text"
+				readonly
+				bind:this={linkInput}
+				value="{$page.url.host}/notepad/{data.slug}"
+				class=" input-md"
+			/>
+		</label>
 		<button
 			type="button"
 			class="btn btn-md"
 			on:click={() => {
+				linkInput.select();
 				navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
 			}}
 		>

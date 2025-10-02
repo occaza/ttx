@@ -12,9 +12,9 @@
 </svelte:head>
 
 <div class="animated-gradient">
-	<div class="mx-2 max-w-full md:mx-auto md:max-w-8/12">
+	<div class="max-w-full md:mx-auto md:max-w-8/12">
 		<Nav />
-		<main class="my-5 mb-5 min-h-dvh place-content-center pt-24 md:bg-white/70">
+		<main class=" mb-5 min-h-dvh place-content-center pt-24 md:bg-white/70">
 			{@render children?.()}
 		</main>
 		<Footer />
