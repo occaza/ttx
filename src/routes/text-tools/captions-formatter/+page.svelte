@@ -1,83 +1,74 @@
 <script lang="ts">
-	let input = '';
-	let output = '';
+	let text = '';
+	let isFormatted = false;
 	let copied = false;
 
-	// Invisible character yang diterima Instagram
-	const INVISIBLE_CHAR = '\u2800'; // Braille Pattern Blank (paling aman untuk IG)
+	const INVISIBLE_CHAR = '\u2800'; // Braille Pattern Blank
 
-	function formatCaption() {
-		// Replace multiple line breaks dengan line break + invisible char
-		output = input.replace(/\n\n+/g, (match) => {
-			const lineCount = match.length;
-			let result = '\n';
-			// Tambah invisible char untuk setiap line kosong
-			for (let i = 1; i < lineCount; i++) {
-				result += INVISIBLE_CHAR + '\n';
-			}
-			return result;
-		});
+	function toggle() {
+		if (isFormatted) {
+			// Convert back: hapus invisible char
+			text = text.replaceAll(INVISIBLE_CHAR, '');
+			isFormatted = false;
+		} else {
+			// Format: tambah invisible char di baris kosong
+			text = text.replace(/\n\n+/g, (match) => {
+				const lineCount = match.length;
+				let result = '\n';
+				for (let i = 1; i < lineCount; i++) {
+					result += INVISIBLE_CHAR + '\n';
+				}
+				return result;
+			});
+			isFormatted = true;
+		}
 	}
 
 	function copyToClipboard() {
-		navigator.clipboard.writeText(output);
+		if (!isFormatted) {
+			toggle(); // Format dulu kalau belum
+		}
+		navigator.clipboard.writeText(text);
 		copied = true;
 		setTimeout(() => (copied = false), 2000);
 	}
-
-	// Auto format saat user mengetik
-	$: if (input) formatCaption();
 </script>
 
 <svelte:head>
 	<title>Instagram Caption Formatter</title>
 </svelte:head>
 
-<div class="mx-auto max-w-4xl space-y-4 p-4">
+<div class="mx-auto max-w-2xl space-y-4 p-4">
 	<div class="space-y-2">
 		<h1 class="text-2xl font-bold">Instagram Caption Formatter</h1>
 		<p class="text-sm text-gray-600">
-			Paste caption kamu di bawah, baris kosong akan otomatis diformat agar bisa muncul di
-			Instagram.
+			Paste caption, klik Format untuk mengubah baris kosong, lalu Copy ke Instagram.
 		</p>
 	</div>
 
-	<div class="grid gap-4 md:grid-cols-2">
-		<!-- Input -->
-		<div class="space-y-2">
-			<label for="input" class="label">
-				<span class="label-text font-semibold">Input (Paste di sini)</span>
-			</label>
-			<textarea
-				id="input"
-				bind:value={input}
-				placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
-				rows="15"
-				class="textarea-bordered textarea w-full font-mono text-sm"
-			></textarea>
-			<p class="text-xs text-gray-500">{input.length} characters</p>
-		</div>
-
-		<!-- Output -->
-		<div class="space-y-2">
-			<label for="output" class="label">
-				<span class="label-text font-semibold">Output (Copy ini ke Instagram)</span>
-			</label>
-			<textarea
-				id="output"
-				bind:value={output}
-				readonly
-				placeholder="Hasil format akan muncul di sini..."
-				rows="15"
-				class="textarea-bordered textarea w-full font-mono text-sm"
-			></textarea>
-			<div class="flex items-center justify-between">
-				<p class="text-xs text-gray-500">{output.length} characters</p>
+	<div class="space-y-2">
+		<textarea
+			bind:value={text}
+			placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
+			rows="15"
+			class="textarea-bordered textarea w-full font-mono text-sm"
+		></textarea>
+		<div class="flex items-center justify-between">
+			<p class="text-xs text-gray-500">
+				{text.length} characters
+				{#if isFormatted}
+					<span class="ml-2 badge badge-sm badge-success">Formatted</span>
+				{/if}
+			</p>
+			<div class="flex gap-2">
+				<button type="button" class="btn btn-sm" on:click={toggle} disabled={!text}>
+					{isFormatted ? 'Reset' : 'Format'}
+				</button>
 				<button
 					type="button"
 					class="btn btn-sm btn-primary"
 					on:click={copyToClipboard}
-					disabled={!output}
+					disabled={!text}
 				>
 					{copied ? '✓ Copied!' : 'Copy'}
 				</button>
@@ -103,10 +94,11 @@
 		<div class="text-sm">
 			<p class="font-semibold">Cara pakai:</p>
 			<ol class="ml-4 list-decimal">
-				<li>Paste caption kamu di kotak kiri</li>
-				<li>Baris kosong otomatis diformat dengan karakter invisible</li>
-				<li>Copy hasil dari kotak kanan</li>
-				<li>Paste ke Instagram caption/bio</li>
+				<li>Paste caption kamu</li>
+				<li>Klik <strong>Format</strong> untuk convert baris kosong</li>
+				<li>Klik <strong>Copy</strong> (akan auto-format jika belum)</li>
+				<li>Paste ke Instagram</li>
+				<li>Klik <strong>Reset</strong> untuk mengembalikan ke aslinya</li>
 			</ol>
 		</div>
 	</div>
@@ -117,16 +109,16 @@
 		<div class="collapse-title font-medium">Lihat Contoh</div>
 		<div class="collapse-content">
 			<div class="space-y-2">
-				<p class="font-semibold">Before:</p>
+				<p class="font-semibold">Before (Normal Enter):</p>
 				<pre class="bg-base-300 p-2 text-sm">Ini paragraf pertama
 
 
-Ini paragraf kedua setelah 2 baris kosong</pre>
-				<p class="font-semibold">After (akan tetap ada jarak di Instagram):</p>
+Ini paragraf kedua</pre>
+				<p class="font-semibold">After Format (Siap untuk IG):</p>
 				<pre class="bg-base-300 p-2 text-sm">Ini paragraf pertama
 ⠀
 ⠀
-Ini paragraf kedua setelah 2 baris kosong</pre>
+Ini paragraf kedua</pre>
 			</div>
 		</div>
 	</div>
