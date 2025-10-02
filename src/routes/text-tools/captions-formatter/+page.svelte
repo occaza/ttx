@@ -6,10 +6,16 @@
 	$: if (input) format();
 
 	function format() {
+		const clean = (s: string) =>
+			s
+				.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '') // hapus zero-width & friends
+				.trim();
+
 		output = input
 			.split(/\r?\n/)
-			.map((l) => l.trim())
-			.join('\n') // normalisasi
+			.map((l) => clean(l))
+			.filter((l) => l || l === '') // tetap izinkan baris kosong asli
+			.join('\n')
 			.trim();
 	}
 
