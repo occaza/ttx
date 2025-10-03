@@ -131,7 +131,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 				bind:value={input}
 				bind:this={inputEl}
 				rows="16"
-				class="textarea-bordered textarea w-full resize-none"
+				class="textarea w-full resize-none font-mono text-base md:text-sm"
 				placeholder=""
 			></textarea>
 		</label>
@@ -145,7 +145,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 				<textarea
 					bind:value={removed}
 					rows="4"
-					class="textarea-bordered textarea w-full resize-none"
+					class="textarea w-full resize-none font-mono text-base md:text-sm"
 					readonly
 				></textarea>
 			</label>

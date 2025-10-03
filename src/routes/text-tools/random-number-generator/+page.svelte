@@ -90,7 +90,7 @@
 				bind:value={output}
 				bind:this={outputEl}
 				rows="10"
-				class="textarea w-full resize-none"
+				class="textarea w-full resize-none font-mono text-base md:text-sm"
 				readonly
 				placeholder="Output here"
 			></textarea>

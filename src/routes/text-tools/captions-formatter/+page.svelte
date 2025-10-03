@@ -23,7 +23,11 @@
 			isFormatted = true;
 		}
 	}
-
+	function clearOut() {
+		text = '';
+		isFormatted = false;
+		copied = false;
+	}
 	function copyToClipboard() {
 		if (!isFormatted) {
 			toggle(); // Format dulu kalau belum
@@ -35,12 +39,12 @@
 </script>
 
 <svelte:head>
-	<title>Instagram Caption Formatter</title>
+	<title>Caption Formatter</title>
 </svelte:head>
 
-<div class="mx-auto max-w-2xl space-y-4 p-4">
+<div class="mx-auto max-w-5xl space-y-3 rounded-2xl bg-base-200 p-6 shadow-lg">
 	<div class="space-y-2">
-		<h1 class="text-2xl font-bold">Instagram Caption Formatter</h1>
+		<h1 class="text-2xl font-bold">Caption Formatter</h1>
 		<p class="text-sm text-gray-600">
 			Paste caption, klik Format untuk mengubah baris kosong, lalu Copy ke Instagram.
 		</p>
@@ -51,7 +55,7 @@
 			bind:value={text}
 			placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
 			rows="15"
-			class="textarea-bordered textarea w-full font-mono text-base md:text-sm"
+			class=" textarea w-full resize-none font-mono text-base md:text-sm"
 		></textarea>
 		<div class="flex items-center justify-between">
 			<p class="text-xs text-gray-500">
@@ -72,6 +76,9 @@
 				>
 					{copied ? '✓ Copied!' : 'Copy'}
 				</button>
+				<div class="tooltip" data-tip="Clear output">
+					<button type="button" class="btn btn-square btn-sm" on:click={clearOut}>C</button>
+				</div>
 			</div>
 		</div>
 	</div>

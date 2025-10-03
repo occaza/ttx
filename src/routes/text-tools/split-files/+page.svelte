@@ -86,7 +86,7 @@
 				bind:value={input}
 				bind:this={inputEl}
 				rows="10"
-				class="textarea-bordered textarea w-full resize-none"
+				class="textarea w-full resize-none font-mono text-base md:text-sm"
 				placeholder="Paste your text here or upload your text file..."
 			></textarea>
 		</label>

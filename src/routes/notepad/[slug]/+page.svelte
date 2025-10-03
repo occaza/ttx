@@ -11,9 +11,15 @@
 	let saved = false;
 	let refreshing = false;
 	let linkInput: HTMLInputElement;
+	let outputEl: HTMLTextAreaElement;
 
 	$: text = data.text;
 	$: isEmpty = !text.trim();
+
+	function selectAll(e: MouseEvent) {
+		e.preventDefault(); // Prevent form submit
+		outputEl?.select();
+	}
 
 	function formatDate(dateString: string | null) {
 		if (!dateString) return 'Never';
@@ -43,18 +49,21 @@
 
 <svelte:head><title>Notepad - {data.slug}</title></svelte:head>
 
-<div class="mx-auto max-w-4xl space-y-3 p-4">
+<div class="mx-auto max-w-5xl space-y-3 rounded-2xl bg-base-200 p-6 shadow-lg">
 	<h2 class="text-lg font-bold">Shared Notepad</h2>
 	<p class="text-sm text-gray-500">
 		Slug: <code>{data.slug}</code> — semua orang dengan link ini bisa lihat & edit.
 	</p>
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
-		<div class="my-2 flex gap-2">
+		<div class="my-2 flex place-items-center gap-2">
 			<button class="btn btn-sm btn-primary" disabled={isEmpty}>Save</button>
 			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
 				{refreshing ? 'Refreshing...' : 'Refresh'}
 			</button>
+			<div class="tooltip" data-tip="Select all">
+				<button type="button" class="btn btn-square btn-sm" on:click={selectAll}>S</button>
+			</div>
 			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
 		</div>
 		<textarea
@@ -62,8 +71,9 @@
 			name="text"
 			bind:value={text}
 			bind:this={ta}
+			bind:this={outputEl}
 			rows="20"
-			class="textarea-bordered textarea w-full"
+			class=" textarea w-full resize-none font-mono text-base md:text-sm"
 		></textarea>
 	</form>
 	{#if data.updatedAt}

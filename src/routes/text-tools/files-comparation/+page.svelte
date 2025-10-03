@@ -179,7 +179,7 @@
 			<textarea
 				value={outA.length ? outA.join('\n') : textA}
 				rows="14"
-				class="textarea w-full resize-none font-mono text-sm"
+				class="textarea w-full resize-none font-mono text-base md:text-sm"
 				readonly
 			></textarea>
 		</label>
@@ -189,7 +189,7 @@
 			<textarea
 				value={outB.length ? outB.join('\n') : textB}
 				rows="14"
-				class="textarea w-full resize-none font-mono text-sm"
+				class="textarea w-full resize-none font-mono text-base md:text-sm"
 				readonly
 			></textarea>
 		</label>

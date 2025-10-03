@@ -75,7 +75,7 @@
 			<textarea
 				bind:value={input}
 				rows="10"
-				class="textarea-bordered textarea w-full resize-none"
+				class="textarea w-full resize-none font-mono text-base md:text-sm"
 				placeholder="Paste text here..."
 			></textarea>
 		</label>
@@ -90,7 +90,7 @@
 			bind:this={inputEl}
 			bind:value={output}
 			rows="10"
-			class="textarea-bordered textarea w-full resize-none"
+			class="textarea w-full resize-none font-mono text-base md:text-sm"
 			readonly
 		></textarea>
 	</label>
