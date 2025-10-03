@@ -51,7 +51,7 @@
 			bind:value={text}
 			placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
 			rows="15"
-			class="textarea-bordered textarea w-full font-mono text-sm"
+			class="textarea-bordered textarea w-full font-mono text-base md:text-sm"
 		></textarea>
 		<div class="flex items-center justify-between">
 			<p class="text-xs text-gray-500">
