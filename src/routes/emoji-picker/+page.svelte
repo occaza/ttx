@@ -125,7 +125,7 @@
 	<title>Emoji Browser - Text Tools</title>
 </svelte:head>
 
-<div class="flex h-screen flex-col bg-base-100">
+<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<div class="border-b bg-base-100 p-4 shadow-md">
 		<h1 class="mb-4 text-3xl font-extrabold text-primary">✨ Emoji Explorer</h1>
 

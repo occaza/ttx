@@ -129,7 +129,7 @@
 
 <svelte:head><title>Compare Two Files</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 rounded-2xl bg-base-200 p-6 shadow-lg">
+<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<h2 class="text-lg font-bold">Compare Two Files</h2>
 	<div class="flex flex-wrap items-center gap-3">
 		<label class="form-control">

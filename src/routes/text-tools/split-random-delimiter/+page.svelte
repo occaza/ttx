@@ -86,7 +86,7 @@
 
 <svelte:head><title>Split Random Delimiter</title></svelte:head>
 
-<div class="mx-auto max-w-4xl space-y-3 p-4">
+<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<h2 class="text-lg font-bold">Split Random Delimiter</h2>
 
 	<div class="form-control">

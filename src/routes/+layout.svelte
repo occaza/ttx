@@ -14,7 +14,7 @@
 <div class="animated-gradient">
 	<div class="max-w-full md:mx-auto md:max-w-8/12">
 		<Nav />
-		<main class="min-h-dvh place-content-between pt-24 md:bg-white/70">
+		<main class="min-h-dvh place-content-between pt-24 pb-20 md:bg-white/70">
 			{@render children?.()}
 		</main>
 		<Footer />

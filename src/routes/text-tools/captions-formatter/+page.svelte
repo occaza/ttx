@@ -42,7 +42,7 @@
 	<title>Caption Formatter</title>
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 rounded-2xl bg-base-200 p-6 shadow-lg">
+<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<div class="space-y-2">
 		<h1 class="text-2xl font-bold">Caption Formatter</h1>
 		<p class="text-sm text-gray-600">

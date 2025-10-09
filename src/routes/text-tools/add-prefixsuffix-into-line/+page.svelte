@@ -41,7 +41,7 @@
 
 <svelte:head><title>Add Prefix/Suffix into Line</title></svelte:head>
 
-<div class="mx-auto max-w-4xl space-y-3 rounded-2xl bg-base-200 p-10 shadow-lg">
+<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<h2 class="text-lg font-bold">Add Prefix/Suffix into Line</h2>
 
 	<div class="flex items-center gap-2">

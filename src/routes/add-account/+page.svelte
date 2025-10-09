@@ -37,7 +37,7 @@
 	}
 </script>
 
-<main class="mx-auto max-w-4xl space-y-3 rounded-2xl bg-base-200 p-10 shadow-lg">
+<main class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<section class="card bg-base-100 shadow-xl" aria-labelledby="form-heading">
 		<div class="card-body">
 			<h2 id="form-heading" class="mb-4 card-title justify-center text-2xl font-bold">
