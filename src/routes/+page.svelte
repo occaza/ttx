@@ -2,7 +2,7 @@
 	import ToolCard from '$lib/components/ToolCard.svelte';
 </script>
 
-<div class="m-2 mx-auto grid w-fit grid-cols-1 gap-2 md:grid-cols-2">
+<div class="m-2 mx-auto grid w-fit grid-cols-1 gap-2 md:m-4 md:grid-cols-2 lg:grid-cols-4">
 	<ToolCard
 		title="Remove Duplicate Lines"
 		desc="Hapus baris duplikat dari teks Anda"
@@ -38,5 +38,15 @@
 		title="Caption Formater"
 		desc="Beautify your instagram captions"
 		href="/text-tools/captions-formatter"
+	/>
+	<ToolCard
+		title="Emoji Browser"
+		desc="Browse, search, and copy emojis with skin tone support"
+		href="/emoji-picker"
+	/>
+	<ToolCard
+		title="Emoji Browser"
+		desc="Pisahkan teks berdasarkan delimiter acak"
+		href="/text-tools/split-random-delimiter"
 	/>
 </div>

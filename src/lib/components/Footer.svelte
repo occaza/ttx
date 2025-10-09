@@ -1,4 +1,6 @@
-<footer class="footer-center footer footer-horizontal rounded bg-base-200 p-10 text-base-content">
+<footer
+	class="footer-center footer footer-horizontal rounded-b-lg bg-base-200 p-10 text-base-content"
+>
 	<nav class="grid grid-flow-col gap-4">
 		<a href="/" class="link link-hover">Contact</a>
 		<a href="/" class="link link-hover">About us</a>

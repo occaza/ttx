@@ -36,8 +36,12 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@emoji-mart/data": "^1.2.1",
+		"@lucide/svelte": "^0.545.0",
 		"@supabase/supabase-js": "^2.58.0",
 		"@vercel/kv": "^3.0.0",
-		"daisyui": "^5.1.14"
+		"daisyui": "^5.1.14",
+		"emoji-mart": "^5.6.0",
+		"emoji-picker-element": "^1.27.0"
 	}
 }
