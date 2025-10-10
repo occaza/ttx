@@ -41,55 +41,53 @@
 	<section class="card bg-base-100 shadow-xl" aria-labelledby="form-heading">
 		<div class="card-body">
 			<h2 id="form-heading" class="mb-4 card-title justify-center text-2xl font-bold">
-				Input Form
+				Send ur account
 			</h2>
 
 			<form on:submit={handleSubmit}>
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<div class="form-control mb-4">
-						<label for="uid-input" class="label">
-							<span class="label-text">UID</span>
+					<div class="form-control">
+						<label class="floating-label">
+							<span>UID here</span>
+							<input
+								type="text"
+								placeholder="UID Here"
+								class="input-bordered input w-full"
+								bind:value={uid}
+								required
+							/>
 						</label>
-						<input
-							id="uid-input"
-							type="text"
-							placeholder="Masukkan UID"
-							class="input-bordered input w-full"
-							bind:value={uid}
-							required
-						/>
 					</div>
 
 					<div class="form-control mb-4">
-						<label for="password-input" class="label">
-							<span class="label-text">Password</span>
+						<label class="floating-label">
+							<span>Password</span>
+							<input
+								type="password"
+								autocomplete="current-password"
+								placeholder="Password Here"
+								class="input-bordered input w-full"
+								bind:value={password}
+								required
+							/>
 						</label>
-						<input
-							id="password-input"
-							type="password"
-							placeholder="Masukkan Password"
-							class="input-bordered input w-full"
-							bind:value={password}
-							required
-						/>
 					</div>
 				</div>
 
 				<div class="form-control mb-6">
-					<label for="cookies-textarea" class="label">
-						<span class="label-text">Cookies</span>
+					<label class="floating-label">
+						<span>Cookies</span>
+						<textarea
+							class="textarea-bordered textarea h-36 w-full resize-none"
+							placeholder="Masukkan Cookies"
+							bind:value={cookies}
+							required
+						></textarea>
 					</label>
-					<textarea
-						id="cookies-textarea"
-						class="textarea-bordered textarea h-36 w-full resize-none"
-						placeholder="Masukkan Cookies"
-						bind:value={cookies}
-						required
-					></textarea>
 				</div>
 
 				<div class="form-control mt-6">
-					<button type="submit" class="btn w-full btn-primary">Submit</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
 				</div>
 			</form>
 		</div>

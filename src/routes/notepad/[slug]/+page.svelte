@@ -4,6 +4,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageData } from './$types';
+	import { FilePlus2, WholeWord } from '@lucide/svelte';
 
 	export let data: PageData;
 	let text = data.text;
@@ -62,9 +63,12 @@
 				{refreshing ? 'Refreshing...' : 'Refresh'}
 			</button>
 			<div class="tooltip" data-tip="Select all">
-				<button type="button" class="btn btn-square btn-sm" on:click={selectAll}>S</button>
+				<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}
+					><WholeWord size={16} /></button
+				>
 			</div>
 			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
+			<a type="button" class="btn btn-sm" href="/notepad"><FilePlus2 size={16} /> New Notes</a>
 		</div>
 		<textarea
 			id="note"

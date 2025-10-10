@@ -45,7 +45,7 @@
 		href="/emoji-picker"
 	/>
 	<ToolCard
-		title="Emoji Browser"
+		title="Split Text Random Delimiter"
 		desc="Pisahkan teks berdasarkan delimiter acak"
 		href="/text-tools/split-random-delimiter"
 	/>

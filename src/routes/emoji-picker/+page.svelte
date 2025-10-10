@@ -129,17 +129,19 @@
 	<div class="border-b bg-base-100 p-4 shadow-md">
 		<h1 class="mb-4 text-3xl font-extrabold text-primary">✨ Emoji Explorer</h1>
 
-		<div class="mb-4 flex flex-wrap items-center gap-3">
-			<input
-				type="text"
-				placeholder="Cari emoji (mis: heart, dog)..."
-				bind:value={searchQuery}
-				class="input-bordered input input-lg min-w-[200px] flex-1"
-			/>
+		<div class="mx-auto mb-4 flex w-full place-content-center items-center gap-3">
+			<div class="w-full flex-1">
+				<input
+					type="text"
+					placeholder="Cari emoji (mis: heart, dog)..."
+					bind:value={searchQuery}
+					class="input-bordered input input-md"
+				/>
+			</div>
 			<div class="join border-base-300 shadow-inner">
 				{#each skinToneEmojis as tone, i}
 					<button
-						class="btn join-item border-2 transition-all duration-150 btn-sm lg:btn-lg"
+						class="btn join-item border-2 transition-all duration-150 btn-sm lg:btn-md"
 						class:btn-active={skinTone === i}
 						class:text-primary={skinTone === i}
 						class:btn-ghost={skinTone !== i}
@@ -157,10 +159,10 @@
 		</div>
 
 		{#if !searchQuery.trim() && !isLoading}
-			<div class="flex flex-wrap gap-2 border-t border-base-200 pt-2">
+			<div class="flex flex-wrap justify-center gap-2 border-t border-base-200 pt-2">
 				{#each categories as category}
 					<button
-						class="btn text-sm font-medium transition-colors btn-sm"
+						class="btn text-sm font-medium transition-colors btn-md"
 						class:btn-primary={selectedCategory === category}
 						class:btn-outline={selectedCategory !== category}
 						on:click={() => (selectedCategory = category)}
@@ -211,7 +213,7 @@
 						readonly
 						value={selectedEmojis.join('')}
 						placeholder="Klik emoji untuk ditambahkan..."
-						class="input-bordered input input-md flex-1 cursor-text bg-white font-mono text-lg focus:outline-none"
+						class="input-bordered input flex-1 cursor-text bg-white font-mono focus:outline-none lg:input-md lg:text-lg"
 					/>
 				</div>
 			</div>
