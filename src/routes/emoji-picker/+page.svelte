@@ -136,11 +136,10 @@
 				bind:value={searchQuery}
 				class="input-bordered input input-lg min-w-[200px] flex-1"
 			/>
-
-			<div class="join rounded-lg border-2 border-base-300 shadow-inner">
+			<div class="join border-base-300 shadow-inner">
 				{#each skinToneEmojis as tone, i}
 					<button
-						class="btn join-item text-2xl font-semibold transition-all duration-150 btn-lg"
+						class="btn join-item border-2 transition-all duration-150 btn-sm lg:btn-lg"
 						class:btn-active={skinTone === i}
 						class:text-primary={skinTone === i}
 						class:btn-ghost={skinTone !== i}
