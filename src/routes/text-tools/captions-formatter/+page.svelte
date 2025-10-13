@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Eraser } from '@lucide/svelte';
 	let text = '';
 	let isFormatted = false;
 	let copied = false;
@@ -76,8 +77,11 @@
 				>
 					{copied ? '✓ Copied!' : 'Copy'}
 				</button>
-				<div class="tooltip" data-tip="Clear output">
-					<button type="button" class="btn btn-square btn-sm" on:click={clearOut}>C</button>
+
+				<div class="tooltip" data-tip="Clear">
+					<button class="btn btn-square btn-sm btn-accent" on:click={clearOut}>
+						<Eraser size={16} />
+					</button>
 				</div>
 			</div>
 		</div>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { WholeWord, Eraser } from '@lucide/svelte';
+
 	let input = '';
 	let output = '';
 	let fileInput: HTMLInputElement;
@@ -79,19 +81,23 @@
 		/>
 		<label class="label cursor-pointer"
 			><input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} /><span
-				class="label-text ml-2">Case sensitive</span
+				class="label-text">Case sensitive</span
 			></label
 		>
 		<label class="label cursor-pointer"
 			><input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} /><span
-				class="label-text ml-2">Remove empty lines</span
+				class="label-text">Remove empty lines</span
 			></label
 		>
 		<div class="tooltip" data-tip="Select all">
-			<button class="btn btn-square btn-sm" on:click={selectAll}>S</button>
+			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
+				<WholeWord size={16} />
+			</button>
 		</div>
 		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm" on:click={clear}>C</button>
+			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
+				<Eraser size={16} />
+			</button>
 		</div>
 	</div>
 	<div>

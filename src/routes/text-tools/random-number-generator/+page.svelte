@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { WholeWord, Eraser } from '@lucide/svelte';
 	let qty = 10;
 	let min = 0;
 	let max = 1000;
@@ -12,7 +13,7 @@
 	function selectAll() {
 		outputEl?.select();
 	}
-	function clearOut() {
+	function clear() {
 		output = '';
 	}
 
@@ -69,16 +70,22 @@
 			<span class="label">Suffix </span>
 			<input type="text" bind:value={suffix} placeholder="Enter suffix here" />
 		</label>
-		<div class="flex items-center gap-2">
+		<div class="flex items-center justify-between gap-2">
 			<label class="label cursor-pointer">
-				<span class="label-text">Pad numbers</span>
 				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={padOn} />
+				<span class="label-text">Pad Numbers</span>
 			</label>
-			<div class="tooltip" data-tip="Select all">
-				<button class="btn btn-square btn-sm" on:click={selectAll}>S</button>
-			</div>
-			<div class="tooltip" data-tip="Clear output">
-				<button class="btn btn-square btn-sm" on:click={clearOut}>C</button>
+			<div>
+				<div class="tooltip" data-tip="Select all">
+					<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
+						<WholeWord size={16} />
+					</button>
+				</div>
+				<div class="tooltip" data-tip="Clear">
+					<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
+						<Eraser size={16} />
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>

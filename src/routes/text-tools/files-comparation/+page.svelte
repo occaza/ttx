@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { WholeWord, Eraser } from '@lucide/svelte';
 	let fileA: File | null = null;
 	let fileB: File | null = null;
 	let nameA = '';
@@ -152,22 +153,24 @@
 	<div class="flex flex-wrap items-center gap-4">
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} /><span
-				class="label-text ml-2">Case sensitive</span
+				class="label-text">Case sensitive</span
 			>
 		</label>
 		<label class="label cursor-pointer"
 			><input type="checkbox" class="checkbox checkbox-sm" bind:checked={ignoreEmpty} /><span
-				class="label-text ml-2">Ignore empty lines</span
+				class="label-text">Ignore empty lines</span
 			>
 		</label>
 		<label class="label cursor-pointer"
 			><input type="checkbox" class="checkbox checkbox-sm" bind:checked={onlyDiff} /><span
-				class="label-text ml-2">Only diffs</span
+				class="label-text">Only diffs</span
 			>
 		</label>
 
-		<div class="tooltip" data-tip="Clear panes">
-			<button class="btn btn-square btn-sm" on:click={clearSide}>C</button>
+		<div class="tooltip" data-tip="Clear">
+			<button class="btn btn-square btn-sm btn-accent" on:click={clearSide}>
+				<Eraser size={16} />
+			</button>
 		</div>
 	</div>
 

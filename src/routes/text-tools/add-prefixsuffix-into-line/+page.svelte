@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { TextSelect, WholeWord, Eraser } from '@lucide/svelte';
+
 	let input = '';
 	let output = '';
 	let prefix = '';
@@ -53,10 +55,14 @@
 			class="file-input-bordered file-input w-full max-w-sm file-input-sm"
 		/>
 		<div class="tooltip" data-tip="Select all">
-			<button class="btn btn-square btn-sm" on:click={selectAll}>S</button>
+			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
+				<WholeWord size={16} />
+			</button>
 		</div>
 		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm" on:click={clear}>C</button>
+			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
+				<Eraser size={16} />
+			</button>
 		</div>
 	</div>
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2">

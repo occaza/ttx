@@ -5,20 +5,35 @@
 	let output = '';
 	let copied = false;
 	let fileName = 'output.txt';
-	let delimiter = '|';
+	let delimiter = '';
 	let customDelimiter = '';
-	let delimiterOption = '|';
+	let delimiterOption = '';
 	let segmen: string[] = [];
 	let pickSet = new Set<number>();
 	let segCount = 0;
 	let inputEl: HTMLTextAreaElement;
+	let fileInput: HTMLInputElement;
 	const maxLabelLength = 10;
 
 	$: if (input) preview();
 	$: (pickSet, extract());
 	$: delimiter = delimiterOption === 'custom' ? customDelimiter || '|' : delimiterOption;
+	$: if (delimiter) {
+		// baru jalankan preview & extract
+		preview();
+		extract();
+	} else {
+		segCount = 0;
+		segmen = [];
+		output = '';
+	}
 
 	function preview() {
+		if (!delimiter) {
+			segCount = 0;
+			segmen = [];
+			return;
+		} //
 		const rows = input.split(/\r?\n/).filter((l) => l.includes(delimiter));
 		if (!rows.length) {
 			segmen = [];
@@ -41,6 +56,11 @@
 	}
 
 	function extract() {
+		if (!delimiter) {
+			output = '';
+			return;
+		} // <-- guard
+
 		const rows = input.split(/\r?\n/).filter((l) => l.includes(delimiter));
 		const picks = Array.from(pickSet).sort((a, b) => a - b);
 		output = rows
@@ -78,9 +98,19 @@
 		fileName = 'output.txt';
 		delimiter = '|';
 		customDelimiter = '';
-		delimiterOption = '|';
+		delimiterOption = '';
 		pickSet = new Set<number>();
 		segCount = 0;
+	}
+
+	function handleFile(e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (!target.files?.length) return;
+		const reader = new FileReader();
+		reader.onload = () => {
+			input = reader.result as string;
+		};
+		reader.readAsText(target.files[0]);
 	}
 </script>
 
@@ -90,13 +120,17 @@
 	<h2 class="text-lg font-bold">Split Random Delimiter</h2>
 
 	<div class="form-control">
-		<label class="label" for="delimiter-select">
-			<span class="label-text font-medium">Delimiter</span>
-		</label>
+		<div class="mb-2 flex flex-wrap items-center gap-3">
+			<input
+				type="file"
+				accept="text/plain"
+				bind:this={fileInput}
+				on:change={handleFile}
+				class="file-input-bordered file-input w-full max-w-xs file-input-sm"
+			/>
 
-		<div class="flex flex-wrap items-center gap-2">
-			<!-- Select -->
-			<select id="delimiter-select" bind:value={delimiterOption} class=" select w-40 select-md">
+			<select id="delimiter-select" bind:value={delimiterOption} class=" select w-40 select-sm">
+				<option value="" disabled selected>Choose Delimiter</option>
 				<option value="|">Pipe (|)</option>
 				<option value="	">Tab</option>
 				<option value=" ">Space</option>
@@ -133,8 +167,11 @@
 
 	<div>
 		<label class="form-control">
-			<span class="label-text">Input text</span>
-			<textarea bind:value={input} rows="6" class="textarea-bordered textarea w-full resize-none"
+			<textarea
+				placeholder="Input here"
+				bind:value={input}
+				rows="6"
+				class="textarea-bordered textarea w-full resize-none"
 			></textarea>
 		</label>
 	</div>
@@ -144,12 +181,11 @@
 	</div>
 
 	<label class="form-control">
-		<span class="label-text">Output text</span>
-
 		<textarea
 			bind:value={output}
 			bind:this={inputEl}
 			rows="15"
+			placeholder="Output here"
 			class="textarea-bordered textarea w-full resize-none"
 			readonly
 		></textarea>
@@ -181,7 +217,7 @@
 		{/if}
 	</div>
 
-	<div class="flex justify-between gap-2">
+	<div class="flex gap-2">
 		<div>
 			<button class="btn btn-sm" disabled={!output} on:click={copy}>
 				{copied ? 'Copied!' : 'Copy'}

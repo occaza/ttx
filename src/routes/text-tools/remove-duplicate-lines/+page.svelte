@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { TextSelect, WholeWord, Eraser } from '@lucide/svelte';
 	let input = `Enter your text, choose the options, then click the "Remove Duplicate Lines" button.
 Only duplicate lines across new lines will be removed. Duplicates within the same line will stay.
 Line order is preserved, only repeated lines are deleted.
@@ -102,10 +103,14 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 			class="file-input-bordered file-input w-full max-w-xs file-input-sm"
 		/>
 		<div class="tooltip" data-tip="Select all">
-			<button class="btn btn-square btn-sm" on:click={selectAll}>S</button>
+			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
+				<WholeWord size={16} />
+			</button>
 		</div>
 		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm" on:click={clear}>C</button>
+			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
+				<Eraser size={16} />
+			</button>
 		</div>
 		{#if hasProcessed}
 			<span class="label-text">{removedCount} lines removed</span>
@@ -114,15 +119,15 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 	<div class="flex flex-wrap items-center gap-4">
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
-			<span class="label-text ml-2">Case sensitive</span>
+			<span class="label-text">Case sensitive</span>
 		</label>
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
-			<span class="label-text ml-2">Remove empty lines</span>
+			<span class="label-text">Remove empty lines</span>
 		</label>
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={showRemoved} />
-			<span class="label-text ml-2">Display removed</span>
+			<span class="label-text">Display removed</span>
 		</label>
 	</div>
 	<div>

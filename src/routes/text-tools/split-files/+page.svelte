@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { TextSelect, WholeWord, Eraser } from '@lucide/svelte';
 	let input = '';
 	let linesPerFile = 200;
 	let headerText = '';
@@ -55,31 +56,35 @@
 <div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<h2 class="text-lg font-bold">Split Text File</h2>
 
-	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2">
+	<div class="flex items-center gap-2">
 		<input
 			type="file"
 			accept="text/plain"
 			bind:this={fileInput}
 			on:change={handleFile}
-			class="file-input-bordered file-input w-full file-input-md"
+			class="file-input-bordered file-input w-full file-input-sm"
 		/>
-		<label class="input w-full">
-			<span class="label">Lines per file</span>
-			<input type="number" bind:value={linesPerFile} placeholder="Min 1" min="1" />
-		</label>
-	</div>
-	<div class="flex gap-1.5">
+
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
-			<span class="label-text ml-2">Remove empty lines</span>
+			<span class="label-text">Remove empty lines</span>
 		</label>
+
 		<div class="tooltip" data-tip="Select all">
-			<button class="btn btn-square btn-sm" on:click={selectAll}>S</button>
+			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
+				<WholeWord size={16} />
+			</button>
 		</div>
 		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm" on:click={clear}>C</button>
+			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
+				<Eraser size={16} />
+			</button>
 		</div>
 	</div>
+	<label class="input w-full">
+		<span class="label">Lines per file</span>
+		<input type="number" bind:value={linesPerFile} placeholder="Min 1" min="1" />
+	</label>
 	<div>
 		<label class="form-control">
 			<textarea
