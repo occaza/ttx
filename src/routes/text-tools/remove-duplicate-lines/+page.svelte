@@ -100,7 +100,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 			accept="text/plain"
 			bind:this={fileInput}
 			on:change={handleFile}
-			class="file-input-bordered file-input w-full max-w-xs file-input-sm"
+			class=" file-input w-full max-w-xs file-input-sm"
 		/>
 		<div class="tooltip" data-tip="Select all">
 			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
