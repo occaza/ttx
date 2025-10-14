@@ -1,20 +1,17 @@
 <script lang="ts">
-	// Mendefinisikan tipe data untuk form
+	import {TextSelect} from '@lucide/svelte';
 	interface FormData {
 		uid: string;
 		password: string;
 		cookies: string;
 	}
 
-	// Variabel reaktif untuk menyimpan nilai input
 	let uid: string = '';
 	let password: string = '';
 	let cookies: string = '';
 
-	// Variabel state untuk mengontrol visibilitas toast
 	let showToast: boolean = false;
 
-	// Fungsi untuk menangani submit form
 	function handleSubmit(event: Event) {
 		event.preventDefault();
 
