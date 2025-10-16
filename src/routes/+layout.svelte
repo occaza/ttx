@@ -11,12 +11,15 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="animated-gradient">
+<div class=" min-h-screen bg-base-300">
 	<div class="max-w-full md:mx-auto md:max-w-8/12">
 		<Nav />
-		<main class="min-h-dvh place-content-between bg-base-300/50 pt-24 pb-20">
+
+		<!-- Wrapper untuk content dengan padding top untuk navbar -->
+		<div class="pt-20">
 			{@render children?.()}
-		</main>
+		</div>
+
 		<Footer />
 	</div>
 </div>

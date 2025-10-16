@@ -1,19 +1,45 @@
 <footer
-	class="footer-center footer footer-horizontal rounded-b-lg bg-base-200 p-10 text-base-content"
+	class="footer-center mt-24 footer footer-horizontal rounded-b-lg border-t border-white/10 bg-gradient-to-b from-base-200/80 to-base-300/80 p-10 text-base-content backdrop-blur-md"
 >
-	<nav class="grid grid-flow-col gap-4">
-		<a href="/" class="link link-hover">Contact</a>
-		<a href="/" class="link link-hover">About us</a>
-		<a href="/" class="link link-hover">Jobs</a>
-		<a href="/" class="link link-hover">Press kit</a>
+	<div
+		class="mb-6 h-1 w-full rounded-full bg-gradient-to-r from-primary via-accent to-secondary"
+	></div>
+
+	<nav class="grid grid-flow-col gap-6">
+		<a
+			href="/"
+			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-primary"
+			>Contact</a
+		>
+		<a
+			href="/"
+			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-accent"
+			>About us</a
+		>
+		<a
+			href="/"
+			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-secondary"
+			>Jobs</a
+		>
+		<a
+			href="/"
+			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-primary"
+			>Press kit</a
+		>
 	</nav>
-	<nav>
-		<div class="grid grid-flow-col gap-4">
-			<a href="/" target="_blank" aria-label="twitter page">
+
+	<nav class="my-6">
+		<div class="grid grid-flow-col gap-6">
+			<a
+				href="/"
+				target="_blank"
+				aria-label="twitter page"
+				class="transition-all duration-300 hover:scale-125 hover:text-primary"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
+					width="28"
+					height="28"
 					viewBox="0 0 24 24"
 					class="fill-current"
 				>
@@ -22,11 +48,16 @@
 					></path>
 				</svg>
 			</a>
-			<a href="/" target="_blank" aria-label="youtube channel">
+			<a
+				href="/"
+				target="_blank"
+				aria-label="youtube channel"
+				class="transition-all duration-300 hover:scale-125 hover:text-accent"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
+					width="28"
+					height="28"
 					viewBox="0 0 24 24"
 					class="fill-current"
 				>
@@ -35,11 +66,16 @@
 					></path>
 				</svg>
 			</a>
-			<a href="/" target="_blank" aria-label="Facebook page">
+			<a
+				href="/"
+				target="_blank"
+				aria-label="Facebook page"
+				class="transition-all duration-300 hover:scale-125 hover:text-secondary"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
+					width="28"
+					height="28"
 					viewBox="0 0 24 24"
 					class="fill-current"
 				>
@@ -50,7 +86,8 @@
 			</a>
 		</div>
 	</nav>
-	<aside>
-		<p>Copyright © {new Date().getFullYear()} - All right reserved by TEXY</p>
-	</aside>
+	<p class="text-sm opacity-70">
+		Copyright © {new Date().getFullYear()} - All right reserved by
+		<span class="font-bold text-primary">TEXY</span>
+	</p>
 </footer>

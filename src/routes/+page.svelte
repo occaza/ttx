@@ -2,51 +2,168 @@
 	import ToolCard from '$lib/components/ToolCard.svelte';
 </script>
 
-<div class="m-2 mx-auto grid w-fit grid-cols-1 gap-2 md:m-4 md:grid-cols-2 lg:grid-cols-4">
-	<ToolCard
-		title="Remove Duplicate Lines"
-		desc="Hapus baris duplikat dari teks Anda"
-		href="/text-tools/remove-duplicate-lines"
-	/>
-	<ToolCard
-		title="Add Prefix/Suffix into Line"
-		desc="Tambahkan prefix atau suffix di baris text"
-		href="/text-tools/add-prefixsuffix-into-line"
-	/>
-	<ToolCard
-		title="Split File"
-		desc="Pecah teks menjadi beberapa file"
-		href="/text-tools/split-files"
-	/>
-	<ToolCard
-		title="Random Number Generator"
-		desc="Buat angka acak"
-		href="/text-tools/random-number-generator"
-	/>
-	<ToolCard title="Line Counter" desc="Hitung jumlah line" href="/text-tools/lines-counter" />
-	<ToolCard
-		title="File Comparation"
-		desc="Bandingkan file dan cek duplikat"
-		href="/text-tools/files-comparation"
-	/>
-	<ToolCard
-		title="Shared Notepad"
-		desc="Catatan online bisa dibuka di browser lain"
-		href="/notepad"
-	/>
-	<ToolCard
-		title="Caption Formater"
-		desc="Beautify your instagram captions"
-		href="/text-tools/captions-formatter"
-	/>
-	<ToolCard
-		title="Emoji Browser"
-		desc="Browse, search, and copy emojis with skin tone support"
-		href="/emoji-picker"
-	/>
-	<ToolCard
-		title="Split Text Random Delimiter"
-		desc="Pisahkan teks berdasarkan delimiter acak"
-		href="/text-tools/split-random-delimiter"
-	/>
-</div>
+<main class="relative min-h-screen pt-32 pb-32 md:pt-28 md:pb-40">
+	<!-- Hero Section -->
+	<div class="relative mx-auto mb-16 max-w-4xl px-4 text-center">
+		<!-- Floating elements background -->
+		<div
+			class="absolute top-0 left-1/4 h-72 w-72 animate-pulse rounded-full bg-primary/20 blur-3xl"
+		></div>
+		<div
+			class="absolute top-20 right-1/4 h-96 w-96 animate-pulse rounded-full bg-accent/20 blur-3xl"
+			style="animation-delay: 1s;"
+		></div>
+
+		<div class="relative z-10">
+			<h1
+				class="animate-in fade-in slide-in-from-bottom-4 mb-4 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-5xl font-black text-transparent duration-700 md:text-7xl"
+			>
+				TEXY.
+			</h1>
+			<p
+				class="animate-in fade-in slide-in-from-bottom-4 mx-auto max-w-2xl text-lg text-base-content/80 duration-700 md:text-xl"
+				style="animation-delay: 200ms;"
+			>
+				Powerful text manipulation tools for developers and creators. Fast, simple, and free.
+			</p>
+
+			<!-- Stats badges -->
+			<div
+				class="animate-in fade-in slide-in-from-bottom-4 mt-8 flex flex-wrap justify-center gap-4 duration-700"
+				style="animation-delay: 400ms;"
+			>
+				<div class="rounded-full border border-white/20 bg-white/10 px-6 py-2 backdrop-blur-sm">
+					<span class="font-bold text-primary">10+</span> Tools Available
+				</div>
+				<div class="rounded-full border border-white/20 bg-white/10 px-6 py-2 backdrop-blur-sm">
+					<span class="font-bold text-accent">100%</span> Free
+				</div>
+				<div class="rounded-full border border-white/20 bg-white/10 px-6 py-2 backdrop-blur-sm">
+					<span class="font-bold text-secondary">No</span> Sign-up Required
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Tools Grid -->
+	<div class="relative mx-auto max-w-7xl px-4">
+		<!-- Section header -->
+		<div class="mb-8 text-center">
+			<h2 class="mb-2 text-3xl font-bold text-base-content">Choose Your Tool</h2>
+			<div
+				class="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-primary via-accent to-secondary"
+			></div>
+		</div>
+
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<ToolCard
+				title="Remove Duplicate Lines"
+				desc="Hapus baris duplikat dari teks Anda dengan cepat dan mudah"
+				href="/text-tools/remove-duplicate-lines"
+			/>
+			<ToolCard
+				title="Add Prefix/Suffix"
+				desc="Tambahkan prefix atau suffix di setiap baris text secara otomatis"
+				href="/text-tools/add-prefixsuffix-into-line"
+			/>
+			<ToolCard
+				title="Split File"
+				desc="Pecah file teks besar menjadi beberapa file kecil"
+				href="/text-tools/split-files"
+			/>
+			<ToolCard
+				title="Random Number Generator"
+				desc="Generate angka acak dengan custom range dan jumlah"
+				href="/text-tools/random-number-generator"
+			/>
+			<ToolCard
+				title="Line Counter"
+				desc="Hitung jumlah baris dan karakter dalam teks Anda"
+				href="/text-tools/lines-counter"
+			/>
+			<ToolCard
+				title="File Comparison"
+				desc="Bandingkan dua file dan temukan perbedaannya"
+				href="/text-tools/files-comparation"
+			/>
+			<ToolCard
+				title="Online Notepad"
+				desc="Catatan online yang bisa dibuka di browser manapun"
+				href="/notepad"
+			/>
+			<ToolCard
+				title="Caption Formatter"
+				desc="Beautify your Instagram captions dengan format yang menarik"
+				href="/text-tools/captions-formatter"
+			/>
+			<ToolCard
+				title="Emoji Browser"
+				desc="Browse, search, dan copy emoji dengan skin tone support"
+				href="/emoji-picker"
+			/>
+			<ToolCard
+				title="Split by Delimiter"
+				desc="Pisahkan teks berdasarkan delimiter yang Anda tentukan"
+				href="/text-tools/split-random-delimiter"
+			/>
+		</div>
+	</div>
+
+	<!-- Features Section -->
+	<div class="relative mx-auto mt-24 max-w-6xl px-4">
+		<div class="grid gap-8 md:grid-cols-3">
+			<div
+				class="group rounded-2xl border border-white/20 bg-gradient-to-br from-white/25 via-white/15 to-white/5 p-6 shadow-xl backdrop-blur-md transition-all duration-500"
+			>
+				<div class="mb-4 inline-block rounded-xl bg-primary/20 p-3">
+					<svg class="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M13 10V3L4 14h7v7l9-11h-7z"
+						/>
+					</svg>
+				</div>
+				<h3 class="mb-2 text-xl font-bold">Lightning Fast</h3>
+				<p class="text-base-content/70">Process your text instantly with optimized algorithms</p>
+			</div>
+
+			<div
+				class="group rounded-2xl border border-white/20 bg-gradient-to-br from-white/25 via-white/15 to-white/5 p-6 shadow-xl backdrop-blur-md transition-all duration-500"
+			>
+				<div class="mb-4 inline-block rounded-xl bg-accent/20 p-3">
+					<svg class="h-8 w-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+						/>
+					</svg>
+				</div>
+				<h3 class="mb-2 text-xl font-bold">100% Private</h3>
+				<p class="text-base-content/70">
+					All processing happens in your browser. We don't store anything
+				</p>
+			</div>
+
+			<div
+				class="group rounded-2xl border border-white/20 bg-gradient-to-br from-white/25 via-white/15 to-white/5 p-6 shadow-xl backdrop-blur-md transition-all duration-500"
+			>
+				<div class="mb-4 inline-block rounded-xl bg-secondary/20 p-3">
+					<svg class="h-8 w-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+						/>
+					</svg>
+				</div>
+				<h3 class="mb-2 text-xl font-bold">Easy to Use</h3>
+				<p class="text-base-content/70">Simple interface designed for everyone</p>
+			</div>
+		</div>
+	</div>
+</main>
