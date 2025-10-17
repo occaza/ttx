@@ -16,7 +16,7 @@
 		<Nav />
 
 		<!-- Wrapper untuk content dengan padding top untuk navbar -->
-		<div class="pt-20">
+		<div class="pt-30">
 			{@render children?.()}
 		</div>
 

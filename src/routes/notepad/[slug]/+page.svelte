@@ -53,7 +53,8 @@
 <div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
 	<h2 class="text-lg font-bold">Online Notepad</h2>
 	<p class="text-sm text-gray-500">
-		Slug: <code>{data.slug}</code> — semua orang dengan link ini bisa lihat & edit.
+		Slug: <code class="badge badge-soft badge-primary">{data.slug}</code> — semua orang dengan link ini
+		bisa lihat & edit.
 	</p>
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>

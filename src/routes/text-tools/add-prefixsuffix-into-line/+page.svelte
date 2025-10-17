@@ -102,7 +102,7 @@
 	</label>
 
 	<div class="my-2 flex items-center gap-2">
-		<button class="btn btn-sm" on:click={saveAs}>Save as</button>
+		<button class="btn border-accent btn-sm" on:click={saveAs}>Save as</button>
 		<input type="text" bind:value={fileName} class="input-bordered input input-sm w-48" />
 	</div>
 </div>

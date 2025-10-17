@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../inviflex"
+		},
+		{
+			"path": "../ttxv2"
 		}
 	],
 	"settings": {}

@@ -126,7 +126,7 @@
 			placeholder="part"
 			class="input-bordered input join-item w-full max-w-xs"
 		/>
-		<button class="btn join-item" on:click={buildLinks}>Split files</button>
+		<button class="btn join-item border-accent" on:click={buildLinks}>Split files</button>
 	</div>
 
 	{#if links.length}
