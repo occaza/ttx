@@ -138,31 +138,43 @@
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Compare Two Files</h2>
 
-	<div class="flex gap-2">
-		<FileUploadInput bind:this={fileUploadA} onload={handleA} onerror={handleError} size="md" />
-		<FileUploadInput bind:this={fileUploadB} onload={handleB} onerror={handleError} size="md" />
+	<div class="mb-4 grid max-w-7xl grid-cols-1 gap-2 lg:grid-cols-2">
+		<div>
+			<FileUploadInput bind:this={fileUploadA} onload={handleA} onerror={handleError} size="md" />
+		</div>
+		<div>
+			<FileUploadInput bind:this={fileUploadB} onload={handleB} onerror={handleError} size="md" />
+		</div>
 	</div>
 
 	<div class="flex flex-wrap items-center gap-4">
-		<label class="label cursor-pointer">
-			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
-			<span class="label-text">Case sensitive</span>
-		</label>
-		<label class="label cursor-pointer">
-			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={ignoreEmpty} />
-			<span class="label-text">Ignore empty lines</span>
-		</label>
-		<label class="label cursor-pointer">
-			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={onlyDiff} />
-			<span class="label-text">Only diffs</span>
-		</label>
-		<ActionButton
-			showSelectAll={false}
-			showClear={true}
-			showCopy={true}
-			onclear={clear}
-			oncopy={copy}
-		/>
+		<div>
+			<label class="label cursor-pointer">
+				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
+				<span class="label-text">Case sensitive</span>
+			</label>
+		</div>
+		<div>
+			<label class="label cursor-pointer">
+				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={ignoreEmpty} />
+				<span class="label-text">Ignore empty lines</span>
+			</label>
+		</div>
+		<div>
+			<label class="label cursor-pointer">
+				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={onlyDiff} />
+				<span class="label-text">Only diffs</span>
+			</label>
+		</div>
+		<div>
+			<ActionButton
+				showSelectAll={false}
+				showClear={true}
+				showCopy={true}
+				onclear={clear}
+				oncopy={copy}
+			/>
+		</div>
 	</div>
 	<div>
 		<button class="btn rounded-sm btn-md btn-primary" onclick={compare}>Compare</button>
