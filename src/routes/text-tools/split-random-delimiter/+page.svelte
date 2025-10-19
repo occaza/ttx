@@ -1,39 +1,47 @@
 <script lang="ts">
-	import { WholeWord, Eraser } from '@lucide/svelte';
+	import FileUploadInput from '$lib/components/FileUpload.svelte';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
+	import SaveFiles from '$lib/components/SaveButton.svelte';
 
-	let input = '';
-	let output = '';
-	let copied = false;
-	let fileName = 'output.txt';
-	let delimiter = '';
-	let customDelimiter = '';
-	let delimiterOption = '';
-	let segmen: string[] = [];
-	let pickSet = new Set<number>();
-	let segCount = 0;
-	let inputEl: HTMLTextAreaElement;
-	let fileInput: HTMLInputElement;
+	let input = $state('');
+	let output = $state('');
+	let copied = $state(false);
+	let delimiter = $state('');
+	let customDelimiter = $state('');
+	let delimiterOption = $state('');
+	let segmen = $state<string[]>([]);
+	let pickSet = $state(new Set<number>());
+	let segCount = $state(0);
+	let inputTextarea: TextArea;
+	let outputTextarea: TextArea;
+	let fileUpload: FileUploadInput;
+
 	const maxLabelLength = 10;
 
-	$: if (input) preview();
-	$: (pickSet, extract());
-	$: delimiter = delimiterOption === 'custom' ? customDelimiter || '|' : delimiterOption;
-	$: if (delimiter) {
-		// baru jalankan preview & extract
-		preview();
-		extract();
-	} else {
-		segCount = 0;
-		segmen = [];
-		output = '';
-	}
+	$effect(() => {
+		if (input) preview();
+	});
+
+	$effect(() => {
+		delimiter = delimiterOption === 'custom' ? customDelimiter || '|' : delimiterOption;
+		if (delimiter) {
+			preview();
+			extract();
+		} else {
+			segCount = 0;
+			segmen = [];
+			output = '';
+		}
+	});
 
 	function preview() {
 		if (!delimiter) {
 			segCount = 0;
 			segmen = [];
 			return;
-		} //
+		}
+
 		const rows = input.split(/\r?\n/).filter((l) => l.includes(delimiter));
 		if (!rows.length) {
 			segmen = [];
@@ -46,6 +54,7 @@
 		segCount = Math.max(...rows.map((r) => r.split(delimiter).length));
 		pickSet.clear();
 		for (let i = 0; i < segCount; i++) pickSet.add(i);
+		pickSet = pickSet;
 
 		segmen = rows[0].split(delimiter).map((s) => {
 			const trimmed = s.trim();
@@ -59,7 +68,7 @@
 		if (!delimiter) {
 			output = '';
 			return;
-		} // <-- guard
+		}
 
 		const rows = input.split(/\r?\n/).filter((l) => l.includes(delimiter));
 		const picks = Array.from(pickSet).sort((a, b) => a - b);
@@ -73,159 +82,128 @@
 			.join('\n');
 	}
 
-	async function copy() {
-		await navigator.clipboard.writeText(output);
-		copied = true;
-		setTimeout(() => (copied = false), 1200);
+	function handleLoad(content: string) {
+		input = content;
 	}
 
-	async function saveAs() {
-		const element = document.createElement('a');
-		const file = new Blob([output], { type: 'text/plain' });
-		element.href = URL.createObjectURL(file);
-		element.download = fileName.endsWith('.txt') ? fileName : fileName + '.txt';
-		document.body.appendChild(element);
-		element.click();
-		document.body.removeChild(element);
+	function handleError(error: Error) {
+		console.error(error);
 	}
+
 	function selectAll() {
-		inputEl.select();
+		outputTextarea.select();
 	}
+
 	function clear() {
 		input = '';
 		output = '';
 		copied = false;
-		fileName = 'output.txt';
-		delimiter = '|';
+		delimiter = '';
 		customDelimiter = '';
 		delimiterOption = '';
 		pickSet = new Set<number>();
 		segCount = 0;
+		segmen = [];
+		fileUpload.reset();
 	}
 
-	function handleFile(e: Event) {
-		const target = e.target as HTMLInputElement;
-		if (!target.files?.length) return;
-		const reader = new FileReader();
-		reader.onload = () => {
-			input = reader.result as string;
-		};
-		reader.readAsText(target.files[0]);
+	function copy() {
+		navigator.clipboard.writeText(output);
+		copied = true;
+		setTimeout(() => (copied = false), 2000);
+	}
+
+	function handleCheckboxChange(index: number, checked: boolean) {
+		if (checked) {
+			pickSet.add(index);
+		} else {
+			pickSet.delete(index);
+		}
+		pickSet = pickSet;
+		extract();
 	}
 </script>
 
 <svelte:head><title>Split Random Delimiter</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<h2 class="text-lg font-bold">Split Random Delimiter</h2>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<h2 class="pb-5 text-lg font-bold">Split Random Delimiter</h2>
 
-	<div class="form-control">
-		<div class="mb-2 flex flex-wrap items-center gap-3">
-			<input
-				type="file"
-				accept="text/plain"
-				bind:this={fileInput}
-				on:change={handleFile}
-				class="file-input-bordered file-input w-full max-w-xs file-input-sm"
-			/>
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
+		<select bind:value={delimiterOption} class="select rounded-sm select-md">
+			<option value="" disabled selected>Choose Delimiter</option>
+			<option value="|">Pipe (|)</option>
+			<option value="	">Tab</option>
+			<option value=" ">Space</option>
+			<option value=",">Comma (,)</option>
+			<option value=";">Semicolon (;)</option>
+			<option value=":">Colon (:)</option>
+			<option value="custom">Custom</option>
+		</select>
 
-			<select id="delimiter-select" bind:value={delimiterOption} class=" select w-40 select-sm">
-				<option value="" disabled selected>Choose Delimiter</option>
-				<option value="|">Pipe (|)</option>
-				<option value="	">Tab</option>
-				<option value=" ">Space</option>
-				<option value=",">Comma (,)</option>
-				<option value=";">Semicolon (;)</option>
-				<option value=":">Colon (:)</option>
-				<option value="custom">Custom</option>
-			</select>
+		{#if delimiterOption === 'custom'}
+			<input type="text" bind:value={customDelimiter} maxlength="1" />
+		{/if}
 
-			<!-- Custom input muncul jika pilih "Custom" -->
-			{#if delimiterOption === 'custom'}
-				<input
-					type="text"
-					bind:value={customDelimiter}
-					maxlength="1"
-					class="input-bordered input input-sm w-20"
-					placeholder="e.g. -"
-				/>
-			{/if}
-
-			<!-- Tombol tindakan -->
-			<div class="flex items-center gap-2">
-				<div class="tooltip" data-tip="Select all">
-					<button class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
-						<WholeWord />
-					</button>
-				</div>
-				<div class="tooltip" data-tip="Clear">
-					<button class="btn btn-square btn-sm btn-accent" on:click={clear}> <Eraser /> </button>
-				</div>
-			</div>
-		</div>
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
+		/>
 	</div>
 
 	<div>
-		<label class="form-control">
-			<textarea
-				placeholder="Input here"
-				bind:value={input}
-				rows="6"
-				class="textarea-bordered textarea w-full resize-none"
-			></textarea>
-		</label>
+		<TextArea
+			bind:this={inputTextarea}
+			bind:value={input}
+			placeholder="Paste text here..."
+			rows={6}
+		/>
 	</div>
 
 	<div>
-		<button class="btn btn-sm btn-primary" on:click={extract}>Extract</button>
+		<button class="btn rounded-sm btn-md btn-primary" onclick={extract}>Extract</button>
 	</div>
 
-	<label class="form-control">
-		<textarea
+	<div>
+		<TextArea
+			bind:this={outputTextarea}
 			bind:value={output}
-			bind:this={inputEl}
-			rows="15"
-			placeholder="Output here"
-			class="textarea-bordered textarea w-full resize-none"
-			readonly
-		></textarea>
-	</label>
-	<div>
-		{#if segCount}
-			<div class="mb-2 text-sm">
-				There are <b>{segCount}</b> Segments per row.
-			</div>
-			<div class="mb-2 flex flex-wrap gap-2">
-				{#each Array(segCount) as _, i}
+			placeholder="Output here..."
+			rows={15}
+			readonly={true}
+		/>
+	</div>
+
+	{#if segCount}
+		<div class="space-y-2">
+			<p class="text-sm">
+				Ada <span class="font-semibold">{segCount}</span> Segment per baris.
+			</p>
+			<div class="flex flex-wrap gap-2">
+				{#each Array(segCount) as _, i (i)}
 					<label class="label cursor-pointer" title={segmen[i] || `seg ${i + 1}`}>
 						<input
 							type="checkbox"
 							class="checkbox checkbox-sm"
 							checked={pickSet.has(i)}
-							on:change={(e) => {
-								if (e.currentTarget.checked) {
-									pickSet = new Set([...pickSet, i]);
-								} else {
-									pickSet = new Set([...pickSet].filter((x) => x !== i));
-								}
-							}}
+							onchange={(e) => handleCheckboxChange(i, e.currentTarget.checked)}
 						/>
 						<span class="label-text">{segmen[i] || `seg ${i + 1}`}</span>
 					</label>
 				{/each}
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 
-	<div class="flex gap-2">
-		<div>
-			<button class="btn btn-sm" disabled={!output} on:click={copy}>
-				{copied ? 'Copied!' : 'Copy'}
-			</button>
-		</div>
-		<div class="flex items-center gap-2">
-			<input type="text" bind:value={fileName} class="input-bordered input input-sm w-48" />
-			<button class="btn btn-sm" disabled={!output} on:click={saveAs}>Save as</button>
-		</div>
+	<div class="flex items-center gap-2">
+		<!-- <button class="btn rounded-sm btn-sm" disabled={!output} onclick={copy}>
+			{copied ? '✓ Copied!' : 'Copy'}
+		</button> -->
+		<SaveFiles content={output} defaultName="output.txt" />
 	</div>
 </div>

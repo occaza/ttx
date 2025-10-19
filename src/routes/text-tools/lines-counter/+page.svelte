@@ -1,26 +1,27 @@
 <script lang="ts">
-	import { WholeWord, Eraser } from '@lucide/svelte';
+	import FileUploadInput from '$lib/components/FileUpload.svelte';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
+	import SaveFiles from '$lib/components/SaveButton.svelte';
 
-	let input = '';
-	let output = '';
-	let fileInput: HTMLInputElement;
-	let outputEl: HTMLTextAreaElement;
+	let input = $state('');
+	let output = $state('');
+	let totalLines = $state(0);
+	let uniqueLines = $state(0);
+	let dupLines = $state(0);
+	let caseSensitive = $state(false);
+	let removeEmpty = $state(false);
 
-	let totalLines = 0;
-	let uniqueLines = 0;
-	let dupLines = 0;
+	let fileUpload: FileUploadInput;
+	let inputTextarea: TextArea;
+	let outputTextarea: TextArea;
 
-	let caseSensitive = false;
-	let removeEmpty = false;
+	function handleLoad(content: string) {
+		input = content;
+	}
 
-	function handleFile(e: Event) {
-		const t = e.target as HTMLInputElement;
-		if (!t.files?.length) return;
-		const r = new FileReader();
-		r.onload = () => {
-			input = r.result as string;
-		};
-		r.readAsText(t.files[0]);
+	function handleError(error: Error) {
+		console.error(error);
 	}
 
 	function count() {
@@ -48,107 +49,91 @@
 	}
 
 	function selectAll() {
-		outputEl?.select();
+		inputTextarea.select();
 	}
+
 	function clear() {
 		input = '';
 		output = '';
 		totalLines = 0;
 		uniqueLines = 0;
 		dupLines = 0;
+		fileUpload.reset();
 	}
-	function saveAs() {
-		const blob = new Blob([output], { type: 'text/plain' });
-		const a = document.createElement('a');
-		a.href = URL.createObjectURL(blob);
-		a.download = 'count-result.txt';
-		a.click();
+
+	function copy() {
+		navigator.clipboard.writeText(output);
 	}
 </script>
 
 <svelte:head><title>Count Lines & Duplicates</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<h2 class="text-lg font-bold">Count Lines & Duplicates</h2>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<h2 class="pb-5 text-lg font-bold">Count Lines & Duplicates</h2>
 
-	<div class="flex flex-wrap items-center gap-3">
-		<input
-			type="file"
-			accept="text/plain"
-			bind:this={fileInput}
-			on:change={handleFile}
-			class="file-input-bordered file-input w-full max-w-xs file-input-sm"
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
 		/>
-		<label class="label cursor-pointer"
-			><input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} /><span
-				class="label-text">Case sensitive</span
-			></label
-		>
-		<label class="label cursor-pointer"
-			><input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} /><span
-				class="label-text">Remove empty lines</span
-			></label
-		>
-		<div class="tooltip" data-tip="Select all">
-			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
-				<WholeWord size={16} />
-			</button>
-		</div>
-		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
-				<Eraser size={16} />
-			</button>
-		</div>
 	</div>
-	<div>
-		<label class="form-control">
-			<textarea
-				bind:value={input}
-				rows="15"
-				class="textarea w-full resize-none font-mono text-base md:text-sm"
-				placeholder="Paste text here..."
-			></textarea>
+
+	<div class="flex flex-wrap items-center gap-4">
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
+			<span class="label-text">Case sensitive</span>
+		</label>
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
+			<span class="label-text">Remove empty lines</span>
 		</label>
 	</div>
-	<button class="btn btn-sm btn-primary" on:click={count}>Count</button>
+
 	<div>
-		{#if totalLines > 0}
-			<div class="space-y-1 text-sm">
-				<span class="">
+		<TextArea
+			bind:this={inputTextarea}
+			bind:value={input}
+			placeholder="Paste text here..."
+			rows={10}
+		/>
+	</div>
+	<div class="flex items-center justify-between gap-3">
+		<div>
+			<button class="btn rounded-sm btn-primary" onclick={count}>Count</button>
+		</div>
+		<div>
+			{#if totalLines > 0}
+				<div class="">
 					<span class="badge badge-soft badge-primary">
 						Total lines: <span class="font-semibold">{totalLines}</span>
 					</span>
-					<span class="badge badge-soft badge-success">
-						Unique lines:
-						<span class="font-semibold">{uniqueLines}</span>
+					<span class="badge badge-soft badge-secondary">
+						Unique lines: <span class="font-semibold">{uniqueLines}</span>
 					</span>
-					<span class="badge badge-soft badge-warning">
-						Duplicate lines:
-						<span class="font-semibold">{dupLines}</span>
+					<span class="badge badge-soft badge-accent">
+						Duplicate lines: <span class="font-semibold">{dupLines}</span>
 					</span>
-				</span>
-			</div>
-		{/if}
+				</div>
+			{/if}
+		</div>
 	</div>
+
 	<div>
-		<label class="form-control">
-			<textarea
-				bind:value={output}
-				bind:this={outputEl}
-				rows="5"
-				class="textarea w-full resize-none font-mono text-base md:text-sm"
-				readonly
-			></textarea>
-		</label>
+		<TextArea
+			bind:this={outputTextarea}
+			bind:value={output}
+			placeholder="Output here..."
+			rows={5}
+			readonly={true}
+		/>
 	</div>
 
 	<div class="flex items-center gap-2">
-		<button class="btn border-accent btn-sm" on:click={saveAs}>Save as</button>
-		<input
-			type="text"
-			value="count-result.txt"
-			class="input-bordered input input-sm w-48"
-			readonly
-		/>
+		<SaveFiles content={output} defaultName="count-result.txt" />
 	</div>
 </div>

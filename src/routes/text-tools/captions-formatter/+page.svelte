@@ -1,18 +1,28 @@
 <script lang="ts">
-	import { Eraser } from '@lucide/svelte';
-	let text = '';
-	let isFormatted = false;
-	let copied = false;
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
 
-	const INVISIBLE_CHAR = '\u2800'; // Braille Pattern Blank
+	let text = $state('');
+	let isFormatted = $state(false);
+	let copied = $state(false);
+
+	let textAreaRef: TextArea;
+
+	const INVISIBLE_CHAR = '\u2800';
+
+	function handleLoad(content: string) {
+		text = content;
+	}
+
+	function handleError(error: Error) {
+		console.error(error);
+	}
 
 	function toggle() {
 		if (isFormatted) {
-			// Convert back: hapus invisible char
 			text = text.replaceAll(INVISIBLE_CHAR, '');
 			isFormatted = false;
 		} else {
-			// Format: tambah invisible char di baris kosong
 			text = text.replace(/\n\n+/g, (match) => {
 				const lineCount = match.length;
 				let result = '\n';
@@ -24,14 +34,20 @@
 			isFormatted = true;
 		}
 	}
-	function clearOut() {
+
+	function selectAll() {
+		textAreaRef.select();
+	}
+
+	function clear() {
 		text = '';
 		isFormatted = false;
 		copied = false;
 	}
+
 	function copyToClipboard() {
 		if (!isFormatted) {
-			toggle(); // Format dulu kalau belum
+			toggle();
 		}
 		navigator.clipboard.writeText(text);
 		copied = true;
@@ -43,51 +59,51 @@
 	<title>Caption Formatter</title>
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<div class="space-y-2">
-		<h1 class="text-2xl font-bold">Caption Formatter</h1>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<div class=" pb-5">
+		<h1 class="text-lg font-bold">Caption Formatter</h1>
 		<p class="text-sm text-gray-600">
 			Paste caption, klik Format untuk mengubah baris kosong, lalu Copy ke Instagram.
 		</p>
 	</div>
 
-	<div class="space-y-2">
-		<textarea
-			bind:value={text}
-			placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
-			rows="15"
-			class=" textarea w-full resize-none font-mono text-base md:text-sm"
-		></textarea>
-		<div class="flex items-center justify-between">
-			<p class="text-xs text-gray-500">
-				{text.length} characters
-				{#if isFormatted}
-					<span class="ml-2 badge badge-sm badge-success">Formatted</span>
-				{/if}
-			</p>
-			<div class="flex gap-2">
-				<button type="button" class="btn btn-sm" on:click={toggle} disabled={!text}>
-					{isFormatted ? 'Reset' : 'Format'}
-				</button>
-				<button
-					type="button"
-					class="btn btn-sm btn-primary"
-					on:click={copyToClipboard}
-					disabled={!text}
-				>
-					{copied ? '✓ Copied!' : 'Copy'}
-				</button>
+	<TextArea
+		bind:this={textAreaRef}
+		bind:value={text}
+		placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
+		rows={15}
+	/>
 
-				<div class="tooltip" data-tip="Clear">
-					<button class="btn btn-square btn-sm btn-accent" on:click={clearOut}>
-						<Eraser size={16} />
-					</button>
-				</div>
-			</div>
+	<div class="flex items-center justify-between">
+		<div class="flex gap-2">
+			<button type="button" class="btn rounded-sm btn-md" onclick={toggle} disabled={!text}>
+				{isFormatted ? 'Reset' : 'Format'}
+			</button>
+			<button
+				type="button"
+				class="btn rounded-sm btn-md btn-primary"
+				onclick={copyToClipboard}
+				disabled={!text}
+			>
+				{copied ? '✓ Copied!' : 'Copy'}
+			</button>
+			<ActionButton
+				showSelectAll={true}
+				showClear={true}
+				showCopy={false}
+				onselectall={selectAll}
+				onclear={clear}
+			/>
 		</div>
+
+		<p class="badge badge-sm text-xs text-gray-500 badge-success">
+			{text.length} characters
+			{#if isFormatted}
+				<span>Formatted</span>
+			{/if}
+		</p>
 	</div>
 
-	<!-- Info -->
 	<div class="alert alert-info">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -106,16 +122,15 @@
 			<p class="font-semibold">Cara pakai:</p>
 			<ol class="ml-4 list-decimal">
 				<li>Paste caption kamu</li>
-				<li>Klik <strong>Format</strong> untuk convert baris kosong</li>
-				<li>Klik <strong>Copy</strong> (akan auto-format jika belum)</li>
+				<li>Klik Format untuk convert baris kosong</li>
+				<li>Klik Copy (akan auto-format jika belum)</li>
 				<li>Paste ke Instagram</li>
-				<li>Klik <strong>Reset</strong> untuk mengembalikan ke aslinya</li>
+				<li>Klik Reset untuk mengembalikan ke aslinya</li>
 			</ol>
 		</div>
 	</div>
 
-	<!-- Example -->
-	<div class="collapse-arrow collapse bg-base-200">
+	<div class="collapse-arrow collapse bg-base-100">
 		<input type="checkbox" />
 		<div class="collapse-title font-medium">Lihat Contoh</div>
 		<div class="collapse-content">

@@ -1,6 +1,11 @@
 <script lang="ts">
-	import { TextSelect, WholeWord, Eraser } from '@lucide/svelte';
-	let input = `Enter your text, choose the options, then click the "Remove Duplicate Lines" button.
+	import FileUploadInput from '$lib/components/FileUpload.svelte';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
+	import SaveFiles from '$lib/components/SaveButton.svelte';
+
+	let input =
+		$state(`Enter your text, choose the options, then click the "Remove Duplicate Lines" button.
 Only duplicate lines across new lines will be removed. Duplicates within the same line will stay.
 Line order is preserved, only repeated lines are deleted.
 
@@ -12,47 +17,41 @@ Check "Display removed" to show removed lines with a note.
 Example:
 Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.
 Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.
-Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
-	let removed = '';
-	let caseSensitive = false;
-	let removeEmpty = false;
-	let showRemoved = false;
-	let fileName = 'output.txt';
-	let removedCount = 0;
-	let fileInput: HTMLInputElement;
-	let inputEl: HTMLTextAreaElement;
-	let hasProcessed = false;
+Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`);
+	let removed = $state('');
+	let caseSensitive = $state(false);
+	let removeEmpty = $state(false);
+	let showRemoved = $state(false);
+	let removedCount = $state(0);
+	let hasProcessed = $state(false);
 
-	function handleFile(e: Event) {
-		const target = e.target as HTMLInputElement;
-		if (!target.files?.length) return;
-		const reader = new FileReader();
-		reader.onload = () => {
-			input = reader.result as string;
-		};
-		reader.readAsText(target.files[0]);
+	let fileUpload: FileUploadInput;
+	let inputTextarea: TextArea;
+
+	function handleLoad(content: string) {
+		input = content;
+	}
+
+	function handleError(error: Error) {
+		console.error(error);
 	}
 
 	function removeDup() {
 		const rawLines = input.split(/\r?\n/);
-
 		const firstPos = new Map<string, number>();
 		const kept: string[] = [];
 		const gone: string[] = [];
 
 		rawLines.forEach((line, idx) => {
-			// Jika removeEmpty true dan line kosong, skip
 			if (removeEmpty && line.trim() === '') {
 				return;
 			}
 
-			// Jika line kosong tapi removeEmpty false, langsung masukkan ke kept
 			if (line.trim() === '' && !removeEmpty) {
 				kept.push(line);
 				return;
 			}
 
-			// Proses normal untuk line yang tidak kosong
 			const key = caseSensitive ? line : line.toLowerCase();
 			const first = firstPos.get(key);
 
@@ -67,55 +66,46 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 		removedCount = gone.length;
 		removed = gone.join('\n');
 		input = kept.join('\n');
-		hasProcessed = true; // Set ke true setelah proses
+		hasProcessed = true;
 	}
 
 	function selectAll() {
-		inputEl.select();
+		inputTextarea.select();
 	}
+
 	function clear() {
 		input = '';
 		removed = '';
 		removedCount = 0;
-		hasProcessed = false; // Reset saat clear
+		hasProcessed = false;
+		fileUpload.reset();
+		removeEmpty = false;
+		caseSensitive = false;
+		showRemoved = false;
 	}
 
-	function saveAs() {
-		const blob = new Blob([input], { type: 'text/plain' });
-		const a = document.createElement('a');
-		a.href = URL.createObjectURL(blob);
-		a.download = fileName.trim() || 'output.txt';
-		a.click();
+	function copy() {
+		navigator.clipboard.writeText(input);
 	}
 </script>
 
 <svelte:head><title>Remove Duplicate Lines</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<h2 class="text-lg font-bold">Remove Duplicate Lines</h2>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<h2 class="pb-5 text-lg font-bold">Remove Duplicate Lines</h2>
 
-	<div class="flex items-center gap-2">
-		<input
-			type="file"
-			accept="text/plain"
-			bind:this={fileInput}
-			on:change={handleFile}
-			class=" file-input w-full max-w-xs file-input-sm"
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
 		/>
-		<div class="tooltip" data-tip="Select all">
-			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
-				<WholeWord size={16} />
-			</button>
-		</div>
-		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
-				<Eraser size={16} />
-			</button>
-		</div>
-		{#if hasProcessed}
-			<span class="label-text">{removedCount} lines removed</span>
-		{/if}
 	</div>
+
 	<div class="flex flex-wrap items-center gap-4">
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
@@ -129,36 +119,31 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={showRemoved} />
 			<span class="label-text">Display removed</span>
 		</label>
-	</div>
-	<div>
-		<label class="form-control">
-			<textarea
-				bind:value={input}
-				bind:this={inputEl}
-				rows="16"
-				class="textarea w-full resize-none font-mono text-base md:text-sm"
-				placeholder=""
-			></textarea>
-		</label>
-
-		<button class="btn my-2 btn-sm btn-primary" on:click={removeDup}>Remove Duplicates</button>
-	</div>
-
-	<div>
-		{#if showRemoved}
-			<label class="form-control">
-				<textarea
-					bind:value={removed}
-					rows="4"
-					class="textarea w-full resize-none font-mono text-base md:text-sm"
-					readonly
-				></textarea>
-			</label>
+		{#if hasProcessed}
+			<span class="label-text text-sm">{removedCount} lines removed</span>
 		{/if}
 	</div>
 
+	<div>
+		<TextArea
+			bind:this={inputTextarea}
+			bind:value={input}
+			placeholder="Paste text here..."
+			rows={15}
+		/>
+	</div>
+
+	<div>
+		<button class="btn rounded-sm btn-primary" onclick={removeDup}>Remove Duplicates</button>
+	</div>
+
+	{#if showRemoved}
+		<div>
+			<TextArea bind:value={removed} placeholder="Removed lines..." rows={6} readonly={true} />
+		</div>
+	{/if}
+
 	<div class="flex items-center gap-2">
-		<button class="btn border-accent btn-sm" on:click={saveAs}>Save as</button>
-		<input type="text" bind:value={fileName} class="input-bordered input input-sm w-48" />
+		<SaveFiles content={input} defaultName="output.txt" />
 	</div>
 </div>

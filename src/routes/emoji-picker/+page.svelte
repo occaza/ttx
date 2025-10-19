@@ -206,6 +206,7 @@
 	<div class="sticky bottom-0 border-t bg-base-200 p-4 shadow-lg">
 		<div class="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
 			<div class="flex-1">
+				<p class="mb-1 text-sm font-medium text-gray-700">Emoji Terpilih:</p>
 				<div class="flex items-center gap-2">
 					<input
 						type="text"

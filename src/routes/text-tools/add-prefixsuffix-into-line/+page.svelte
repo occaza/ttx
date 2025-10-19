@@ -1,22 +1,24 @@
 <script lang="ts">
-	import { TextSelect, WholeWord, Eraser } from '@lucide/svelte';
+	import FileUploadInput from '$lib/components/FileUpload.svelte';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
+	import SaveFiles from '$lib/components/SaveButton.svelte';
 
-	let input = '';
-	let output = '';
-	let prefix = '';
-	let suffix = '';
-	let fileName = 'output.txt';
-	let fileInput: HTMLInputElement;
-	let inputEl: HTMLTextAreaElement;
+	let input = $state('');
+	let output = $state('');
+	let prefix = $state('');
+	let suffix = $state('');
+	let fileUpload: FileUploadInput;
 
-	function handleFile(e: Event) {
-		const target = e.target as HTMLInputElement;
-		if (!target.files?.length) return;
-		const reader = new FileReader();
-		reader.onload = () => {
-			input = reader.result as string;
-		};
-		reader.readAsText(target.files[0]);
+	let inputTextarea: TextArea;
+	let outputTextarea: TextArea;
+
+	function handleLoad(content: string) {
+		input = content;
+	}
+
+	function handleError(error: Error) {
+		console.error(error);
 	}
 
 	function applyFix() {
@@ -25,84 +27,75 @@
 	}
 
 	function selectAll() {
-		inputEl.select();
+		outputTextarea.select();
 	}
+
 	function clear() {
 		input = '';
 		output = '';
+		prefix = '';
+		suffix = '';
+		fileUpload.reset();
 	}
 
-	function saveAs() {
-		const blob = new Blob([output], { type: 'text/plain' });
-		const a = document.createElement('a');
-		a.href = URL.createObjectURL(blob);
-		a.download = fileName.trim() || 'output.txt';
-		a.click();
+	function copy() {
+		navigator.clipboard.writeText(output);
 	}
 </script>
 
 <svelte:head><title>Add Prefix/Suffix into Line</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<h2 class="text-lg font-bold">Add Prefix/Suffix into Line</h2>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<h2 class="pb-5 text-lg font-bold">Add Prefix/Suffix into Line</h2>
 
-	<div class="flex items-center gap-2">
-		<input
-			type="file"
-			accept="text/plain"
-			bind:this={fileInput}
-			on:change={handleFile}
-			class="file-input-bordered file-input w-full max-w-sm file-input-sm"
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
 		/>
-		<div class="tooltip" data-tip="Select all">
-			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
-				<WholeWord size={16} />
-			</button>
-		</div>
-		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
-				<Eraser size={16} />
-			</button>
-		</div>
 	</div>
+
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2">
-		<label class="input w-full">
-			<span class="label">Prefix </span>
+		<label class="input w-full rounded-sm">
+			<span class="label">Prefix</span>
 			<input type="text" bind:value={prefix} placeholder="Enter prefix here" />
 		</label>
 
-		<label class="input w-full">
-			<span class="label">Suffix </span>
+		<label class="input w-full rounded-sm">
+			<span class="label">Suffix</span>
 			<input type="text" bind:value={suffix} placeholder="Enter suffix here" />
 		</label>
 	</div>
+
 	<div>
-		<label class="form-control">
-			<textarea
-				bind:value={input}
-				rows="10"
-				class="textarea w-full resize-none font-mono text-base md:text-sm"
-				placeholder="Paste text here..."
-			></textarea>
-		</label>
+		<TextArea
+			bind:this={inputTextarea}
+			bind:value={input}
+			placeholder="Paste text here..."
+			rows={10}
+		/>
 	</div>
 
-	<div class="my-2">
-		<button class="btn btn-sm btn-primary" on:click={applyFix}>Add prefix and/or suffix</button>
+	<div>
+		<button class="btn rounded-sm btn-primary" onclick={applyFix}>Add prefix and/or suffix</button>
 	</div>
 
-	<label class="form-control">
-		<textarea
-			bind:this={inputEl}
+	<div>
+		<TextArea
+			bind:this={outputTextarea}
 			bind:value={output}
-			rows="10"
-			class="textarea w-full resize-none font-mono text-base md:text-sm"
-			readonly
-		></textarea>
-	</label>
+			placeholder="Output here..."
+			rows={10}
+			readonly={true}
+		/>
+	</div>
 
-	<div class="my-2 flex items-center gap-2">
-		<button class="btn border-accent btn-sm" on:click={saveAs}>Save as</button>
-		<input type="text" bind:value={fileName} class="input-bordered input input-sm w-48" />
+	<div class="flex items-center gap-2">
+		<SaveFiles content={output} defaultName="output.txt" />
 	</div>
 </div>

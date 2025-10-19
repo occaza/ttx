@@ -1,25 +1,28 @@
 <script lang="ts">
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageData } from './$types';
-	import { FilePlus2, WholeWord } from '@lucide/svelte';
+	import { FilePlus2 } from '@lucide/svelte';
 
-	export let data: PageData;
-	let text = data.text;
-	let ta: HTMLTextAreaElement;
-	let saved = false;
-	let refreshing = false;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
+	let text = $state(data.text);
+	let saved = $state(false);
+	let refreshing = $state(false);
 	let linkInput: HTMLInputElement;
-	let outputEl: HTMLTextAreaElement;
+	let ta: TextArea;
 
-	$: text = data.text;
-	$: isEmpty = !text.trim();
+	let isEmpty = $derived(!text.trim());
 
-	function selectAll(e: MouseEvent) {
-		e.preventDefault(); // Prevent form submit
-		outputEl?.select();
+	function selectAll() {
+		ta.select();
 	}
 
 	function formatDate(dateString: string | null) {
@@ -46,64 +49,68 @@
 		await invalidateAll();
 		refreshing = false;
 	}
+
+	function copyLink() {
+		linkInput.select();
+		navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
+	}
 </script>
 
 <svelte:head><title>Notepad - {data.slug}</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<h2 class="text-lg font-bold">Online Notepad</h2>
-	<p class="text-sm text-gray-500">
-		Slug: <code class="badge badge-soft badge-primary">{data.slug}</code> — semua orang dengan link ini
-		bisa lihat & edit.
-	</p>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<div class=" pb-5">
+		<span class="text-sm text-gray-500">
+			<h2 class=" text-lg font-bold">Online Notepad</h2>
+			Slug:
+			<code class="badge badge-soft badge-primary"> {data.slug}</code> semua orang dengan link ini bisa
+			lihat & edit.
+		</span>
+	</div>
 
 	<form method="POST" action="?/save" use:enhance={afterSave}>
-		<div class="my-2 flex place-items-center gap-2">
-			<button class="btn btn-sm btn-primary" disabled={isEmpty}>Save</button>
-			<button type="button" class="btn btn-sm" on:click={refresh} disabled={refreshing}>
+		<div class="mb-3 flex gap-2">
+			<button type="submit" class="btn rounded-sm btn-md btn-primary" disabled={isEmpty}>
+				Save
+			</button>
+			<button type="button" class="btn rounded-sm btn-md" onclick={refresh} disabled={refreshing}>
 				{refreshing ? 'Refreshing...' : 'Refresh'}
 			</button>
-			<div class="tooltip" data-tip="Select all">
-				<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}
-					><WholeWord size={16} /></button
-				>
-			</div>
-			{#if saved}<span class="ml-2 text-xs text-green-600">saved!</span>{/if}
-			<a type="button" class="btn btn-sm" href="/notepad"><FilePlus2 size={16} /> New Notes</a>
+			<ActionButton
+				showSelectAll={true}
+				showClear={false}
+				showCopy={false}
+				onselectall={selectAll}
+			/>
+			{#if saved}
+				<span class="self-center text-xs text-green-600">saved!</span>
+			{/if}
+			<a type="button" class="btn ml-auto rounded-sm btn-md" href="/notepad">
+				<FilePlus2 size={16} /> New Notes
+			</a>
 		</div>
-		<textarea
-			id="note"
-			name="text"
-			bind:value={text}
+
+		<TextArea
 			bind:this={ta}
-			bind:this={outputEl}
-			rows="20"
-			class=" textarea w-full resize-none font-mono text-base md:text-sm"
-		></textarea>
+			bind:value={text}
+			name="text"
+			placeholder="Tulis catatan kamu di sini..."
+			rows={15}
+		/>
 	</form>
+
 	{#if data.updatedAt}
 		<p class="text-xs text-gray-400">Last edited: {formatDate(data.updatedAt)}</p>
 	{/if}
-	<div class="text-md flex gap-2">
-		<label class="input w-full">
-			<span class="label">https://</span>
-			<input
-				type="text"
-				readonly
-				bind:this={linkInput}
-				value="{$page.url.host}/notepad/{data.slug}"
-				class="input-md"
-			/>
-		</label>
-		<button
-			type="button"
-			class="btn btn-md"
-			on:click={() => {
-				linkInput.select();
-				navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
-			}}
-		>
-			Copy
-		</button>
+
+	<div class="flex items-center gap-2">
+		<input
+			type="text"
+			readonly
+			bind:this={linkInput}
+			value="https://{$page.url.host}/notepad/{data.slug}"
+			class="input-bordered input input-md flex-1 rounded-sm"
+		/>
+		<button type="button" class="btn rounded-sm btn-md" onclick={copyLink}> Copy </button>
 	</div>
 </div>

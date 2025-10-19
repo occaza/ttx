@@ -1,29 +1,31 @@
 <script lang="ts">
-	import { TextSelect, WholeWord, Eraser } from '@lucide/svelte';
-	let input = '';
-	let linesPerFile = 200;
-	let headerText = '';
-	let footerText = '';
-	let fileName = 'part';
-	let fileInput: HTMLInputElement;
-	let inputEl: HTMLTextAreaElement;
-	let removeEmpty = false;
+	import FileUploadInput from '$lib/components/FileUpload.svelte';
+	import ActionButton from '$lib/components/ActionButton.svelte';
+	import TextArea from '$lib/components/TextArea.svelte';
+
+	let input = $state('');
+	let linesPerFile = $state(100);
+	let headerText = $state('');
+	let footerText = $state('');
+	let fileName = $state('Part');
+	let removeEmpty = $state(false);
+
+	let fileUpload: FileUploadInput;
+	let inputTextarea: TextArea;
 
 	type Link = { name: string; url: string };
-	let links: Link[] = [];
+	let links = $state<Link[]>([]);
 
-	function handleFile(e: Event) {
-		const target = e.target as HTMLInputElement;
-		if (!target.files?.length) return;
-		const reader = new FileReader();
-		reader.onload = () => {
-			input = reader.result as string;
-		};
-		reader.readAsText(target.files[0]);
+	function handleLoad(content: string) {
+		input = content;
+	}
+
+	function handleError(error: Error) {
+		console.error(error);
 	}
 
 	function buildLinks() {
-		links = []; // reset
+		links = [];
 		let lines = input.split(/\r?\n/);
 		if (removeEmpty) lines = lines.filter((l) => l.trim() !== '');
 
@@ -43,58 +45,56 @@
 	}
 
 	function selectAll() {
-		inputEl.select();
+		inputTextarea.select();
 	}
+
 	function clear() {
 		input = '';
 		links = [];
+		fileUpload.reset();
+		linesPerFile = 100;
+		headerText = '';
+		footerText = '';
+	}
+
+	function copy() {
+		navigator.clipboard.writeText(input);
 	}
 </script>
 
 <svelte:head><title>Split File</title></svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
-	<h2 class="text-lg font-bold">Split Text File</h2>
+<div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
+	<h2 class="pb-5 text-lg font-bold">Split Text File</h2>
 
-	<div class="flex items-center gap-2">
-		<input
-			type="file"
-			accept="text/plain"
-			bind:this={fileInput}
-			on:change={handleFile}
-			class="file-input-bordered file-input w-full file-input-sm"
-		/>
-
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
 		<label class="label cursor-pointer">
 			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
 			<span class="label-text">Remove empty lines</span>
 		</label>
-
-		<div class="tooltip" data-tip="Select all">
-			<button type="button" class="btn btn-square btn-sm btn-secondary" on:click={selectAll}>
-				<WholeWord size={16} />
-			</button>
-		</div>
-		<div class="tooltip" data-tip="Clear">
-			<button class="btn btn-square btn-sm btn-accent" on:click={clear}>
-				<Eraser size={16} />
-			</button>
-		</div>
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
+		/>
 	</div>
-	<label class="input w-full">
+
+	<label class="input w-full rounded-sm">
 		<span class="label">Lines per file</span>
 		<input type="number" bind:value={linesPerFile} placeholder="Min 1" min="1" />
 	</label>
+
 	<div>
-		<label class="form-control">
-			<textarea
-				bind:value={input}
-				bind:this={inputEl}
-				rows="10"
-				class="textarea w-full resize-none font-mono text-base md:text-sm"
-				placeholder="Paste your text here or upload your text file..."
-			></textarea>
-		</label>
+		<TextArea
+			bind:this={inputTextarea}
+			bind:value={input}
+			placeholder="Paste your text here or upload your text file..."
+			rows={10}
+		/>
 	</div>
 
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-2">
@@ -104,7 +104,7 @@
 				type="text"
 				bind:value={headerText}
 				placeholder="Header text"
-				class="input-bordered input w-full"
+				class="input-bordered input w-full rounded-sm"
 			/>
 		</label>
 
@@ -114,26 +114,29 @@
 				type="text"
 				bind:value={footerText}
 				placeholder="Footer text"
-				class="input-bordered input w-full"
+				class="input-bordered input w-full rounded-sm"
 			/>
 		</label>
 	</div>
 
-	<div class="my-2 join">
+	<div class="join">
+		<button class="btn join-item rounded-l-sm btn-primary" onclick={buildLinks}>Split files</button>
 		<input
 			type="text"
 			bind:value={fileName}
 			placeholder="part"
-			class="input-bordered input join-item w-full max-w-xs"
+			class="input join-item rounded-r-sm"
 		/>
-		<button class="btn join-item border-accent" on:click={buildLinks}>Split files</button>
 	</div>
 
 	{#if links.length}
-		<div class="space-y-2">
-			<p class="text-sm">Ready to download:</p>
+		<p class="text-md">Ready to download:</p>
+		<div class="flex flex-wrap">
+			<br />
 			{#each links as l}
-				<a href={l.url} download={l.name} class="block link link-primary">{l.name}</a>
+				<a href={l.url} download={l.name} class="m-0.5 badge rounded-sm badge-soft badge-primary"
+					>{l.name}</a
+				>
 			{/each}
 		</div>
 	{/if}
