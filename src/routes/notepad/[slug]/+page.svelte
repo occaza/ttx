@@ -73,11 +73,19 @@
 	<meta property="og:title" content="Online Notepad - {data.slug}" />
 	<meta property="og:description" content="Catatan online yang bisa dibuka dan diedit bersama" />
 	<meta property="og:url" content={$page.url.href} />
+	<meta
+		property="og:image"
+		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+	/>
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="Online Notepad - {data.slug}" />
 	<meta name="twitter:description" content="Catatan online yang bisa dibuka dan diedit bersama" />
+	<meta
+		name="twitter:image"
+		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+	/>
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">

@@ -1,6 +1,7 @@
 <script>
 	import ToolCard from '$lib/components/ToolCard.svelte';
 	import Hero from '$lib/components/Hero.svelte';
+	import { page } from '$app/stores';
 </script>
 
 <svelte:head>
@@ -14,7 +15,7 @@
 		content="text tools, text editor, format text, edit text, hapus duplikat, split file, online tools, gratis"
 	/>
 	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://yoursite.com/text-tools" />
+	<link rel="canonical" href={$page.url.origin} />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
@@ -26,8 +27,11 @@
 		property="og:description"
 		content="Koleksi lengkap tools gratis untuk edit, format, dan manipulasi teks"
 	/>
-	<meta property="og:url" content="https://yoursite.com/text-tools" />
-	<meta property="og:image" content="https://yoursite.com/og-home.jpg" />
+	<meta property="og:url" content={$page.url.origin} />
+	<meta
+		property="og:image"
+		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+	/>
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary_large_image" />
@@ -36,7 +40,10 @@
 		name="twitter:description"
 		content="Koleksi lengkap tools gratis untuk edit, format, dan manipulasi teks"
 	/>
-	<meta name="twitter:image" content="https://yoursite.com/og-home.jpg" />
+	<meta
+		name="twitter:image"
+		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+	/>
 </svelte:head>
 
 <Hero />

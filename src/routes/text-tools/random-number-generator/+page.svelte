@@ -2,6 +2,7 @@
 	import ActionButton from '$lib/components/ActionButton.svelte';
 	import TextArea from '$lib/components/TextArea.svelte';
 	import SaveFiles from '$lib/components/SaveButton.svelte';
+	import { page } from '$app/stores';
 
 	let qty = $state(10);
 	let min = $state(0);
@@ -52,7 +53,7 @@
 		content="random number, number generator, random generator, angka acak, generate number, random tool"
 	/>
 	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://yoursite.com/text-tools/random-number-generator" />
+	<link rel="canonical" href="{$page.url.origin}/text-tools/random-number-generator" />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
@@ -62,7 +63,10 @@
 		content="Generate angka acak dengan range dan jumlah yang bisa dikustomisasi"
 	/>
 	<meta property="og:url" content="https://yoursite.com/text-tools/random-number-generator" />
-	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+	<meta
+		property="og:image"
+		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+	/>
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary_large_image" />
@@ -71,7 +75,10 @@
 		name="twitter:description"
 		content="Generate angka acak dengan range dan jumlah yang bisa dikustomisasi"
 	/>
-	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+	<meta
+		name="twitter:image"
+		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+	/>
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">

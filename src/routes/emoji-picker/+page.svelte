@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	// Menggunakan promise untuk menghindari loading yang blocking
 	let emojiDataPromise: Promise<any> | null = null;
@@ -132,7 +133,7 @@
 		content="emoji, emoji picker, emoji browser, cari emoji, emoji unicode, emoticon, skin tone emoji"
 	/>
 	<meta name="robots" content="index, follow" />
-	<link rel="canonical" href="https://yoursite.com/emoji-picker" />
+	<link rel="canonical" href="{$page.url.href}/emoji-picker" />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
@@ -141,8 +142,11 @@
 		property="og:description"
 		content="Browser emoji lengkap dengan fitur pencarian dan skin tone"
 	/>
-	<meta property="og:url" content="https://yoursite.com/emoji-picker" />
-	<meta property="og:image" content="https://yoursite.com/og-emoji.jpg" />
+	<meta property="og:url" content="{$page.url.href}/emoji-picker" />
+	<meta
+		property="og:image"
+		content="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1169"
+	/>
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary_large_image" />
@@ -151,7 +155,10 @@
 		name="twitter:description"
 		content="Browser emoji lengkap dengan fitur pencarian dan skin tone"
 	/>
-	<meta name="twitter:image" content="https://yoursite.com/og-emoji.jpg" />
+	<meta
+		name="twitter:image"
+		content="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1169"
+	/>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">
