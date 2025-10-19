@@ -62,7 +62,35 @@
 	}
 </script>
 
-<svelte:head><title>Split File</title></svelte:head>
+<svelte:head>
+	<title>Split File</title>
+	<meta
+		name="description"
+		content="Pisah file teks besar menjadi beberapa file kecil. Atur jumlah baris per file dan tambahkan header/footer otomatis."
+	/>
+	<meta
+		name="keywords"
+		content="split file, file splitter, pisah file, divide text, text splitter, file tool"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/split-files" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Split Text File - Text Tools" />
+	<meta
+		property="og:description"
+		content="Pisah file teks besar menjadi beberapa file kecil dengan mudah"
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/split-files" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Split Text File - Text Tools" />
+	<meta name="twitter:description" content="Pisah file teks besar menjadi beberapa file kecil" />
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Split Text File</h2>

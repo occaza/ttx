@@ -41,7 +41,38 @@
 	}
 </script>
 
-<svelte:head><title>Random Number Generator</title></svelte:head>
+<svelte:head>
+	<title>Random Number Generator</title>
+	<meta
+		name="description"
+		content="Generate angka acak dengan range dan jumlah yang bisa dikustomisasi. Tambahkan prefix, suffix, dan padding angka."
+	/>
+	<meta
+		name="keywords"
+		content="random number, number generator, random generator, angka acak, generate number, random tool"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/random-number-generator" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Random Number Generator - Text Tools" />
+	<meta
+		property="og:description"
+		content="Generate angka acak dengan range dan jumlah yang bisa dikustomisasi"
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/random-number-generator" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Random Number Generator - Text Tools" />
+	<meta
+		name="twitter:description"
+		content="Generate angka acak dengan range dan jumlah yang bisa dikustomisasi"
+	/>
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Random Number Generator</h2>

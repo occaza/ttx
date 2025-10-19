@@ -66,7 +66,38 @@
 	}
 </script>
 
-<svelte:head><title>Count Lines & Duplicates</title></svelte:head>
+<svelte:head>
+	<title>Count Lines & Duplicates</title>
+	<meta
+		name="description"
+		content="Hitung jumlah baris, baris unik, dan duplikat dalam teks Anda. Deteksi duplikat dengan case sensitive atau tidak."
+	/>
+	<meta
+		name="keywords"
+		content="line counter, count duplicates, text counter, hitung baris, cek duplikat, line tool"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/lines-counter" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Count Lines & Duplicates - Text Tools" />
+	<meta
+		property="og:description"
+		content="Hitung jumlah baris, baris unik, dan duplikat dalam teks"
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/lines-counter" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Count Lines & Duplicates - Text Tools" />
+	<meta
+		name="twitter:description"
+		content="Hitung jumlah baris, baris unik, dan duplikat dalam teks"
+	/>
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Count Lines & Duplicates</h2>

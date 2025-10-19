@@ -3,6 +3,42 @@
 	import Hero from '$lib/components/Hero.svelte';
 </script>
 
+<svelte:head>
+	<title>TEXY | Koleksi Tools Gratis untuk Edit dan Format Teks</title>
+	<meta
+		name="description"
+		content="Koleksi lengkap tools gratis untuk edit, format, dan manipulasi teks. Hapus duplikat, split file, compare file, dan banyak lagi."
+	/>
+	<meta
+		name="keywords"
+		content="text tools, text editor, format text, edit text, hapus duplikat, split file, online tools, gratis"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta
+		property="og:title"
+		content="Text Tools - Koleksi Tools Gratis untuk Edit dan Format Teks"
+	/>
+	<meta
+		property="og:description"
+		content="Koleksi lengkap tools gratis untuk edit, format, dan manipulasi teks"
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools" />
+	<meta property="og:image" content="https://yoursite.com/og-home.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Text Tools - Koleksi Tools Gratis" />
+	<meta
+		name="twitter:description"
+		content="Koleksi lengkap tools gratis untuk edit, format, dan manipulasi teks"
+	/>
+	<meta name="twitter:image" content="https://yoursite.com/og-home.jpg" />
+</svelte:head>
+
 <Hero />
 <main class="relative min-h-screen pt-32 pb-32 md:pt-28 md:pb-40">
 	<!-- Tools Grid -->

@@ -56,7 +56,29 @@
 	}
 </script>
 
-<svelte:head><title>Notepad - {data.slug}</title></svelte:head>
+<svelte:head>
+	<title>Notepad - {data.slug}</title>
+	<meta
+		name="description"
+		content="Catatan online yang bisa dibuka dan diedit bersama. Bagikan link dan kolaborasi real-time dengan siapa saja."
+	/>
+	<meta
+		name="keywords"
+		content="notepad online, shared notepad, collaborative notes, catatan bersama, text editor online"
+	/>
+	<meta name="robots" content="noindex, nofollow" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Online Notepad - {data.slug}" />
+	<meta property="og:description" content="Catatan online yang bisa dibuka dan diedit bersama" />
+	<meta property="og:url" content={$page.url.href} />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Online Notepad - {data.slug}" />
+	<meta name="twitter:description" content="Catatan online yang bisa dibuka dan diedit bersama" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<div class=" pb-5">

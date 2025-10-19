@@ -123,6 +123,35 @@
 
 <svelte:head>
 	<title>Emoji Browser - Text Tools</title>
+	<meta
+		name="description"
+		content="Browser emoji lengkap dengan fitur pencarian dan skin tone. Temukan emoji yang Anda butuhkan dan salin dengan satu klik."
+	/>
+	<meta
+		name="keywords"
+		content="emoji, emoji picker, emoji browser, cari emoji, emoji unicode, emoticon, skin tone emoji"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/emoji-picker" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Emoji Browser - Cari dan Salin Emoji dengan Mudah" />
+	<meta
+		property="og:description"
+		content="Browser emoji lengkap dengan fitur pencarian dan skin tone"
+	/>
+	<meta property="og:url" content="https://yoursite.com/emoji-picker" />
+	<meta property="og:image" content="https://yoursite.com/og-emoji.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Emoji Browser - Cari dan Salin Emoji dengan Mudah" />
+	<meta
+		name="twitter:description"
+		content="Browser emoji lengkap dengan fitur pencarian dan skin tone"
+	/>
+	<meta name="twitter:image" content="https://yoursite.com/og-emoji.jpg" />
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-3 bg-base-200 p-6 shadow-lg lg:rounded-2xl">

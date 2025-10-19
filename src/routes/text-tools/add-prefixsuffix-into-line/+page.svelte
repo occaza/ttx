@@ -43,7 +43,38 @@
 	}
 </script>
 
-<svelte:head><title>Add Prefix/Suffix into Line</title></svelte:head>
+<svelte:head>
+	<title>Add Prefix/Suffix into Line</title>
+	<meta
+		name="description"
+		content="Tambahkan prefix atau suffix ke setiap baris teks secara otomatis. Hemat waktu untuk editing teks massal."
+	/>
+	<meta
+		name="keywords"
+		content="add prefix, add suffix, text prefix, text suffix, bulk edit, text formatter"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/add-prefixsuffix-into-line" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Add Prefix/Suffix into Line - Text Tools" />
+	<meta
+		property="og:description"
+		content="Tambahkan prefix atau suffix ke setiap baris teks secara otomatis"
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/add-prefixsuffix-into-line" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Add Prefix/Suffix into Line - Text Tools" />
+	<meta
+		name="twitter:description"
+		content="Tambahkan prefix atau suffix ke setiap baris teks secara otomatis"
+	/>
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Add Prefix/Suffix into Line</h2>

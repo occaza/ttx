@@ -89,7 +89,32 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`);
 	}
 </script>
 
-<svelte:head><title>Remove Duplicate Lines</title></svelte:head>
+<svelte:head>
+	<title>Remove Duplicate Lines</title>
+	<meta
+		name="description"
+		content="Hapus baris duplikat dari teks Anda secara otomatis. Pertahankan urutan dan hapus hanya baris yang berulang."
+	/>
+	<meta
+		name="keywords"
+		content="remove duplicates, hapus duplikat, clean text, deduplicate, unique lines, text cleaner"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/remove-duplicate-lines" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Remove Duplicate Lines - Text Tools" />
+	<meta property="og:description" content="Hapus baris duplikat dari teks Anda secara otomatis" />
+	<meta property="og:url" content="https://yoursite.com/text-tools/remove-duplicate-lines" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Remove Duplicate Lines - Text Tools" />
+	<meta name="twitter:description" content="Hapus baris duplikat dari teks Anda secara otomatis" />
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Remove Duplicate Lines</h2>

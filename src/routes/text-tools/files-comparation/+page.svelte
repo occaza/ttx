@@ -133,7 +133,35 @@
 	}
 </script>
 
-<svelte:head><title>Compare Two Files</title></svelte:head>
+<svelte:head>
+	<title>Compare Two Files</title>
+	<meta
+		name="description"
+		content="Bandingkan dua file teks dan temukan perbedaannya. Deteksi duplikat dan baris yang tidak cocok dengan mudah."
+	/>
+	<meta
+		name="keywords"
+		content="compare files, file comparison, text diff, bandingkan file, cek duplikat, file tool"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/files-comparation" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Compare Two Files - Text Tools" />
+	<meta
+		property="og:description"
+		content="Bandingkan dua file teks dan temukan perbedaannya dengan mudah"
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/files-comparation" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Compare Two Files - Text Tools" />
+	<meta name="twitter:description" content="Bandingkan dua file teks dan temukan perbedaannya" />
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Compare Two Files</h2>

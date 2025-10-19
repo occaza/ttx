@@ -57,6 +57,35 @@
 
 <svelte:head>
 	<title>Caption Formatter</title>
+	<meta
+		name="description"
+		content="Format caption Instagram Anda dengan baris kosong yang benar. Buat caption lebih menarik dan mudah dibaca di Instagram."
+	/>
+	<meta
+		name="keywords"
+		content="instagram caption, format caption, instagram formatter, caption tool, beautify caption, instagram tips"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/captions-formatter" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Caption Formatter - Format Caption Instagram" />
+	<meta
+		property="og:description"
+		content="Format caption Instagram dengan baris kosong yang benar. Buat caption lebih menarik."
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/captions-formatter" />
+	<meta property="og:image" content="https://yoursite.com/og-caption-formatter.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Caption Formatter - Format Caption Instagram" />
+	<meta
+		name="twitter:description"
+		content="Format caption Instagram dengan baris kosong yang benar"
+	/>
+	<meta name="twitter:image" content="https://yoursite.com/og-caption-formatter.jpg" />
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">

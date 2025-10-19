@@ -124,7 +124,35 @@
 	}
 </script>
 
-<svelte:head><title>Split Random Delimiter</title></svelte:head>
+<svelte:head>
+	<title>Split Random Delimiter</title>
+	<meta
+		name="description"
+		content="Pisahkan teks berdasarkan delimiter pilihan Anda. Pilih segmen yang ingin diambil dari setiap baris dengan mudah."
+	/>
+	<meta
+		name="keywords"
+		content="split text, delimiter, text splitter, pisah teks, extract data, csv tool"
+	/>
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://yoursite.com/text-tools/split-random-delimiter" />
+
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Split Random Delimiter - Text Tools" />
+	<meta
+		property="og:description"
+		content="Pisahkan teks berdasarkan delimiter pilihan Anda. Pilih segmen yang ingin diambil dari setiap baris."
+	/>
+	<meta property="og:url" content="https://yoursite.com/text-tools/split-random-delimiter" />
+	<meta property="og:image" content="https://yoursite.com/og-image.jpg" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="Split Random Delimiter - Text Tools" />
+	<meta name="twitter:description" content="Pisahkan teks berdasarkan delimiter pilihan Anda" />
+	<meta name="twitter:image" content="https://yoursite.com/og-image.jpg" />
+</svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Split Random Delimiter</h2>
