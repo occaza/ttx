@@ -102,17 +102,8 @@
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Split Text File</h2>
 
-	<div class="flex flex-col gap-2">
-		<div>
-			<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
-		</div>
-		<div>
-			<label class="label cursor-pointer">
-				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
-				<span class="label-text">Remove empty lines</span>
-			</label>
-		</div>
-
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
 		<ActionButton
 			showSelectAll={true}
 			showClear={true}
@@ -123,10 +114,20 @@
 		/>
 	</div>
 
-	<label class="input w-full rounded-sm">
-		<span class="label">Lines per file</span>
-		<input type="number" bind:value={linesPerFile} placeholder="Min 1" min="1" />
-	</label>
+	<div class="grid grid-cols-1 items-center gap-2 md:flex">
+		<div>
+			<label class="input w-full rounded-sm">
+				<span class="label">Lines per file</span>
+				<input type="number" bind:value={linesPerFile} placeholder="Min 1" min="1" />
+			</label>
+		</div>
+		<div>
+			<label class="label cursor-pointer">
+				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
+				<span class="label-text">Remove empty lines</span>
+			</label>
+		</div>
+	</div>
 
 	<div>
 		<TextArea

@@ -18,7 +18,7 @@
 </script>
 
 <div class="flex items-center gap-2">
-	<button class="btn btn-soft btn-md btn-success" onclick={handleSave}>Save as</button>
+	<button class="btn rounded-sm btn-md btn-neutral" onclick={handleSave}>Save as</button>
 	<input
 		type="text"
 		bind:value={fileName}

@@ -87,7 +87,9 @@
 		</div>
 	</nav>
 	<p class="text-sm opacity-70">
-		Copyright © {new Date().getFullYear()} - All right reserved by
-		<span class="font-bold text-primary">TEXY</span>
+		<span>
+			Copyright © {new Date().getFullYear()} - All right reserved by
+			<span class="font-bold text-primary"><a href="/">TEXY</a></span>
+		</span>
 	</p>
 </footer>

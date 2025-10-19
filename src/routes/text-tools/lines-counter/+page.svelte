@@ -109,30 +109,26 @@
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Count Lines & Duplicates</h2>
 
-	<div class="flex flex-col gap-2">
-		<div>
-			<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
-		</div>
-		<div class="flex flex-wrap items-center gap-4">
-			<label class="label cursor-pointer">
-				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
-				<span class="label-text">Case sensitive</span>
-			</label>
-			<label class="label cursor-pointer">
-				<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
-				<span class="label-text">Remove empty lines</span>
-			</label>
-		</div>
-		<div>
-			<ActionButton
-				showSelectAll={true}
-				showClear={true}
-				showCopy={true}
-				onselectall={selectAll}
-				onclear={clear}
-				oncopy={copy}
-			/>
-		</div>
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
+		/>
+	</div>
+	<div class="flex flex-wrap items-center gap-4">
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={caseSensitive} />
+			<span class="label-text">Case sensitive</span>
+		</label>
+		<label class="label cursor-pointer">
+			<input type="checkbox" class="checkbox checkbox-sm" bind:checked={removeEmpty} />
+			<span class="label-text">Remove empty lines</span>
+		</label>
 	</div>
 
 	<div>

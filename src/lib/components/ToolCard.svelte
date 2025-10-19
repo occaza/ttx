@@ -1,72 +1,64 @@
 <script lang="ts">
-	export let title: string;
-	export let desc: string;
-	export let href: string;
+	let { title, desc, href } = $props<{
+		title: string;
+		desc: string;
+		href: string;
+	}>();
+
+	let isHovered = $state(false);
 </script>
 
-<div>
-	<a
-		{href}
-		class="group relative block h-36 w-full overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/25 via-white/15 to-white/5 p-6 shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-[1.05] hover:border-white/40 hover:shadow-2xl"
-	>
-		<!-- Animated gradient overlay -->
-		<div
-			class="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-		></div>
+<a
+	{href}
+	class="card-hover group relative overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-lg transition-all duration-300 hover:shadow-2xl"
+	onmouseenter={() => (isHovered = true)}
+	onmouseleave={() => (isHovered = false)}
+>
+	<div
+		class="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+	></div>
 
-		<!-- Glow effect -->
-		<div
-			class="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-30"
-		></div>
-
-		<!-- Sparkle effects -->
-		<span
-			class="absolute top-4 right-4 h-2 w-2 rounded-full bg-gradient-to-tr from-primary to-accent opacity-0 transition-all duration-300 group-hover:animate-ping group-hover:opacity-100"
-		></span>
-		<span
-			class="absolute top-4 right-4 h-2 w-2 rounded-full bg-gradient-to-tr from-primary to-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-		></span>
-
-		<!-- Animated corner accent -->
-		<div
-			class="absolute top-0 right-0 h-16 w-16 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-		>
+	<div class="relative z-10 card-body">
+		<div class="flex items-start justify-between gap-2">
+			<h2 class="card-title text-lg transition-colors duration-300 group-hover:text-primary">
+				{title}
+			</h2>
 			<div
-				class="absolute top-0 right-0 h-full w-full rounded-bl-3xl bg-gradient-to-bl from-accent/40 to-transparent"
-			></div>
-		</div>
-
-		<!-- Content -->
-		<div class="relative z-10 flex h-full flex-col justify-between">
-			<div>
-				<h3
-					class="mb-2 text-lg font-bold text-base-content transition-colors duration-300 group-hover:text-primary"
-				>
-					{title}
-				</h3>
-				<p
-					class="line-clamp-2 text-sm text-base-content/70 transition-colors duration-300 group-hover:text-base-content/90"
-				>
-					{desc}
-				</p>
-			</div>
-
-			<!-- Arrow icon -->
-			<div class="flex justify-end">
-				<svg
-					class="h-6 w-6 text-base-content/40 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M17 8l4 4m0 0l-4 4m4-4H3"
-					/>
-				</svg>
+				class="transform text-2xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+			>
+				{#if isHovered}
+					✨
+				{:else}
+					🔧
+				{/if}
 			</div>
 		</div>
-	</a>
-</div>
+		<p class="text-sm text-base-content/70">{desc}</p>
+
+		<div class="mt-2 card-actions justify-end">
+			<span
+				class="inline-flex items-center text-sm font-semibold text-primary transition-all duration-300 group-hover:gap-2"
+			>
+				Coba Sekarang
+				<span
+					class="inline-block transform transition-transform duration-300 group-hover:translate-x-1"
+					>→</span
+				>
+			</span>
+		</div>
+	</div>
+
+	<div
+		class="absolute right-0 bottom-0 left-0 h-1 origin-left scale-x-0 transform bg-gradient-to-r from-primary via-secondary to-accent transition-transform duration-300 group-hover:scale-x-100"
+	></div>
+</a>
+
+<style>
+	.card-hover {
+		transform: translateY(0);
+	}
+
+	.card-hover:hover {
+		transform: translateY(-4px);
+	}
+</style>

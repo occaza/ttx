@@ -164,37 +164,37 @@
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<h2 class="pb-5 text-lg font-bold">Split Random Delimiter</h2>
 
-	<div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-4">
-		<div>
-			<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
-		</div>
-		<div>
-			<select bind:value={delimiterOption} class="select w-full rounded-sm select-md">
-				<option value="" disabled selected>Choose Delimiter</option>
-				<option value="|">Pipe (|)</option>
-				<option value="	">Tab</option>
-				<option value=" ">Space</option>
-				<option value=",">Comma (,)</option>
-				<option value=";">Semicolon (;)</option>
-				<option value=":">Colon (:)</option>
-				<option value="custom">Custom</option>
-			</select>
-		</div>
-		<div>
-			{#if delimiterOption === 'custom'}
-				<input type="text" bind:value={customDelimiter} maxlength="1" />
-			{/if}
-		</div>
-		<div>
-			<ActionButton
-				showSelectAll={true}
-				showClear={true}
-				showCopy={true}
-				onselectall={selectAll}
-				onclear={clear}
-				oncopy={copy}
+	<div class="flex gap-2">
+		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
+		<ActionButton
+			showSelectAll={true}
+			showClear={true}
+			showCopy={true}
+			onselectall={selectAll}
+			onclear={clear}
+			oncopy={copy}
+		/>
+	</div>
+	<div class="grid grid-cols-1 gap-2 md:flex">
+		<select bind:value={delimiterOption} class="select rounded-sm select-md">
+			<option value="" disabled selected>Choose Delimiter</option>
+			<option value="|">Pipe (|)</option>
+			<option value="	">Tab</option>
+			<option value=" ">Space</option>
+			<option value=",">Comma (,)</option>
+			<option value=";">Semicolon (;)</option>
+			<option value=":">Colon (:)</option>
+			<option value="custom">Custom</option>
+		</select>
+		{#if delimiterOption === 'custom'}
+			<input
+				type="text"
+				class="input rounded-sm"
+				bind:value={customDelimiter}
+				maxlength="1"
+				placeholder="e.g ~"
 			/>
-		</div>
+		{/if}
 	</div>
 
 	<div>

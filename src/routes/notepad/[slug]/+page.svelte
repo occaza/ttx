@@ -90,8 +90,8 @@
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
 	<div class=" pb-5">
+		<h2 class=" text-lg font-bold">Online Notepad</h2>
 		<span class="text-sm text-gray-500">
-			<h2 class=" text-lg font-bold">Online Notepad</h2>
 			Slug:
 			<code class="badge badge-soft badge-primary"> {data.slug}</code> semua orang dengan link ini bisa
 			lihat & edit.
@@ -125,7 +125,7 @@
 			bind:value={text}
 			name="text"
 			placeholder="Tulis catatan kamu di sini..."
-			rows={15}
+			rows={25}
 		/>
 	</form>
 
