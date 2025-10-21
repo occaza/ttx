@@ -162,7 +162,10 @@
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
-	<h2 class="pb-5 text-lg font-bold">Split Random Delimiter</h2>
+	<div class="pb-5">
+		<h2 class="text-lg font-bold">Split Random Delimiter</h2>
+		<p class="text-sm text-gray-600">Pisah teks berdasarkan delimiter pilihan Anda.</p>
+	</div>
 
 	<div class="flex gap-2">
 		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />
@@ -215,7 +218,7 @@
 			bind:this={outputTextarea}
 			bind:value={output}
 			placeholder="Output here..."
-			rows={15}
+			rows={12}
 			readonly={true}
 		/>
 	</div>

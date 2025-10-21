@@ -107,7 +107,10 @@
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
-	<h2 class="pb-5 text-lg font-bold">Count Lines & Duplicates</h2>
+	<div class="pb-5">
+		<h2 class="text-lg font-bold">Count Lines & Duplicates</h2>
+		<p class="text-sm text-gray-600">Hitung total baris, baris unik, dan duplikat.</p>
+	</div>
 
 	<div class="flex gap-2">
 		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />

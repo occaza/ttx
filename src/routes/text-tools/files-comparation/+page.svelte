@@ -171,7 +171,10 @@
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
-	<h2 class="pb-5 text-lg font-bold">Compare Two Files</h2>
+	<div class="pb-5">
+		<h2 class="text-lg font-bold">Compare Two Files</h2>
+		<p class="text-sm text-gray-600">Bandingkan dua file teks dan temukan perbedaannya.</p>
+	</div>
 
 	<div class="mb-4 grid max-w-7xl grid-cols-1 gap-2 lg:grid-cols-2">
 		<div>

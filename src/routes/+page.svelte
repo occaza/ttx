@@ -46,7 +46,7 @@
 
 <div class="features-grid mb-16 px-4 {mounted ? 'fade-in-delayed' : 'opacity-0'}">
 	<div class="mb-8 text-center">
-		<h2 class="mb-2 text-3xl font-bold text-base-content md:text-4xl">Kenapa Pakai Ini?</h2>
+		<h2 class="mb-2 text-3xl font-bold text-base-content md:text-4xl">Kenapa harus TEXY?</h2>
 		<p class="text-base-content/70">Tools sederhana yang bekerja cepat</p>
 	</div>
 	<div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -116,6 +116,11 @@
 			title="Split Text Random Delimiter"
 			desc="Pisahkan teks berdasarkan delimiter acak"
 			href="/text-tools/split-random-delimiter"
+		/>
+		<ToolCard
+			title="CSV Parser"
+			desc="Extract nama dan nomor telepon dari file VCard (.vcf)"
+			href="/text-tools/csv-parser"
 		/>
 	</div>
 </div>

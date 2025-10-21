@@ -24,6 +24,7 @@
 			prefix: '/utility',
 			items: [
 				{ title: 'Notepad', href: '/notepad' },
+				{ title: 'CSV Parser', href: '/text-tools/csv-parser' },
 				{ title: 'Emoji Picker', href: '/emoji-picker' }
 			]
 		}
@@ -138,7 +139,7 @@
 							>
 								{#each group.items as item}
 									<a
-										class="flex items-center rounded-lg px-3 py-2.5 text-sm transition-all duration-200 hover:scale-[1.02] hover:bg-primary/10 {$page
+										class="text-md flex items-center rounded-lg px-3 py-2.5 transition-all duration-200 hover:scale-[1.02] hover:bg-primary/10 {$page
 											.url.pathname === item.href
 											? 'bg-primary text-primary-content shadow-sm'
 											: ''}"
@@ -202,7 +203,7 @@
 								class="flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-all duration-200 hover:bg-primary/10"
 								on:click|stopPropagation={() => toggleMobileDropdown(group.title)}
 							>
-								<span class="text-sm font-semibold">{group.title}</span>
+								<span class="text-md font-semibold">{group.title}</span>
 								<svg
 									class="h-5 w-5 transition-transform duration-300 {mobileDropOpen === group.title
 										? 'rotate-180'
@@ -227,7 +228,7 @@
 								>
 									{#each group.items as item}
 										<a
-											class="flex items-center rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:bg-primary/10 {$page
+											class="text-md flex items-center rounded-lg px-3 py-2 transition-all duration-200 hover:bg-primary/10 {$page
 												.url.pathname === item.href
 												? 'bg-primary font-medium text-primary-content'
 												: 'text-base-content/80'}"

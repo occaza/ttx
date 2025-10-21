@@ -82,7 +82,10 @@
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
-	<h2 class="pb-5 text-lg font-bold">Random Number Generator</h2>
+	<div class="pb-5">
+		<h2 class=" text-lg font-bold">Random Number Generator</h2>
+		<p class="text-sm text-gray-600">Generate angka acak dengan mudah.</p>
+	</div>
 
 	<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 		<label class="input w-full rounded-sm">

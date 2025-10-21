@@ -84,7 +84,10 @@
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
-	<h2 class="pb-5 text-lg font-bold">Add Prefix/Suffix into Line</h2>
+	<div class="pb-5">
+		<h2 class="text-lg font-bold">Add Prefix/Suffix into Line</h2>
+		<p class="text-sm text-gray-600">Tambah teks di awal dan di akhir baris.</p>
+	</div>
 
 	<div class="flex gap-2">
 		<FileUploadInput bind:this={fileUpload} onload={handleLoad} onerror={handleError} size="md" />

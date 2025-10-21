@@ -96,7 +96,7 @@
 </svelte:head>
 
 <div class="mx-auto flex max-w-5xl flex-col space-y-3 bg-base-100 p-6 shadow-lg lg:rounded-lg">
-	<div class=" pb-5">
+	<div class="pb-5">
 		<h1 class="text-lg font-bold">Caption Formatter</h1>
 		<p class="text-sm text-gray-600">
 			Paste caption, klik Format untuk mengubah baris kosong, lalu Copy ke Instagram.
