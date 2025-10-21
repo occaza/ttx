@@ -1,7 +1,17 @@
 <script lang="ts">
 	import PakasirPayment from '$lib/components/PakasirPayment.svelte';
-	let orderId = 'INV' + Date.now();
+	import { onMount } from 'svelte';
+
+	let orderId = '';
 	let amount = 50000;
+
+	onMount(() => {
+		orderId = 'INV' + Date.now();
+	});
 </script>
 
-<PakasirPayment {orderId} {amount} />
+{#if orderId}
+	<PakasirPayment {orderId} {amount} />
+{:else}
+	<div>Loading...</div>
+{/if}
