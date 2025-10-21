@@ -23,9 +23,10 @@
 				categories = Object.keys(emojiData.categories).filter((cat) => cat !== 'recent');
 			}
 
-			// Load emoji kategori default setelah data dimuat
-			loadCategoryEmojis(selectedCategory);
 			isLoading = false;
+
+			// Load emoji kategori default SETELAH isLoading = false
+			filterEmojis();
 		} catch (err) {
 			console.error('Failed to load emoji data:', err);
 			isLoading = false;
@@ -135,10 +136,12 @@
 		return labels[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
 	}
 
-	$: if (!isLoading && emojiData) {
-		selectedCategory;
-		searchQuery;
-		skinTone;
+	// Reactive statement untuk perubahan setelah initial load
+	$: if (
+		!isLoading &&
+		emojiData &&
+		(selectedCategory || searchQuery !== undefined || skinTone !== undefined)
+	) {
 		filterEmojis();
 	}
 </script>
@@ -151,11 +154,8 @@
 	class="mx-auto flex max-w-5xl flex-col bg-base-100 shadow-lg lg:rounded-lg"
 	style="height: calc(100vh - 2rem);"
 >
-	<div class="sticky top-0 z-10 rounded-t-lg border-b bg-base-200 p-4 shadow-md">
-		<div class="pb-5">
-			<h2 class="text-lg font-bold text-primary">Emoji Explorer</h2>
-			<p class="text-sm text-gray-600">Jelajahi dan salin emoji dengan mudah.</p>
-		</div>
+	<div class="sticky top-0 z-10 border-b bg-base-200 p-4 shadow-md">
+		<h1 class="mb-4 text-3xl font-extrabold text-primary">✨ Emoji Explorer</h1>
 
 		<div class="mx-auto mb-4 flex w-full place-content-center items-center gap-3">
 			<div class="relative w-full flex-1">
@@ -239,7 +239,7 @@
 		{/if}
 	</div>
 
-	<div class="sticky bottom-0 rounded-b-lg border-t bg-base-100 p-4 shadow-lg">
+	<div class="sticky bottom-0 border-t bg-base-100 p-4 shadow-lg">
 		<div class="flex flex-col items-stretch gap-3 md:flex-row md:items-center">
 			<p class="mb-1 text-sm font-medium text-gray-700">Emoji Terpilih:</p>
 			<div class="flex-1">

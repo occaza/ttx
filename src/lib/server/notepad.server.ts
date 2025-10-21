@@ -1,3 +1,4 @@
+// src/lib/server/notepad.server.ts
 import { NOTEPAD_ENCRYPTION_KEY as KEY } from '$env/static/private';
 
 export const ENCRYPTION_KEY = KEY;

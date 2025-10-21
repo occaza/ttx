@@ -1,12 +1,20 @@
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
 declare global {
 	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
+		interface Locals {
+			user: any;
+		}
+	}
+}
+
+declare namespace NodeJS {
+	interface ProcessEnv {
+		TRIPAY_API_KEY: string;
+		TRIPAY_PRIVATE_KEY: string;
+		TRIPAY_MERCHANT_CODE: string;
+		TRIPAY_MODE: string;
+		SUPABASE_URL: string;
+		SUPABASE_SERVICE_KEY: string;
+		NOTEPAD_ENCRYPTION_KEY: string;
 	}
 }
 
