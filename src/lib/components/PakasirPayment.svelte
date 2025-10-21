@@ -8,7 +8,6 @@
 	let loading = false;
 	let error: string = '';
 	let showQr = false;
-	let isSandbox = true;
 
 	async function initializePayment() {
 		loading = true;
@@ -41,18 +40,22 @@
 		error = '';
 
 		try {
+			const payload = { orderId, amount };
+			console.log('Sending payload:', payload);
+
 			const response = await fetch('/api/simulate-payment', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ orderId, amount })
+				body: JSON.stringify(payload)
 			});
 
 			const data = await response.json();
+			console.log('Simulate response:', data);
 
-			if (data.payment) {
+			if (data.success || response.ok) {
 				error = 'Simulasi pembayaran berhasil';
 			} else {
-				error = 'Gagal simulasi pembayaran';
+				error = data.error || 'Gagal simulasi pembayaran';
 			}
 		} catch (err) {
 			error = 'Terjadi kesalahan: ' + err;
@@ -91,14 +94,12 @@
 					class="mx-auto w-full max-w-sm"
 				/>
 
-				{#if isSandbox}
-					<div class="mt-6">
-						<p class="mb-3 text-sm">Mode Sandbox</p>
-						<button class="btn btn-sm btn-primary" on:click={simulatePayment} disabled={loading}>
-							Simulasi Pembayaran
-						</button>
-					</div>
-				{/if}
+				<div class="mt-6">
+					<p class="mb-3 text-sm">Mode Sandbox</p>
+					<button class="btn btn-sm btn-primary" on:click={simulatePayment} disabled={loading}>
+						Simulasi Pembayaran
+					</button>
+				</div>
 			</div>
 		{/if}
 	</div>
