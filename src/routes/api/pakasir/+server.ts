@@ -5,9 +5,14 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 	try {
 		const { amount, order_id, method } = await request.json();
 
-		// Cek variabel env
 		const project = process.env.PUBLIC_PAKASIR_SLUG;
 		const apiKey = process.env.PAKASIR_API_KEY;
+
+		// Tambahkan log di sini
+		console.log('Pakasir ENV:', {
+			slug: project,
+			key: apiKey ? apiKey.slice(0, 6) + '...' : 'undefined'
+		});
 
 		if (!project || !apiKey) {
 			throw new Error('Konfigurasi .env tidak lengkap');
@@ -24,19 +29,15 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 			})
 		});
 
-		// Coba ambil teks mentah dulu, bukan langsung JSON
 		const text = await res.text();
+		console.log('Pakasir response:', res.status, text); // Tambahkan ini juga
 
 		if (!res.ok) {
 			return json({ error: `API Error: ${res.status} - ${text}` }, { status: res.status });
 		}
 
-		// Baru parse JSON bila isinya valid
 		const data = text ? JSON.parse(text) : null;
-
-		if (!data) {
-			throw new Error('Response kosong dari Pakasir');
-		}
+		if (!data) throw new Error('Response kosong dari Pakasir');
 
 		return json(data);
 	} catch (err: any) {

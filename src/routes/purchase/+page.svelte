@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { generateOrderId } from '$lib/utils/order';
 
-	let amount = 20000;
+	let amount = 1000;
 	let orderId = generateOrderId();
 	let paymentData: any = null;
 	let status = '';
