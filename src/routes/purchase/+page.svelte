@@ -17,7 +17,7 @@
 				body: JSON.stringify({
 					amount,
 					order_id: orderId,
-					method: 'qris'
+					method: 'bni_va'
 				})
 			});
 
