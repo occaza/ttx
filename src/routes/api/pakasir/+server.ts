@@ -2,21 +2,45 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request, fetch }) => {
-	const { amount, order_id, method } = await request.json();
+	try {
+		const { amount, order_id, method } = await request.json();
 
-	const res = await fetch(`https://app.pakasir.com/api/transactioncreate/${method}`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({
-			project: process.env.PUBLIC_PAKASIR_SLUG,
-			order_id,
-			amount,
-			api_key: process.env.PAKASIR_API_KEY
-		})
-	});
+		// Cek variabel env
+		const project = process.env.PUBLIC_PAKASIR_SLUG;
+		const apiKey = process.env.PAKASIR_API_KEY;
 
-	const data = await res.json();
-	if (!res.ok) return json({ error: data.error || 'Gagal membuat transaksi' }, { status: 400 });
+		if (!project || !apiKey) {
+			throw new Error('Konfigurasi .env tidak lengkap');
+		}
 
-	return json(data);
+		const res = await fetch(`https://app.pakasir.com/api/transactioncreate/${method}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				project,
+				order_id,
+				amount,
+				api_key: apiKey
+			})
+		});
+
+		// Coba ambil teks mentah dulu, bukan langsung JSON
+		const text = await res.text();
+
+		if (!res.ok) {
+			return json({ error: `API Error: ${res.status} - ${text}` }, { status: res.status });
+		}
+
+		// Baru parse JSON bila isinya valid
+		const data = text ? JSON.parse(text) : null;
+
+		if (!data) {
+			throw new Error('Response kosong dari Pakasir');
+		}
+
+		return json(data);
+	} catch (err: any) {
+		console.error('Pakasir Error:', err);
+		return json({ error: err.message }, { status: 500 });
+	}
 };
