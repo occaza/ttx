@@ -21,6 +21,10 @@
 
 	let isEmpty = $derived(!text.trim());
 
+	$effect(() => {
+		text = data.text;
+	});
+
 	function selectAll() {
 		ta.select();
 	}
