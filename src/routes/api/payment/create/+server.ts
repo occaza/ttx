@@ -1,19 +1,32 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { supabase } from '$lib/server/supabase.server';
 import { createPayment, generateOrderId } from '$lib/server/pakasir.server';
 import type { PaymentMethod } from '$lib/types/pakasir';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const { amount, payment_method, user_id } = await request.json();
+		const body = await request.json();
+		const { amount, payment_method, user_id } = body;
 
 		if (!amount || amount <= 0) {
-			throw error(400, 'Amount harus lebih dari 0');
+			return json(
+				{
+					success: false,
+					error: 'Amount harus lebih dari 0'
+				},
+				{ status: 400 }
+			);
 		}
 
 		if (!payment_method) {
-			throw error(400, 'Payment method wajib diisi');
+			return json(
+				{
+					success: false,
+					error: 'Payment method wajib diisi'
+				},
+				{ status: 400 }
+			);
 		}
 
 		const orderId = generateOrderId();
@@ -42,7 +55,14 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 		if (dbError) {
 			console.error('Database error:', dbError);
-			throw error(500, 'Gagal menyimpan transaksi');
+			return json(
+				{
+					success: false,
+					error: 'Gagal menyimpan transaksi',
+					details: dbError.message
+				},
+				{ status: 500 }
+			);
 		}
 
 		return json({
@@ -52,9 +72,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		});
 	} catch (err) {
 		console.error('Payment creation error:', err);
-		if (err instanceof Error) {
-			throw error(500, err.message);
-		}
-		throw error(500, 'Terjadi kesalahan saat membuat pembayaran');
+
+		return json(
+			{
+				success: false,
+				error: err instanceof Error ? err.message : 'Terjadi kesalahan saat membuat pembayaran'
+			},
+			{ status: 500 }
+		);
 	}
 };

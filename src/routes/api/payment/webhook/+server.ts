@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { supabase } from '$lib/server/supabase.server';
 import { getTransactionDetail } from '$lib/server/pakasir.server';
@@ -18,12 +18,24 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		if (!existingTransaction) {
 			console.error(`Transaction not found: ${order_id}`);
-			throw error(404, 'Transaksi tidak ditemukan');
+			return json(
+				{
+					success: false,
+					error: 'Transaksi tidak ditemukan'
+				},
+				{ status: 404 }
+			);
 		}
 
 		if (existingTransaction.amount !== amount) {
 			console.error(`Amount mismatch for ${order_id}`);
-			throw error(400, 'Amount tidak sesuai');
+			return json(
+				{
+					success: false,
+					error: 'Amount tidak sesuai'
+				},
+				{ status: 400 }
+			);
 		}
 
 		const verificationResponse = await getTransactionDetail(order_id, amount);
@@ -31,7 +43,13 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		if (verifiedStatus !== 'completed') {
 			console.error(`Status verification failed for ${order_id}`);
-			throw error(400, 'Status pembayaran tidak valid');
+			return json(
+				{
+					success: false,
+					error: 'Status pembayaran tidak valid'
+				},
+				{ status: 400 }
+			);
 		}
 
 		const completedAtDate = new Date(completed_at);
@@ -46,17 +64,30 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		if (updateError) {
 			console.error('Database update error:', updateError);
-			throw error(500, 'Gagal update transaksi');
+			return json(
+				{
+					success: false,
+					error: 'Gagal update transaksi'
+				},
+				{ status: 500 }
+			);
 		}
 
 		console.log(`Payment completed for ${order_id}`);
 
-		return json({ success: true, message: 'Webhook processed' });
+		return json({
+			success: true,
+			message: 'Webhook processed'
+		});
 	} catch (err) {
 		console.error('Webhook error:', err);
-		if (err instanceof Error) {
-			throw error(500, err.message);
-		}
-		throw error(500, 'Terjadi kesalahan saat memproses webhook');
+
+		return json(
+			{
+				success: false,
+				error: err instanceof Error ? err.message : 'Terjadi kesalahan saat memproses webhook'
+			},
+			{ status: 500 }
+		);
 	}
 };

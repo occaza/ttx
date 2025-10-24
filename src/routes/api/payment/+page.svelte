@@ -42,14 +42,15 @@
 				})
 			});
 
-			if (!response.ok) {
-				throw new Error('Gagal membuat pembayaran');
-			}
-
 			const data = await response.json();
+
+			if (!response.ok || !data.success) {
+				throw new Error(data.error || 'Gagal membuat pembayaran');
+			}
 
 			goto(`/payment/success?order_id=${data.transaction.order_id}`);
 		} catch (err) {
+			console.error('Payment error:', err);
 			error = err instanceof Error ? err.message : 'Terjadi kesalahan';
 		} finally {
 			loading = false;
@@ -83,9 +84,8 @@
 					class="input-bordered input w-full"
 					disabled={loading}
 				/>
-				<!-- svelte-ignore a11y_label_has_associated_control -->
-				<label class="label">
-					<span class="label-text-alt">{formatRupiah(amount)}</span>
+				<label class="label" for="amount-display">
+					<span id="amount-display" class="label-text-alt">{formatRupiah(amount)}</span>
 				</label>
 			</div>
 

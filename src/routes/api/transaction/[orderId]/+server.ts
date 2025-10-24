@@ -1,4 +1,4 @@
-import { json, error } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { supabase } from '$lib/server/supabase.server';
 import { getTransactionDetail } from '$lib/server/pakasir.server';
@@ -8,7 +8,13 @@ export const GET: RequestHandler = async ({ params }) => {
 		const { orderId } = params;
 
 		if (!orderId) {
-			throw error(400, 'Order ID wajib diisi');
+			return json(
+				{
+					success: false,
+					error: 'Order ID wajib diisi'
+				},
+				{ status: 400 }
+			);
 		}
 
 		const { data: transaction, error: dbError } = await supabase
@@ -18,7 +24,13 @@ export const GET: RequestHandler = async ({ params }) => {
 			.single();
 
 		if (dbError || !transaction) {
-			throw error(404, 'Transaksi tidak ditemukan');
+			return json(
+				{
+					success: false,
+					error: 'Transaksi tidak ditemukan'
+				},
+				{ status: 404 }
+			);
 		}
 
 		if (transaction.status === 'pending') {
@@ -52,9 +64,14 @@ export const GET: RequestHandler = async ({ params }) => {
 		});
 	} catch (err) {
 		console.error('Transaction detail error:', err);
-		if (err instanceof Error) {
-			throw error(500, err.message);
-		}
-		throw error(500, 'Terjadi kesalahan saat mengambil detail transaksi');
+
+		return json(
+			{
+				success: false,
+				error:
+					err instanceof Error ? err.message : 'Terjadi kesalahan saat mengambil detail transaksi'
+			},
+			{ status: 500 }
+		);
 	}
 };
