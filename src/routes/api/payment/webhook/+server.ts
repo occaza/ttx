@@ -1,3 +1,5 @@
+/* \routes\api\payment\webhook */
+
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { supabase } from '$lib/server/supabase.server';
