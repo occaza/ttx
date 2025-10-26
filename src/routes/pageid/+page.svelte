@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores'; // store reaktif dari SvelteKit
+	import { page } from '$app/stores';
 
 	$: id = $page.url.searchParams.get('id') ?? 'tanpa-id';
 	$: title = `${id}`;
 </script>
 
 <svelte:head>
-	<!-- Override bagian <title> & Open-Graph saja -->
 	<title>{title}</title>
 	<meta property="og:title" content={title} />
 	<meta name="twitter:title" content={title} />

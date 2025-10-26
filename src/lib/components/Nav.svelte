@@ -25,7 +25,8 @@
 			items: [
 				{ title: 'Notepad', href: '/notepad' },
 				{ title: 'CSV Parser', href: '/text-tools/csv-parser' },
-				{ title: 'Emoji Picker', href: '/emoji-picker' }
+				{ title: 'Emoji Picker', href: '/emoji-picker' },
+				{ title: 'Page ID', href: '/pageid?id=demo' }
 			]
 		}
 	];
