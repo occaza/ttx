@@ -63,16 +63,16 @@
 		}
 	}
 
-	function forceLogout() {
-		// Clear localStorage
-		Object.keys(localStorage).forEach((key) => {
-			if (key.includes('supabase') || key.includes('sb-')) {
-				localStorage.removeItem(key);
-			}
-		});
-		// Immediate redirect
-		window.location.href = '/login';
-	}
+	// function forceLogout() {
+	// 	// Clear localStorage
+	// 	Object.keys(localStorage).forEach((key) => {
+	// 		if (key.includes('supabase') || key.includes('sb-')) {
+	// 			localStorage.removeItem(key);
+	// 		}
+	// 	});
+	// 	// Immediate redirect
+	// 	window.location.href = '/login';
+	// }
 </script>
 
 <div class="min-h-screen bg-base-200">
@@ -89,14 +89,14 @@
 					Logout
 				{/if}
 			</button>
-			<button
+			<!-- <button
 				onclick={forceLogout}
 				class="btn btn-sm btn-warning"
 				title="Force logout jika normal logout gagal"
 				disabled={logoutLoading}
 			>
 				⚡ Force
-			</button>
+			</button> -->
 		</div>
 	</div>
 

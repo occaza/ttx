@@ -6,6 +6,8 @@
 	let email = '';
 	let password = '';
 	let confirmPassword = '';
+	let name = '';
+	let phone = '';
 	let loading = false;
 	let errorMsg = '';
 	let successMsg = '';
@@ -13,7 +15,7 @@
 	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
 	async function handleRegister() {
-		if (!email || !password || !confirmPassword) {
+		if (!email || !password || !confirmPassword || !name || !phone) {
 			errorMsg = 'Semua field harus diisi';
 			return;
 		}
@@ -32,24 +34,44 @@
 		errorMsg = '';
 		successMsg = '';
 
-		const { error } = await supabase.auth.signUp({
+		// 1. Buat akun
+		const { data, error } = await supabase.auth.signUp({
 			email,
 			password,
 			options: {
+				data: { name, phone },
 				emailRedirectTo: `${window.location.origin}/auth/callback`
 			}
 		});
 
-		loading = false;
-
 		if (error) {
+			loading = false;
 			errorMsg = error.message;
-		} else {
-			successMsg = 'Akun berhasil dibuat! Cek email Anda untuk verifikasi.';
-			setTimeout(() => {
-				goto('/login');
-			}, 3000);
+			return;
 		}
+
+		// 2. Simpan ke tabel profiles (opsional, jika Anda punya tabel sendiri)
+		const user = data?.user;
+		if (user) {
+			const { error: profileError } = await supabase.from('profiles').insert([
+				{
+					id: user.id, // gunakan id dari user Supabase
+					name,
+					phone,
+					email
+				}
+			]);
+
+			if (profileError) {
+				console.error('Gagal simpan profil:', profileError.message);
+			}
+		}
+
+		loading = false;
+		successMsg = 'Akun berhasil dibuat! Cek email Anda untuk verifikasi.';
+		setTimeout(() => {
+			goto('/login');
+		}, 3000);
 	}
 </script>
 
@@ -72,6 +94,34 @@
 
 			<form on:submit|preventDefault={handleRegister}>
 				<div class="form-control">
+					<label class="label" for="name">
+						<span class="label-text">Nama</span>
+					</label>
+					<input
+						id="name"
+						type="text"
+						bind:value={name}
+						placeholder="Nama lengkap"
+						class="input-bordered input"
+						required
+					/>
+				</div>
+
+				<div class="form-control mt-4">
+					<label class="label" for="phone">
+						<span class="label-text">Nomor HP</span>
+					</label>
+					<input
+						id="phone"
+						type="tel"
+						bind:value={phone}
+						placeholder="08xxxxxxxxxx"
+						class="input-bordered input"
+						required
+					/>
+				</div>
+
+				<div class="form-control mt-4">
 					<label class="label" for="email">
 						<span class="label-text">Email</span>
 					</label>
