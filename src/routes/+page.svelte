@@ -122,5 +122,10 @@
 			desc="Extract nama dan nomor telepon dari file VCard (.vcf)"
 			href="/text-tools/csv-parser"
 		/>
+		<ToolCard
+			title="Page Identifier"
+			desc="Demo page untuk mengenali query parameter"
+			href="/pageid?id=Demo"
+		/>
 	</div>
 </div>
