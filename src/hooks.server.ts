@@ -6,29 +6,56 @@ import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/publi
 const supabase: Handle = async ({ event, resolve }) => {
 	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
 		cookies: {
-			get: (key) => event.cookies.get(key),
-			set: (key, value, options) => {
-				event.cookies.set(key, value, { ...options, path: '/' });
-			},
-			remove: (key, options) => {
-				event.cookies.delete(key, { ...options, path: '/' });
+			getAll: () => event.cookies.getAll(),
+			setAll: (cookiesToSet) => {
+				cookiesToSet.forEach(({ name, value, options }) => {
+					event.cookies.set(name, value, {
+						...options,
+						path: '/',
+						// ✅ Tambahkan maxAge untuk kontrol expiry (1 hari = 86400 detik)
+						maxAge: 60 * 60 * 24, // 24 jam
+						sameSite: 'lax',
+						secure: process.env.NODE_ENV === 'production',
+						httpOnly: true
+					});
+				});
 			}
 		}
 	});
 
 	event.locals.safeGetSession = async () => {
 		const {
+			data: { session }
+		} = await event.locals.supabase.auth.getSession();
+
+		if (!session) {
+			return { session: null, user: null };
+		}
+
+		// ✅ Verifikasi dengan getUser() untuk keamanan
+		const {
 			data: { user },
 			error
 		} = await event.locals.supabase.auth.getUser();
 
-		if (error || !user) {
+		if (error) {
 			return { session: null, user: null };
 		}
 
-		const {
-			data: { session }
-		} = await event.locals.supabase.auth.getSession();
+		// ✅ Hapus session yang expired
+		// Cek apakah session sudah kadaluarsa (tambah buffer 5 menit)
+		const expiresAt = session.expires_at;
+		const now = Math.floor(Date.now() / 1000);
+
+		if (expiresAt && now > expiresAt - 300) {
+			// Session akan expired dalam 5 menit, refresh dulu
+			const {
+				data: { session: refreshedSession }
+			} = await event.locals.supabase.auth.refreshSession();
+			if (refreshedSession) {
+				return { session: refreshedSession, user };
+			}
+		}
 
 		return { session, user };
 	};
@@ -40,17 +67,27 @@ const supabase: Handle = async ({ event, resolve }) => {
 	});
 };
 
+// ✅ Auth Guard untuk protected routes
 const authGuard: Handle = async ({ event, resolve }) => {
 	const { session, user } = await event.locals.safeGetSession();
-	event.locals.session = session;
-	event.locals.user = user;
+	const path = event.url.pathname;
 
-	if (!event.locals.session && event.url.pathname.startsWith('/dashboard')) {
-		throw redirect(303, '/login');
+	// Protected routes
+	const protectedRoutes = ['/dashboard'];
+	const authRoutes = ['/login', '/register', '/forgot-password'];
+
+	// Redirect ke login jika akses protected route tanpa auth
+	if (protectedRoutes.some((route) => path.startsWith(route))) {
+		if (!session || !user) {
+			throw redirect(303, '/login');
+		}
 	}
 
-	if (event.locals.session && event.url.pathname === '/login') {
-		throw redirect(303, '/dashboard');
+	// Redirect ke dashboard jika sudah login tapi akses auth pages
+	if (authRoutes.some((route) => path.startsWith(route))) {
+		if (session && user) {
+			throw redirect(303, '/dashboard');
+		}
 	}
 
 	return resolve(event);

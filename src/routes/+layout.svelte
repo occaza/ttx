@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
 	import { createBrowserClient } from '@supabase/ssr';
+	import type { User } from '@supabase/supabase-js';
 	import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
@@ -11,24 +11,40 @@
 	import { page } from '$app/stores';
 
 	let { children, data } = $props();
-
-	let session = $derived(data.session);
-	let user = $derived(data.user);
-
+	let authenticatedUser: User | null = $state(data.user ?? null);
+	let isLoading: boolean = $state(true);
 	let supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
 	onMount(() => {
-		const {
-			data: { subscription }
-		} = supabase.auth.onAuthStateChange(async (event, session) => {
-			if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-				await supabase.auth.getUser();
-			}
-			invalidate('supabase:auth');
-		});
+		let authSubscription: { unsubscribe: () => void };
+
+		(async () => {
+			// Initial user check
+			const {
+				data: { user }
+			} = await supabase.auth.getUser();
+			authenticatedUser = user;
+			isLoading = false;
+
+			const {
+				data: { subscription }
+			} = supabase.auth.onAuthStateChange(async (event, _session) => {
+				if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+					const {
+						data: { user }
+					} = await supabase.auth.getUser();
+					authenticatedUser = user;
+				} else if (event === 'SIGNED_OUT') {
+					authenticatedUser = null;
+				}
+				invalidate('supabase:auth');
+			});
+
+			authSubscription = subscription;
+		})();
 
 		return () => {
-			subscription.unsubscribe();
+			authSubscription?.unsubscribe();
 		};
 	});
 </script>
@@ -76,6 +92,7 @@
 
 <div class="min-h-screen bg-base-300">
 	<div class="max-w-full md:mx-auto md:max-w-8/12">
+		<!-- Pastikan komponen Nav menerima props ini -->
 		<Nav />
 
 		<div class="pt-30">
