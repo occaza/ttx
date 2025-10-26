@@ -42,7 +42,7 @@
 // 	}
 // };
 import { error } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabase.server';
+import { supabaseAdmin } from '$lib/server/supabase.server';
 import { ENCRYPTION_KEY } from '$lib/server/notepad.server';
 import nacl from 'tweetnacl';
 
@@ -114,7 +114,7 @@ export async function load({ params }) {
 		throw error(400, 'Slug harus 12 karakter alfanumerik');
 	}
 
-	const { data } = await supabase
+	const { data } = await supabaseAdmin
 		.from('notepad')
 		.select('text, updated_at')
 		.eq('slug', slug)
@@ -155,7 +155,7 @@ export const actions = {
 		try {
 			const encryptedText = encryptText(text);
 
-			await supabase.from('notepad').upsert({
+			await supabaseAdmin.from('notepad').upsert({
 				slug,
 				text: encryptedText,
 				updated_at: new Date().toISOString()
