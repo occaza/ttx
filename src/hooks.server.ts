@@ -73,7 +73,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	const path = event.url.pathname;
 
 	// Protected routes
-	const protectedRoutes = ['/dashboard'];
+	const protectedRoutes = ['/dashboard', '/account'];
 	const authRoutes = ['/login', '/register', '/forgot-password'];
 
 	// Redirect ke login jika akses protected route tanpa auth

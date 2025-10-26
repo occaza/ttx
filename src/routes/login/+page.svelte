@@ -44,7 +44,7 @@
 				</div>
 			{/if}
 
-			<form on:submit|preventDefault={handleLogin}>
+			<form onsubmit={handleLogin}>
 				<div class="form-control">
 					<label class="label" for="email">
 						<span class="label-text">Email</span>
@@ -71,9 +71,9 @@
 						class="input-bordered input"
 						required
 					/>
-					<label class="label">
+					<div class="label">
 						<a href="/forgot-password" class="label-text-alt link link-hover">Lupa password?</a>
-					</label>
+					</div>
 				</div>
 
 				<div class="form-control mt-6">
