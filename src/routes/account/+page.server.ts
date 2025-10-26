@@ -1,5 +1,5 @@
 import { error, fail } from '@sveltejs/kit';
-import { supabase } from '$lib/server/supabase.server';
+import { supabaseAdmin } from '$lib/server/supabase.server';
 
 export const load = async ({ url }) => {
 	try {
@@ -11,7 +11,7 @@ export const load = async ({ url }) => {
 			data: accounts,
 			error: err,
 			count
-		} = await supabase
+		} = await supabaseAdmin
 			.from('cookies')
 			.select('*', { count: 'exact' })
 			.order('added_at', { ascending: false })
@@ -49,7 +49,7 @@ export const actions = {
 				return fail(400, { message: 'UID dan Password wajib diisi' });
 			}
 
-			const { error: err } = await supabase.from('cookies').insert({
+			const { error: err } = await supabaseAdmin.from('cookies').insert({
 				uid,
 				pwd,
 				cookies: cook || null
@@ -81,7 +81,7 @@ export const actions = {
 				return fail(400, { message: 'UID dan Password wajib diisi' });
 			}
 
-			const { error: err } = await supabase
+			const { error: err } = await supabaseAdmin
 				.from('cookies')
 				.update({
 					pwd,
@@ -111,7 +111,7 @@ export const actions = {
 				return fail(400, { message: 'UID tidak valid' });
 			}
 
-			const { error: err } = await supabase.from('cookies').delete().eq('uid', uid);
+			const { error: err } = await supabaseAdmin.from('cookies').delete().eq('uid', uid);
 
 			if (err) {
 				console.error('Supabase delete error:', err);
