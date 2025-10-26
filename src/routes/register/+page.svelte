@@ -6,16 +6,18 @@
 	let email = '';
 	let password = '';
 	let confirmPassword = '';
-	let name = '';
 	let phone = '';
 	let loading = false;
 	let errorMsg = '';
 	let successMsg = '';
+	let username = '';
+	let first_name = '';
+	let last_name = '';
 
 	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
 	async function handleRegister() {
-		if (!email || !password || !confirmPassword || !name || !phone) {
+		if (!email || !password || !confirmPassword || !username || !phone) {
 			errorMsg = 'Semua field harus diisi';
 			return;
 		}
@@ -39,7 +41,12 @@
 			email,
 			password,
 			options: {
-				data: { name, phone },
+				data: {
+					username,
+					first_name,
+					last_name,
+					phone
+				},
 				emailRedirectTo: `${window.location.origin}/auth/callback`
 			}
 		});
@@ -75,8 +82,8 @@
 	}
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-base-200">
-	<div class="card w-96 bg-base-100 shadow-xl">
+<div class="flex min-h-screen items-center justify-center bg-base-200 p-4">
+	<div class="card w-full max-w-2xl bg-base-100 shadow-xl">
 		<div class="card-body">
 			<h2 class="card-title justify-center text-center text-2xl">Daftar Akun</h2>
 
@@ -92,85 +99,119 @@
 				</div>
 			{/if}
 
-			<form on:submit|preventDefault={handleRegister}>
-				<div class="form-control">
-					<label class="label" for="name">
-						<span class="label-text">Nama</span>
-					</label>
-					<input
-						id="name"
-						type="text"
-						bind:value={name}
-						placeholder="Nama lengkap"
-						class="input-bordered input"
-						required
-					/>
+			<form on:submit|preventDefault={handleRegister} class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<!-- Kiri -->
+				<div class="space-y-4">
+					<div class="form-control">
+						<label class="label" for="first_name">
+							<span class="label-text">Nama Depan</span>
+						</label>
+						<input
+							id="first_name"
+							type="text"
+							bind:value={first_name}
+							placeholder="Nama depan"
+							class="input-bordered input"
+							required
+						/>
+					</div>
+
+					<div class="form-control">
+						<label class="label" for="last_name">
+							<span class="label-text">Nama Belakang</span>
+						</label>
+						<input
+							id="last_name"
+							type="text"
+							bind:value={last_name}
+							placeholder="Nama belakang"
+							class="input-bordered input"
+							required
+						/>
+					</div>
+
+					<div class="form-control">
+						<label class="label" for="username">
+							<span class="label-text">Username</span>
+						</label>
+						<input
+							id="username"
+							type="text"
+							bind:value={username}
+							placeholder="contoh: yusup123"
+							class="input-bordered input"
+							required
+						/>
+					</div>
+
+					<div class="form-control">
+						<label class="label" for="phone">
+							<span class="label-text">Nomor HP</span>
+						</label>
+						<input
+							id="phone"
+							type="tel"
+							bind:value={phone}
+							placeholder="08xxxxxxxxxx"
+							class="input-bordered input"
+							required
+						/>
+					</div>
 				</div>
 
-				<div class="form-control mt-4">
-					<label class="label" for="phone">
-						<span class="label-text">Nomor HP</span>
-					</label>
-					<input
-						id="phone"
-						type="tel"
-						bind:value={phone}
-						placeholder="08xxxxxxxxxx"
-						class="input-bordered input"
-						required
-					/>
-				</div>
+				<!-- Kanan -->
+				<div class="space-y-4">
+					<div class="form-control">
+						<label class="label" for="email">
+							<span class="label-text">Email</span>
+						</label>
+						<input
+							id="email"
+							type="email"
+							bind:value={email}
+							placeholder="email@example.com"
+							class="input-bordered input"
+							required
+						/>
+					</div>
 
-				<div class="form-control mt-4">
-					<label class="label" for="email">
-						<span class="label-text">Email</span>
-					</label>
-					<input
-						id="email"
-						type="email"
-						bind:value={email}
-						placeholder="email@example.com"
-						class="input-bordered input"
-						required
-					/>
-				</div>
+					<div class="form-control">
+						<label class="label" for="password">
+							<span class="label-text">Password</span>
+						</label>
+						<input
+							id="password"
+							type="password"
+							bind:value={password}
+							placeholder="••••••••"
+							class="input-bordered input"
+							required
+						/>
+					</div>
 
-				<div class="form-control mt-4">
-					<label class="label" for="password">
-						<span class="label-text">Password</span>
-					</label>
-					<input
-						id="password"
-						type="password"
-						bind:value={password}
-						placeholder="••••••••"
-						class="input-bordered input"
-						required
-					/>
-				</div>
+					<div class="form-control">
+						<label class="label" for="confirm-password">
+							<span class="label-text">Konfirmasi Password</span>
+						</label>
+						<input
+							id="confirm-password"
+							type="password"
+							bind:value={confirmPassword}
+							placeholder="••••••••"
+							class="input-bordered input"
+							required
+						/>
+					</div>
 
-				<div class="form-control mt-4">
-					<label class="label" for="confirm-password">
-						<span class="label-text">Konfirmasi Password</span>
-					</label>
-					<input
-						id="confirm-password"
-						type="password"
-						bind:value={confirmPassword}
-						placeholder="••••••••"
-						class="input-bordered input"
-						required
-					/>
-				</div>
-
-				<div class="form-control mt-6">
-					<button type="submit" class="btn btn-primary" disabled={loading}>
-						{loading ? 'Loading...' : 'Daftar'}
-					</button>
+					<div class="form-control mt-2">
+						<button type="submit" class="btn w-full btn-primary" disabled={loading}>
+							{loading ? 'Loading...' : 'Daftar'}
+						</button>
+					</div>
 				</div>
 			</form>
 
-			<div class="divider">ATAU</div>
+			<div class="divider mt-6">ATAU</div>
 
 			<div class="text-center">
 				<p class="text-sm">
