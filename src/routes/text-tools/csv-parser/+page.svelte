@@ -1,8 +1,5 @@
 <script lang="ts">
-	import FileUploadInput from '$lib/components/FileUpload.svelte';
-	import ActionButton from '$lib/components/ActionButton.svelte';
-	import TextArea from '$lib/components/TextArea.svelte';
-	import SaveFiles from '$lib/components/SaveButton.svelte';
+	import { FileUploadInput, ActionButton, TextArea, SaveFiles } from '$lib';
 
 	let input = $state('');
 	let output = $state('');

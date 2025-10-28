@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ActionButton from '$lib/components/ActionButton.svelte';
-	import TextArea from '$lib/components/TextArea.svelte';
+	import { ActionButton, TextArea } from '$lib';
+
 	import { page } from '$app/stores';
 
 	let text = $state('');

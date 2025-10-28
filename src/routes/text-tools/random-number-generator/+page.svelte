@@ -1,7 +1,6 @@
 <script lang="ts">
-	import ActionButton from '$lib/components/ActionButton.svelte';
-	import TextArea from '$lib/components/TextArea.svelte';
-	import SaveFiles from '$lib/components/SaveButton.svelte';
+	import { ActionButton, TextArea, SaveFiles } from '$lib';
+
 	import { page } from '$app/stores';
 
 	let qty = $state(10);

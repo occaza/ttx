@@ -10,7 +10,7 @@
 			prefix: '/text-tools',
 			items: [
 				{ title: 'Remove Duplicate Lines', href: '/text-tools/remove-duplicate-lines' },
-				{ title: 'Add Prefix/Suffix', href: '/text-tools/add-prefixsuffix-into-line' },
+				{ title: 'Add Prefix/Suffix', href: '/text-tools/add-prefix-suffix' },
 				{ title: 'Split Text File', href: '/text-tools/split-files' },
 				{ title: 'Random Number Generator', href: '/text-tools/random-number-generator' },
 				{ title: 'Count Lines & Duplicates', href: '/text-tools/lines-counter' },

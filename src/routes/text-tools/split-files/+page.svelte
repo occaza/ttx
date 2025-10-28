@@ -1,7 +1,6 @@
 <script lang="ts">
-	import FileUploadInput from '$lib/components/FileUpload.svelte';
-	import ActionButton from '$lib/components/ActionButton.svelte';
-	import TextArea from '$lib/components/TextArea.svelte';
+	import { FileUploadInput, ActionButton, TextArea } from '$lib';
+
 	import { page } from '$app/stores';
 
 	let input = $state('');
