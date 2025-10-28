@@ -16,7 +16,8 @@
 				{ title: 'Count Lines & Duplicates', href: '/text-tools/lines-counter' },
 				{ title: 'Compare Two Files', href: '/text-tools/files-comparation' },
 				{ title: 'Caption Formatter', href: '/text-tools/captions-formatter' },
-				{ title: 'Split by Delimiter', href: '/text-tools/split-random-delimiter' }
+				{ title: 'Split by Delimiter', href: '/text-tools/split-random-delimiter' },
+				{ title: 'Sort Lines', href: '/text-tools/sort-lines' }
 			]
 		},
 		{

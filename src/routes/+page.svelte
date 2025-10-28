@@ -127,5 +127,10 @@
 			desc="Demo page untuk mengenali query parameter"
 			href="/pageid?id=Demo"
 		/>
+		<ToolCard
+			title="Sort Lines"
+			desc="Urutkan baris teks secara alfabetis"
+			href="/text-tools/sort-lines"
+		/>
 	</div>
 </div>
