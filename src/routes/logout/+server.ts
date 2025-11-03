@@ -14,7 +14,9 @@ export const POST: RequestHandler = async ({ locals: { supabase }, cookies }) =>
 		);
 
 		try {
-			const { error } = await Promise.race([signOutPromise, timeoutPromise]);
+			const { error } = (await Promise.race([signOutPromise, timeoutPromise])) as {
+				error: null | Error;
+			};
 
 			if (error) {
 				console.error('[API] SignOut error:', error);

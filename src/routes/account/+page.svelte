@@ -74,6 +74,7 @@
 		const pastedText = e.clipboardData?.getData('text');
 		if (!pastedText) return;
 
+		// Format 1: uid|password|cookies
 		if (pastedText.includes('|')) {
 			e.preventDefault();
 			const parts = pastedText.split('|');
@@ -82,6 +83,20 @@
 				uid = parts[0].trim();
 				password = parts[1].trim();
 				cookies = parts.length >= 3 ? parts[2].trim() : '';
+			}
+			return;
+		}
+
+		// Format 2: cookies only (extract c_user as uid)
+		if (pastedText.includes('c_user=')) {
+			e.preventDefault();
+
+			// Extract c_user value
+			const cUserMatch = pastedText.match(/c_user=(\d+)/);
+			if (cUserMatch) {
+				uid = cUserMatch[1];
+				password = ''; // Password kosong untuk format cookies
+				cookies = pastedText.trim();
 			}
 		}
 	}
@@ -92,6 +107,12 @@
 
 	function changeLimit(newLimit: number) {
 		goto(`?page=1&limit=${newLimit}`);
+	}
+	function resetForm() {
+		uid = '';
+		password = '';
+		cookies = '';
+		editMode = null;
 	}
 </script>
 
@@ -110,10 +131,10 @@
 							<input
 								type="text"
 								name="uid"
-								placeholder="UID Here atau paste format: uid|password|cookies"
+								placeholder="Paste format: uid|pwd|cookies ATAU cookies saja (c_user akan otomatis diambil)"
 								class="input-bordered input w-full"
 								bind:value={uid}
-								on:paste={handleUidPaste}
+								onpaste={handleUidPaste}
 								readonly={editMode !== null}
 								required
 							/>
@@ -122,7 +143,7 @@
 
 					<div class="form-control mb-4">
 						<label class="floating-label">
-							<span>Password</span>
+							<span>Password (opsional)</span>
 							<input
 								type="password"
 								name="password"
@@ -130,7 +151,6 @@
 								placeholder="Password Here"
 								class="input-bordered input w-full"
 								bind:value={password}
-								required
 							/>
 						</label>
 					</div>
@@ -152,8 +172,11 @@
 					<button type="submit" class="btn flex-1 btn-primary">
 						{editMode ? 'Update' : 'Submit'}
 					</button>
+
+					<button type="button" class="btn btn-outline" onclick={resetForm}> Reset </button>
+
 					{#if editMode}
-						<button type="button" class="btn btn-ghost" on:click={cancelEdit}>Batal</button>
+						<button type="button" class="btn btn-ghost" onclick={cancelEdit}> Batal </button>
 					{/if}
 				</div>
 			</form>
@@ -178,7 +201,7 @@
 						<select
 							class="select-bordered select w-20 select-sm"
 							value={data.limit}
-							on:change={(e) => changeLimit(parseInt(e.currentTarget.value))}
+							onchange={(e) => changeLimit(parseInt(e.currentTarget.value))}
 						>
 							<option value="5">5</option>
 							<option value="10">10</option>
@@ -217,7 +240,7 @@
 											<button
 												type="button"
 												class="btn btn-ghost btn-xs"
-												on:click={() => copyToClipboard(account.uid)}
+												onclick={() => copyToClipboard(account.uid)}
 												aria-label="Copy UID"
 											>
 												<svg
@@ -243,7 +266,7 @@
 											<button
 												type="button"
 												class="btn btn-ghost btn-xs"
-												on:click={() => copyToClipboard(account.pwd)}
+												onclick={() => copyToClipboard(account.pwd)}
 												aria-label="Copy Password"
 											>
 												<svg
@@ -270,7 +293,7 @@
 												<button
 													type="button"
 													class="btn btn-ghost btn-xs"
-													on:click={() => copyToClipboard(account.cookies)}
+													onclick={() => copyToClipboard(account.cookies)}
 													aria-label="Copy Cookies"
 												>
 													<svg
@@ -299,7 +322,7 @@
 											<button
 												type="button"
 												class="btn btn-ghost btn-xs"
-												on:click={() => startEdit(account)}
+												onclick={() => startEdit(account)}
 												aria-label="Edit akun"
 											>
 												<svg
@@ -320,7 +343,7 @@
 											<button
 												type="button"
 												class="btn text-error btn-ghost btn-xs"
-												on:click={() => openDeleteModal(account.uid)}
+												onclick={() => openDeleteModal(account.uid)}
 												aria-label="Hapus akun"
 											>
 												<svg
@@ -351,7 +374,7 @@
 						<button
 							class="btn btn-sm"
 							disabled={data.currentPage === 1}
-							on:click={() => goToPage(data.currentPage - 1)}
+							onclick={() => goToPage(data.currentPage - 1)}
 							aria-label="Halaman sebelumnya"
 						>
 							«
@@ -361,7 +384,7 @@
 							{#if i + 1 === 1 || i + 1 === data.totalPages || Math.abs(i + 1 - data.currentPage) <= 1}
 								<button
 									class="btn btn-sm {data.currentPage === i + 1 ? 'btn-primary' : ''}"
-									on:click={() => goToPage(i + 1)}
+									onclick={() => goToPage(i + 1)}
 									aria-label="Halaman {i + 1}"
 								>
 									{i + 1}
@@ -374,7 +397,7 @@
 						<button
 							class="btn btn-sm"
 							disabled={data.currentPage === data.totalPages}
-							on:click={() => goToPage(data.currentPage + 1)}
+							onclick={() => goToPage(data.currentPage + 1)}
 							aria-label="Halaman selanjutnya"
 						>
 							»
@@ -403,7 +426,7 @@
 				</svg>
 				<span>{toastMessage}</span>
 				<button
-					on:click={hideToast}
+					onclick={hideToast}
 					class="btn text-white btn-ghost btn-sm"
 					aria-label="Tutup notifikasi"
 				>
@@ -432,8 +455,8 @@
 			<p class="py-4">Yakin ingin menghapus akun dengan UID: <strong>{uidToDelete}</strong>?</p>
 			<p class="text-sm text-gray-500">Tindakan ini tidak dapat dibatalkan.</p>
 			<div class="modal-action">
-				<button type="button" class="btn btn-ghost" on:click={closeDeleteModal}>Batal</button>
-				<form method="POST" action="?/delete" use:enhance on:submit={closeDeleteModal}>
+				<button type="button" class="btn btn-ghost" onclick={closeDeleteModal}>Batal</button>
+				<form method="POST" action="?/delete" use:enhance onsubmit={closeDeleteModal}>
 					<input type="hidden" name="uid" value={uidToDelete} />
 					<button type="submit" class="btn btn-error">Hapus</button>
 				</form>
