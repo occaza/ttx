@@ -48,6 +48,21 @@
 	}
 }
 
+@keyframes fadeInFast {
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fade-in-fast {
+	animation: fadeInFast 0.15s ease-out forwards;
+}
+
 @keyframes text-shimmer {
 	0% {
 		background-position: 0% 50%;

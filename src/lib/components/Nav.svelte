@@ -60,7 +60,7 @@
 					</button>
 
 					{#if dropOpen === 'tools'}
-						<div class="absolute left-0 right-0 top-full mt-4 w-full rounded-2xl border border-base-content/10 bg-base-100/95 p-6 shadow-2xl backdrop-blur-xl animate-in slide-in-from-top-2 fade-in">
+						<div class="absolute left-0 right-0 top-full mt-4 w-full rounded-2xl border border-base-content/10 bg-base-100/95 p-6 shadow-2xl backdrop-blur-xl fade-in-fast">
 							<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
 								{#each Object.entries(groups) as [category, categoryTools]}
 									<div>
@@ -123,7 +123,7 @@
 
 <!-- Mobile Menu Overlay -->
 {#if open}
-	<div class="mobile-menu md:hidden fixed inset-x-4 top-20 z-40 rounded-3xl border border-base-content/10 bg-base-100/95 p-3 shadow-[0_20px_50px_rgb(0,0,0,0.3)] backdrop-blur-2xl animate-in slide-in-from-top-4 fade-in">
+	<div class="mobile-menu md:hidden fixed inset-x-4 top-20 z-40 rounded-3xl border border-base-content/10 bg-base-100/95 p-3 shadow-[0_20px_50px_rgb(0,0,0,0.3)] backdrop-blur-2xl fade-in-fast">
 		<div class="flex flex-col gap-1">
 			<a href="/" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl hover:bg-base-200 text-sm font-medium text-base-content transition-colors {$page.url.pathname === '/' ? 'bg-base-200/50' : ''}" onclick={closeMenus}>
 				<Home size={18} class="text-base-content/50" />
