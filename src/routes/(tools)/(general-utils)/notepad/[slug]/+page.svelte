@@ -23,7 +23,6 @@
 	let unlocking = $state(false);
 	let unlockError = $state('');
 
-
 	$effect(() => {
 		text = data.text;
 	});
@@ -68,7 +67,7 @@
 		return async ({ result, update }) => {
 			unlocking = false;
 			if (result.type === 'success' && result.data?.success) {
-				await update(); // Reloads data
+				await update();
 			} else if (result.type === 'success' && result.data?.error) {
 				unlockError = result.data.error;
 			} else {
@@ -76,7 +75,6 @@
 			}
 		};
 	};
-
 </script>
 
 <svelte:head>
@@ -184,8 +182,6 @@
 					/>
 				</div>
 
-				<!-- Main Editor (Toolbar Removed) -->
-
 				<!-- Bottom Footer (Info & Share) -->
 				<div class="flex flex-col sm:flex-row items-center justify-between border-t border-base-content/10 bg-base-200/20 px-4 py-3 gap-4 rounded-b-2xl">
 					<div class="flex items-center gap-2 text-xs font-medium text-base-content/40">
@@ -223,7 +219,7 @@
 							<Copy size={14} /> Copy
 						</button>
 						<div class="flex items-center gap-2">
-							<button type="submit" class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm gap-1.5" disabled={isEmpty}>
+							<button type="submit" class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm gap-1.5">
 								<Save size={14} /> Save
 							</button>
 							{#if saved}
@@ -232,26 +228,6 @@
 						</div>
 					</div>
 				</div>
-
-				{#if data.previousContent}
-					<form method="POST" action="?/restore" use:enhance={handleRestore} class="border-t border-warning/20 bg-warning/5 px-4 py-2.5 rounded-b-2xl flex flex-col sm:flex-row items-start sm:items-center gap-2">
-						<div class="flex-1 min-w-0">
-							<p class="text-xs font-medium text-warning">Backup tersedia</p>
-							<p class="text-xs text-base-content/40 truncate max-w-xs">{data.previousContent.slice(0, 80)}{data.previousContent.length > 80 ? '...' : ''}</p>
-						</div>
-						{#if restoreError}
-							<span class="text-xs text-error">{restoreError}</span>
-						{/if}
-						<button type="submit" class="btn btn-xs btn-warning gap-1.5 shrink-0" disabled={restoring}>
-							{#if restoring}
-								<span class="loading loading-spinner loading-xs"></span>
-							{:else}
-								<RotateCcw size={12} />
-							{/if}
-							Restore
-						</button>
-					</form>
-				{/if}
 
 			</form>
 		{/if}
