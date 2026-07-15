@@ -1,8 +1,8 @@
-import { 
-    Copy, TextCursor, Split, Shuffle, 
+import {
+    Copy, TextCursor, Split, Shuffle,
     List, FileCode, NotebookPen, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, BarChart2, Lock, BookOpen
+    ArrowDown, ChartBar, Lock, BookOpen
 } from '@lucide/svelte';
 
 export const tools = [
@@ -15,7 +15,7 @@ export const tools = [
     { title: 'Caption Formater', desc: 'Rapikan dan format caption media sosial.', href: '/captions-formatter', icon: Type, category: 'Text Operations' },
     { title: 'Sort Lines', desc: 'Urutkan baris teks secara alfabetis.', href: '/sort-lines', icon: ArrowDown, category: 'Text Operations' },
 
-    { title: 'Word Counter & Stats', desc: 'Hitung kata, karakter, dan statistik teks.', href: '/word-counter', icon: BarChart2, category: 'Data & Parsing' },
+    { title: 'Word Counter & Stats', desc: 'Hitung kata, karakter, dan statistik teks.', href: '/word-counter', icon: ChartBar, category: 'Data & Parsing' },
     { title: 'Line Counter', desc: 'Hitung jumlah baris dalam dokumen.', href: '/lines-counter', icon: List, category: 'Data & Parsing' },
     { title: 'File Comparation', desc: 'Bandingkan dua file dan temukan perbedaannya.', href: '/files-comparation', icon: FileCode, category: 'Data & Parsing' },
     { title: 'CSV/VCard Parser', desc: 'Ekstrak data dari file VCard atau CSV.', href: '/csv-parser', icon: Table, category: 'Data & Parsing' },

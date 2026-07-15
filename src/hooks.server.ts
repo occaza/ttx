@@ -93,4 +93,4 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(supabase, authGuard);
+export const handle: Handle = sequence(supabase);

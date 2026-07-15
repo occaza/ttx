@@ -107,7 +107,9 @@ function decryptText(encryptedHex: string): string {
 	return decodeUTF8(decrypted);
 }
 
-export async function load({ params }) {
+import { createHash } from 'crypto';
+
+export async function load({ params, cookies }) {
 	const slug = params.slug;
 
 	if (!/^[a-z0-9]{12}$/.test(slug)) {
@@ -121,9 +123,29 @@ export async function load({ params }) {
 		.single();
 
 	let decryptedText = '';
+	let isLocked = false;
+
 	if (data?.text) {
 		try {
 			decryptedText = decryptText(data.text);
+			
+			// Cek apakah teks adalah JSON yang dikunci
+			try {
+				const parsed = JSON.parse(decryptedText);
+				if (parsed && parsed.__is_locked) {
+					isLocked = true;
+					// Cek cookie apakah user sudah punya akses
+					const authCookie = cookies.get(`np_auth_${slug}`);
+					if (authCookie === parsed.password_hash) {
+						isLocked = false;
+						decryptedText = parsed.content;
+					} else {
+						decryptedText = ''; // Kosongkan jika belum unlock
+					}
+				}
+			} catch (e) {
+				// Bukan JSON atau JSON biasa (tidak dikunci), biarkan sebagai teks biasa
+			}
 		} catch (err) {
 			console.error('Decryption error:', err);
 			throw error(500, 'Gagal decrypt catatan');
@@ -133,6 +155,7 @@ export async function load({ params }) {
 	return {
 		slug,
 		text: decryptedText,
+		isLocked,
 		updatedAt: data?.updated_at || null
 	};
 }
@@ -147,13 +170,25 @@ export const actions = {
 
 		const formData = await request.formData();
 		const text = (formData.get('text') || '').toString().trim();
+		const password = (formData.get('password') || '').toString().trim();
 
 		if (!text) {
 			throw error(400, 'Text tidak boleh kosong');
 		}
 
+		let finalContentToEncrypt = text;
+
+		if (password) {
+			const passwordHash = createHash('sha256').update(password).digest('hex');
+			finalContentToEncrypt = JSON.stringify({
+				__is_locked: true,
+				content: text,
+				password_hash: passwordHash
+			});
+		}
+
 		try {
-			const encryptedText = encryptText(text);
+			const encryptedText = encryptText(finalContentToEncrypt);
 
 			await supabaseAdmin.from('notepad').upsert({
 				slug,
@@ -166,5 +201,52 @@ export const actions = {
 			console.error('Encryption error:', err);
 			throw error(500, 'Gagal encrypt catatan');
 		}
+	},
+	unlock: async ({ request, params, cookies }) => {
+		const slug = params.slug;
+		const formData = await request.formData();
+		const password = (formData.get('password') || '').toString().trim();
+
+		if (!password) {
+			return { success: false, error: 'Password tidak boleh kosong' };
+		}
+
+		// Ambil data untuk mengecek hash
+		const { data } = await supabaseAdmin
+			.from('notepad')
+			.select('text')
+			.eq('slug', slug)
+			.single();
+
+		if (!data?.text) {
+			return { success: false, error: 'Catatan tidak ditemukan' };
+		}
+
+		try {
+			const decryptedText = decryptText(data.text);
+			const parsed = JSON.parse(decryptedText);
+
+			if (parsed && parsed.__is_locked) {
+				const inputHash = createHash('sha256').update(password).digest('hex');
+				
+				if (inputHash === parsed.password_hash) {
+					// Password benar, set cookie (berlaku 1 hari)
+					cookies.set(`np_auth_${slug}`, inputHash, {
+						path: `/notepad/${slug}`,
+						maxAge: 60 * 60 * 24,
+						httpOnly: true,
+						sameSite: 'strict',
+						secure: process.env.NODE_ENV === 'production'
+					});
+					return { success: true };
+				} else {
+					return { success: false, error: 'Password salah' };
+				}
+			}
+		} catch (e) {
+			return { success: false, error: 'Catatan tidak dikunci' };
+		}
+		
+		return { success: false, error: 'Terjadi kesalahan' };
 	}
 };

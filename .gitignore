@@ -32,3 +32,9 @@ testpage/
 *.code-workspace
 
 *.pdf
+
+# Documentation
+blueprint.md
+
+# Backup
+auth_backup/

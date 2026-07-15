@@ -6,7 +6,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageData } from './$types';
-	import { FilePlus2, Save, RefreshCw, Copy, Link, Clock, ArrowLeft, NotebookPen } from '@lucide/svelte';
+	import { FilePlus2, Save, RefreshCw, Copy, Link, Clock, ArrowLeft, NotebookPen, Lock } from '@lucide/svelte';
 
 	interface Props {
 		data: PageData;
@@ -16,8 +16,12 @@
 	let text = $state(data.text);
 	let saved = $state(false);
 	let refreshing = $state(false);
-	let linkInput: HTMLInputElement;
-	let ta: TextArea;
+	let linkInput: HTMLInputElement | undefined = $state();
+	let ta: TextArea | undefined = $state();
+	let passwordInput = $state('');
+	let unlockPassword = $state('');
+	let unlocking = $state(false);
+	let unlockError = $state('');
 
 	let isEmpty = $derived(!text.trim());
 
@@ -26,7 +30,7 @@
 	});
 
 	function selectAll() {
-		ta.select();
+		ta?.select();
 	}
 
 	function formatDate(dateString: string | null) {
@@ -44,7 +48,7 @@
 			await update({ reset: false });
 			saved = true;
 			setTimeout(() => (saved = false), 1000);
-			ta.focus();
+			ta?.focus();
 		};
 	};
 
@@ -55,9 +59,24 @@
 	}
 
 	function copyLink() {
-		linkInput.select();
+		linkInput?.select();
 		navigator.clipboard.writeText(`${$page.url.origin}/notepad/${data.slug}`);
 	}
+
+	const handleUnlock: SubmitFunction = () => {
+		unlocking = true;
+		unlockError = '';
+		return async ({ result, update }) => {
+			unlocking = false;
+			if (result.type === 'success' && result.data?.success) {
+				await update(); // Reloads data
+			} else if (result.type === 'success' && result.data?.error) {
+				unlockError = result.data.error;
+			} else {
+				unlockError = 'Gagal membuka catatan';
+			}
+		};
+	};
 </script>
 
 <svelte:head>
@@ -105,76 +124,117 @@
 						</div>
 					</div>
 				</div>
-				<a href="/notepad" class="btn btn-sm bg-base-200/50 border border-base-content/10 rounded-lg hover:bg-base-200 transition-colors shadow-sm gap-2">
-					<FilePlus2 size={16} /> New Notes
-				</a>
+				<div class="flex gap-2">
+					<button type="button" class="btn btn-sm bg-base-200/50 border border-base-content/10 rounded-lg hover:bg-base-200 transition-colors shadow-sm gap-1.5" onclick={refresh} disabled={refreshing}>
+						<RefreshCw size={14} class={refreshing ? 'animate-spin' : ''} /> {refreshing ? 'Refreshing...' : 'Refresh'}
+					</button>
+					<a href="/notepad" class="btn btn-sm bg-base-200/50 border border-base-content/10 rounded-lg hover:bg-base-200 transition-colors shadow-sm gap-2">
+						<FilePlus2 size={16} /> New Notes
+					</a>
+				</div>
 			</div>
 		</div>
 
-		<form method="POST" action="?/save" use:enhance={afterSave} class="flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
-			
-			<!-- Top Toolbar -->
-			<div class="flex items-center justify-between border-b border-base-content/10 bg-base-200/30 h-14 px-4 rounded-t-2xl">
-				<div class="flex items-center gap-3">
-					<button type="submit" class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm gap-1.5" disabled={isEmpty}>
-						<Save size={14} /> Save
-					</button>
-					<button type="button" class="btn btn-sm bg-base-100 border border-base-content/10 rounded-lg hover:bg-base-200 transition-colors shadow-sm gap-1.5" onclick={refresh} disabled={refreshing}>
-						<RefreshCw size={14} class={refreshing ? 'animate-spin' : ''} /> {refreshing ? 'Refreshing...' : 'Refresh'}
-					</button>
-					{#if saved}
-						<span class="text-xs font-bold text-success animate-in fade-in slide-in-from-left-2">Saved!</span>
-					{/if}
+		{#if data.isLocked}
+			<div class="flex flex-col items-center justify-center min-h-[400px] rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md p-8">
+				<div class="bg-primary/10 p-4 rounded-full mb-4 text-primary">
+					<Lock size={48} />
 				</div>
-				<div class="flex items-center gap-2">
-					<ActionButton
-						showSelectAll={true}
-						showClear={false}
-						showCopy={false}
-						onselectall={selectAll}
+				<h2 class="text-2xl font-bold mb-2">Catatan Terkunci</h2>
+				<p class="text-base-content/60 text-center mb-6 max-w-sm">
+					Catatan ini dilindungi dengan password. Silakan masukkan password untuk melihat dan mengedit isinya.
+				</p>
+
+				{#if unlockError}
+					<div class="alert alert-error text-sm mb-4 max-w-sm">
+						<span>{unlockError}</span>
+					</div>
+				{/if}
+
+				<form method="POST" action="?/unlock" use:enhance={handleUnlock} class="flex w-full max-w-sm flex-col gap-3">
+					<input 
+						type="password" 
+						name="password" 
+						bind:value={unlockPassword}
+						placeholder="Masukkan password..." 
+						class="input input-bordered w-full"
+						required 
+					/>
+					<button type="submit" class="btn btn-primary" disabled={unlocking || !unlockPassword}>
+						{#if unlocking}
+							<span class="loading loading-spinner loading-sm"></span>
+						{:else}
+							Buka Catatan
+						{/if}
+					</button>
+				</form>
+			</div>
+		{:else}
+			<form method="POST" action="?/save" use:enhance={afterSave} class="flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
+				
+				<!-- Main Editor -->
+				<div class="bg-base-100/50 flex-col relative rounded-t-2xl">
+					<TextArea
+						bind:this={ta}
+						bind:value={text}
+						name="text"
+						placeholder="Tulis catatan kamu di sini..."
+						rows={25}
+						className="w-full resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono min-h-[500px] rounded-t-2xl"
 					/>
 				</div>
-			</div>
 
-			<!-- Main Editor -->
-			<div class="bg-base-100/50 flex-col relative">
-				<TextArea
-					bind:this={ta}
-					bind:value={text}
-					name="text"
-					placeholder="Tulis catatan kamu di sini..."
-					rows={25}
-					className="w-full resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono min-h-[500px]"
-				/>
-			</div>
+				<!-- Main Editor (Toolbar Removed) -->
 
-			<!-- Bottom Footer (Info & Share) -->
-			<div class="flex flex-col sm:flex-row items-center justify-between border-t border-base-content/10 bg-base-200/20 px-4 py-3 gap-4 rounded-b-2xl">
-				<div class="flex items-center gap-2 text-xs font-medium text-base-content/40">
-					<Clock size={14} />
-					<span>Last edited: {formatDate(data.updatedAt)}</span>
-				</div>
-				
-				<div class="flex items-center gap-2 w-full sm:w-auto">
-					<div class="relative w-full sm:w-72">
-						<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-							<Link size={14} class="text-base-content/30" />
-						</div>
-						<input
-							type="text"
-							readonly
-							bind:this={linkInput}
-							value="https://{$page.url.host}/notepad/{data.slug}"
-							class="w-full bg-base-100 border border-base-content/10 text-base-content/60 text-xs rounded-lg focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-colors py-2 pl-9 pr-3 shadow-inner"
-						/>
+				<!-- Bottom Footer (Info & Share) -->
+				<div class="flex flex-col sm:flex-row items-center justify-between border-t border-base-content/10 bg-base-200/20 px-4 py-3 gap-4 rounded-b-2xl">
+					<div class="flex items-center gap-2 text-xs font-medium text-base-content/40">
+						<Clock size={14} />
+						<span>Last edited: {formatDate(data.updatedAt)}</span>
 					</div>
-					<button type="button" class="btn btn-sm bg-base-100 border border-base-content/10 rounded-lg hover:bg-base-200 transition-colors shadow-sm gap-1.5" onclick={copyLink}>
-						<Copy size={14} /> Copy
-					</button>
-				</div>
-			</div>
+					
+					<div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+						<div class="relative w-full sm:w-48">
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<Lock size={14} class="text-base-content/30" />
+							</div>
+							<input
+								type="password"
+								name="password"
+								bind:value={passwordInput}
+								placeholder="Set Password (Opsional)"
+								class="w-full bg-base-100 border border-base-content/10 text-base-content/80 text-xs rounded-lg focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-colors py-2 pl-9 pr-3 shadow-inner"
+							/>
+						</div>
 
-		</form>
+						<div class="relative w-full sm:w-72">
+							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+								<Link size={14} class="text-base-content/30" />
+							</div>
+							<input
+								type="text"
+								readonly
+								bind:this={linkInput}
+								value="https://{$page.url.host}/notepad/{data.slug}"
+								class="w-full bg-base-100 border border-base-content/10 text-base-content/60 text-xs rounded-lg focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-colors py-2 pl-9 pr-3 shadow-inner"
+							/>
+						</div>
+						<button type="button" class="btn btn-sm bg-base-100 border border-base-content/10 rounded-lg hover:bg-base-200 transition-colors shadow-sm gap-1.5" onclick={copyLink}>
+							<Copy size={14} /> Copy
+						</button>
+						<div class="flex items-center gap-2">
+							<button type="submit" class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm gap-1.5" disabled={isEmpty}>
+								<Save size={14} /> Save
+							</button>
+							{#if saved}
+								<span class="text-xs font-bold text-success animate-in fade-in slide-in-from-left-2">Saved!</span>
+							{/if}
+						</div>
+					</div>
+				</div>
+
+			</form>
+		{/if}
 
 	</div>
 </div>
