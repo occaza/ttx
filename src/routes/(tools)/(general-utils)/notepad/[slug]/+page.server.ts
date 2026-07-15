@@ -137,14 +137,14 @@ export async function load({ params, cookies }) {
 					const authCookie = cookies.get(`np_auth_${slug}`);
 					if (authCookie === parsed.password_hash) {
 						isLocked = false;
-						decryptedText = parsed.content;
+						decryptedText = parsed.content || '';
 						previousContent = parsed.previous_content ?? null;
 					} else {
 						decryptedText = '';
 					}
 				} else if (parsed && parsed.__notepad) {
 					// Format JSON notepad tanpa password
-					decryptedText = parsed.content;
+					decryptedText = parsed.content || '';
 					previousContent = parsed.previous_content ?? null;
 				}
 			} catch (e) {
