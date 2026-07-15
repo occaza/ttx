@@ -123,28 +123,32 @@ export async function load({ params, cookies }) {
 		.single();
 
 	let decryptedText = '';
+	let previousContent: string | null = null;
 	let isLocked = false;
 
 	if (data?.text) {
 		try {
 			decryptedText = decryptText(data.text);
 			
-			// Cek apakah teks adalah JSON yang dikunci
 			try {
 				const parsed = JSON.parse(decryptedText);
 				if (parsed && parsed.__is_locked) {
 					isLocked = true;
-					// Cek cookie apakah user sudah punya akses
 					const authCookie = cookies.get(`np_auth_${slug}`);
 					if (authCookie === parsed.password_hash) {
 						isLocked = false;
 						decryptedText = parsed.content;
+						previousContent = parsed.previous_content ?? null;
 					} else {
-						decryptedText = ''; // Kosongkan jika belum unlock
+						decryptedText = '';
 					}
+				} else if (parsed && parsed.__notepad) {
+					// Format JSON notepad tanpa password
+					decryptedText = parsed.content;
+					previousContent = parsed.previous_content ?? null;
 				}
 			} catch (e) {
-				// Bukan JSON atau JSON biasa (tidak dikunci), biarkan sebagai teks biasa
+				// Plain text biasa, tidak ada JSON
 			}
 		} catch (err) {
 			console.error('Decryption error:', err);
@@ -156,8 +160,34 @@ export async function load({ params, cookies }) {
 		slug,
 		text: decryptedText,
 		isLocked,
+		previousContent,
 		updatedAt: data?.updated_at || null
 	};
+}
+
+// Helper: baca konten saat ini dari DB (plain text setelah decrypt)
+async function getCurrentContent(slug: string): Promise<string | null> {
+	const { data } = await supabaseAdmin
+		.from('notepad')
+		.select('text')
+		.eq('slug', slug)
+		.single();
+
+	if (!data?.text) return null;
+
+	try {
+		const decrypted = decryptText(data.text);
+		try {
+			const parsed = JSON.parse(decrypted);
+			if (parsed.__is_locked) return parsed.content;
+			if (parsed.__notepad) return parsed.content;
+		} catch {
+			// plain text
+		}
+		return decrypted;
+	} catch {
+		return null;
+	}
 }
 
 export const actions = {
@@ -172,18 +202,27 @@ export const actions = {
 		const text = (formData.get('text') || '').toString().trim();
 		const password = (formData.get('password') || '').toString().trim();
 
-		if (!text) {
-			throw error(400, 'Text tidak boleh kosong');
-		}
 
-		let finalContentToEncrypt = text;
+		// Ambil konten lama sebelum ditimpa (soft delete)
+		const oldContent = await getCurrentContent(slug);
+		const previousContent = oldContent !== text ? oldContent : null;
+
+		let finalContentToEncrypt: string;
 
 		if (password) {
 			const passwordHash = createHash('sha256').update(password).digest('hex');
 			finalContentToEncrypt = JSON.stringify({
 				__is_locked: true,
 				content: text,
+				previous_content: previousContent,
 				password_hash: passwordHash
+			});
+		} else {
+			// Simpan dalam format JSON notepad (dengan previous_content)
+			finalContentToEncrypt = JSON.stringify({
+				__notepad: true,
+				content: text,
+				previous_content: previousContent
 			});
 		}
 
