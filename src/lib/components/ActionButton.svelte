@@ -27,11 +27,11 @@
 		<div class="tooltip" data-tip="Select all">
 			<button
 				type="button"
-				class="btn btn-square rounded-sm btn-md"
+				class="btn btn-square rounded-xl btn-sm md:btn-md bg-base-100/50 hover:bg-base-200 border border-base-content/10 shadow-sm transition-all hover:-translate-y-0.5 text-base-content/70 hover:text-primary"
 				onclick={() => onselectall?.()}
 				{disabled}
 			>
-				<TextSelect size={16} />
+				<TextSelect size={18} />
 			</button>
 		</div>
 	{/if}
@@ -40,11 +40,11 @@
 		<div class="tooltip" data-tip="Copy">
 			<button
 				type="button"
-				class="btn btn-square rounded-sm btn-md"
+				class="btn btn-square rounded-xl btn-sm md:btn-md bg-base-100/50 hover:bg-base-200 border border-base-content/10 shadow-sm transition-all hover:-translate-y-0.5 text-base-content/70 hover:text-primary"
 				onclick={() => oncopy?.()}
 				{disabled}
 			>
-				<Copy size={16} />
+				<Copy size={18} />
 			</button>
 		</div>
 	{/if}
@@ -52,11 +52,11 @@
 		<div class="tooltip" data-tip="Clear">
 			<button
 				type="button"
-				class="btn btn-square rounded-sm btn-md"
+				class="btn btn-square rounded-xl btn-sm md:btn-md bg-base-100/50 hover:bg-base-200 border border-base-content/10 shadow-sm transition-all hover:-translate-y-0.5 text-base-content/70 hover:text-error"
 				onclick={() => onclear?.()}
 				{disabled}
 			>
-				<Eraser size={16} />
+				<Eraser size={18} />
 			</button>
 		</div>
 	{/if}

@@ -1,95 +1,33 @@
-<footer
-	class="footer-center mt-24 footer footer-horizontal rounded-b-lg border-t border-white/10 bg-gradient-to-b from-base-200/80 to-base-300/80 p-10 text-base-content backdrop-blur-md"
->
-	<div
-		class="mb-6 h-1 w-full rounded-full bg-gradient-to-r from-primary via-accent to-secondary"
-	></div>
+<footer class="relative overflow-hidden border-t border-base-content/10 bg-base-100">
+	<!-- Subtle grid continuation -->
+	<div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
 
-	<nav class="grid grid-flow-col gap-6">
-		<a
-			href="/"
-			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-primary"
-			>Contact</a
-		>
-		<a
-			href="/"
-			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-accent"
-			>About us</a
-		>
-		<a
-			href="/"
-			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-secondary"
-			>Jobs</a
-		>
-		<a
-			href="/"
-			class="link link-hover transition-all duration-300 hover:scale-110 hover:text-primary"
-			>Press kit</a
-		>
-	</nav>
+	<div class="relative mx-auto max-w-7xl px-4 py-10 md:px-8">
+		<div class="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
+			<!-- Brand -->
+			<div>
+				<a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
+					TEXY<span class="text-primary">.</span>
+				</a>
+				<p class="mt-1.5 max-w-xs text-sm text-base-content/50">
+					Utilitas teks ringan yang berjalan langsung di browser.
+				</p>
+			</div>
 
-	<nav class="my-6">
-		<div class="grid grid-flow-col gap-6">
-			<a
-				href="/"
-				target="_blank"
-				aria-label="twitter page"
-				class="transition-all duration-300 hover:scale-125 hover:text-primary"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="28"
-					height="28"
-					viewBox="0 0 24 24"
-					class="fill-current"
-				>
-					<path
-						d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
-					></path>
-				</svg>
-			</a>
-			<a
-				href="/"
-				target="_blank"
-				aria-label="youtube channel"
-				class="transition-all duration-300 hover:scale-125 hover:text-accent"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="28"
-					height="28"
-					viewBox="0 0 24 24"
-					class="fill-current"
-				>
-					<path
-						d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
-					></path>
-				</svg>
-			</a>
-			<a
-				href="/"
-				target="_blank"
-				aria-label="Facebook page"
-				class="transition-all duration-300 hover:scale-125 hover:text-secondary"
-			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="28"
-					height="28"
-					viewBox="0 0 24 24"
-					class="fill-current"
-				>
-					<path
-						d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
-					></path>
-				</svg>
-			</a>
+			<!-- Quick links -->
+			<nav class="flex flex-wrap gap-x-8 gap-y-2 text-sm">
+				<a href="/text-tools/remove-duplicate-lines" class="text-base-content/50 transition-colors hover:text-base-content">Remove Duplicates</a>
+				<a href="/text-tools/sort-lines" class="text-base-content/50 transition-colors hover:text-base-content">Sort Lines</a>
+				<a href="/notepad" class="text-base-content/50 transition-colors hover:text-base-content">Notepad</a>
+				<a href="/emoji-picker" class="text-base-content/50 transition-colors hover:text-base-content">Emoji Browser</a>
+			</nav>
 		</div>
-	</nav>
-	<p class="text-sm opacity-70">
-		<span>
-			Copyright © {new Date().getFullYear()} - All right reserved by
-			<span class="font-bold text-primary"><a href="/">TEXY</a></span>
-		</span>
-	</p>
+
+		<!-- Bottom bar -->
+		<div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-base-content/8 pt-6 text-xs text-base-content/40 sm:flex-row">
+			<p>&copy; {new Date().getFullYear()} TEXY. Semua proses berjalan di browser Anda.</p>
+			<p>Dibuat dengan penuh perhatian.</p>
+		</div>
+	</div>
 </footer>
+

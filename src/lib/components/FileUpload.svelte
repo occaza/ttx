@@ -39,5 +39,5 @@
 	{accept}
 	bind:this={fileInput}
 	onchange={handleChange}
-	class="file-input w-full rounded-sm file-input-{size} {className}"
+	class="file-input w-full rounded-xl file-input-{size} bg-base-100/50 border-base-content/10 shadow-sm transition-all hover:border-primary/40 focus:border-primary/40 focus:ring-2 focus:ring-primary/20 {className}"
 />

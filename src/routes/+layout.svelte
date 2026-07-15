@@ -90,15 +90,14 @@
 	<meta name="theme-color" content="#0ea5e9" />
 </svelte:head>
 
-<div class="min-h-screen bg-base-300">
-	<div class="max-w-full md:mx-auto md:max-w-8/12">
-		<!-- Pastikan komponen Nav menerima props ini -->
+<div class="min-h-screen bg-base-100">
+	{#if !$page.error}
 		<Nav />
-
-		<div class="pt-30">
-			{@render children?.()}
-		</div>
-
-		<Footer />
+	{/if}
+	<div class={$page.error ? '' : 'pt-16'}>
+		{@render children?.()}
 	</div>
+	{#if !$page.error}
+		<Footer />
+	{/if}
 </div>

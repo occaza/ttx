@@ -1,64 +1,36 @@
 <script lang="ts">
-	let { title, desc, href } = $props<{
+	import { ArrowRight, Wrench } from '@lucide/svelte';
+
+	let { title, desc, href, icon: Icon = Wrench } = $props<{
 		title: string;
 		desc: string;
 		href: string;
+		icon?: any;
 	}>();
-
-	let isHovered = $state(false);
 </script>
 
 <a
 	{href}
-	class="card-hover group relative overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-lg transition-all duration-300 hover:shadow-2xl"
-	onmouseenter={() => (isHovered = true)}
-	onmouseleave={() => (isHovered = false)}
+	class="group relative overflow-hidden rounded-2xl border border-base-content/10 bg-base-100 p-4 transition-all hover:border-primary/40 hover:bg-base-200/40 hover:shadow-xl hover:shadow-primary/5"
 >
-	<div
-		class="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-	></div>
+	<!-- Subtle top gradient line -->
+	<div class="absolute inset-x-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
 
-	<div class="relative z-10 card-body">
-		<div class="flex items-start justify-between gap-2">
-			<h2 class="card-title text-lg transition-colors duration-300 group-hover:text-primary">
-				{title}
-			</h2>
-			<div
-				class="transform text-2xl transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-			>
-				{#if isHovered}
-					✨
-				{:else}
-					🔧
-				{/if}
+	<div class="flex items-start justify-between gap-3">
+		<div class="flex items-center gap-2.5 min-w-0">
+			<div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-base-200/80 text-base-content/60 transition-colors group-hover:bg-primary/10 group-hover:text-primary">
+				<Icon size={14} />
 			</div>
+			<h3 class="truncate text-[13px] font-bold text-base-content transition-colors group-hover:text-primary">
+				{title}
+			</h3>
 		</div>
-		<p class="text-sm text-base-content/70">{desc}</p>
-
-		<div class="mt-2 card-actions justify-end">
-			<span
-				class="inline-flex items-center text-sm font-semibold text-primary transition-all duration-300 group-hover:gap-2"
-			>
-				Coba Sekarang
-				<span
-					class="inline-block transform transition-transform duration-300 group-hover:translate-x-1"
-					>→</span
-				>
-			</span>
+		<div class="pt-1.5 shrink-0 text-base-content/20 opacity-0 transition-all group-hover:opacity-100 group-hover:text-primary mt-0.5">
+			<ArrowRight size={14} />
 		</div>
 	</div>
 
-	<div
-		class="absolute right-0 bottom-0 left-0 h-1 origin-left scale-x-0 transform bg-gradient-to-r from-primary via-secondary to-accent transition-transform duration-300 group-hover:scale-x-100"
-	></div>
+	<p class="mt-2 pl-[38px] text-[11px] leading-relaxed text-base-content/50 line-clamp-2">
+		{desc}
+	</p>
 </a>
-
-<style>
-	.card-hover {
-		transform: translateY(0);
-	}
-
-	.card-hover:hover {
-		transform: translateY(-4px);
-	}
-</style>

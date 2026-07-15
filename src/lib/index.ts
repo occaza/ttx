@@ -8,3 +8,4 @@ export { default as Nav } from './components/Nav.svelte';
 export { default as Hero } from './components/Hero.svelte';
 export { default as ToolCard } from './components/ToolCard.svelte';
 export { default as Footer } from './components/Footer.svelte';
+export { default as ThemeSwitcher } from './components/ThemeSwitcher.svelte';
