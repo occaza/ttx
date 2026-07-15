@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit';
 import { ADMIN_RECOVERY_PASSWORD } from '$env/static/private';
-import { ENCRYPTION_KEY } from '$lib/server/notepad.server';
 import nacl from 'tweetnacl';
 
 const { secretbox } = nacl;
@@ -17,8 +16,8 @@ function hexToBytes(hex: string): Uint8Array {
 	return bytes;
 }
 
-function decryptText(encryptedHex: string): string {
-	const key = hexToBytes(ENCRYPTION_KEY);
+function decryptText(encryptedHex: string, customKey: string): string {
+	const key = hexToBytes(customKey);
 	const full = hexToBytes(encryptedHex);
 
 	const nonce = full.slice(0, secretbox.nonceLength);
@@ -37,18 +36,19 @@ export const actions = {
 	default: async ({ request }) => {
 		const formData = await request.formData();
 		const password = formData.get('password')?.toString().trim();
+		const decryptionKey = formData.get('decryptionKey')?.toString().trim();
 		const encryptedHex = formData.get('encryptedHex')?.toString().trim();
 
-		if (!password || !encryptedHex) {
-			return { success: false, error: 'Password dan data hex harus diisi' };
+		if (!password || !decryptionKey || !encryptedHex) {
+			return { success: false, error: 'Password, Decryption Key, dan Payload Hex harus diisi' };
 		}
 
 		if (password !== ADMIN_RECOVERY_PASSWORD) {
-			return { success: false, error: 'Password salah' };
+			return { success: false, error: 'Password halaman salah' };
 		}
 
 		try {
-			const decrypted = decryptText(encryptedHex);
+			const decrypted = decryptText(encryptedHex, decryptionKey);
 			
 			// Coba format jika bentuknya JSON
 			try {

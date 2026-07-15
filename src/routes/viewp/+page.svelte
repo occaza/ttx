@@ -40,10 +40,11 @@
 				{/if}
 
 				<div class="form-control">
-					<label class="label">
-						<span class="label-text opacity-70">Access Key</span>
+					<label class="label" for="password">
+						<span class="label-text opacity-70">Page Access Password</span>
 					</label>
 					<input 
+						id="password"
 						type="password" 
 						name="password" 
 						required 
@@ -52,10 +53,25 @@
 				</div>
 
 				<div class="form-control mt-4">
-					<label class="label">
+					<label class="label" for="decryptionKey">
+						<span class="label-text opacity-70">Decryption Key</span>
+					</label>
+					<input 
+						id="decryptionKey"
+						type="text" 
+						name="decryptionKey" 
+						required 
+						class="input input-bordered w-full font-mono bg-base-100/50" 
+						placeholder="Hex string key..."
+					/>
+				</div>
+
+				<div class="form-control mt-4">
+					<label class="label" for="encryptedHex">
 						<span class="label-text opacity-70">Payload Hex</span>
 					</label>
 					<textarea 
+						id="encryptedHex"
 						name="encryptedHex" 
 						rows="4" 
 						required
