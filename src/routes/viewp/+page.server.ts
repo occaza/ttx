@@ -32,19 +32,47 @@ function decryptText(encryptedHex: string, customKey: string): string {
 	return decodeUTF8(decrypted);
 }
 
+export async function load({ cookies }) {
+	const auth = cookies.get('viewp_auth');
+	const unlocked = auth === ADMIN_RECOVERY_PASSWORD;
+	return { unlocked };
+}
+
 export const actions = {
-	default: async ({ request }) => {
+	unlock: async ({ request, cookies }) => {
 		const formData = await request.formData();
 		const password = formData.get('password')?.toString().trim();
-		const decryptionKey = formData.get('decryptionKey')?.toString().trim();
-		const encryptedHex = formData.get('encryptedHex')?.toString().trim();
 
-		if (!password || !decryptionKey || !encryptedHex) {
-			return { success: false, error: 'Password, Decryption Key, dan Payload Hex harus diisi' };
+		if (!password) {
+			return { unlockError: 'Password harus diisi' };
 		}
 
 		if (password !== ADMIN_RECOVERY_PASSWORD) {
-			return { success: false, error: 'Password halaman salah' };
+			return { unlockError: 'Password salah' };
+		}
+
+		// Set cookie for 1 hour
+		cookies.set('viewp_auth', password, { 
+			path: '/viewp', 
+			httpOnly: true, 
+			sameSite: 'lax', 
+			secure: process.env.NODE_ENV === 'production',
+			maxAge: 60 * 60
+		});
+		return { success: true };
+	},
+	decrypt: async ({ request, cookies }) => {
+		const auth = cookies.get('viewp_auth');
+		if (auth !== ADMIN_RECOVERY_PASSWORD) {
+			throw error(401, 'Unauthorized');
+		}
+
+		const formData = await request.formData();
+		const decryptionKey = formData.get('decryptionKey')?.toString().trim();
+		const encryptedHex = formData.get('encryptedHex')?.toString().trim();
+
+		if (!decryptionKey || !encryptedHex) {
+			return { decryptError: 'Decryption Key dan Payload Hex harus diisi' };
 		}
 
 		try {
@@ -56,18 +84,16 @@ export const actions = {
 				return { 
 					success: true, 
 					result: JSON.stringify(parsed, null, 2),
-					isJson: true
 				};
 			} catch {
 				return { 
 					success: true, 
 					result: decrypted,
-					isJson: false
 				};
 			}
 		} catch (err: any) {
 			console.error('Decryption error:', err);
-			return { success: false, error: err.message || 'Gagal decrypt catatan' };
+			return { decryptError: err.message || 'Gagal decrypt catatan' };
 		}
 	}
 };
