@@ -34,7 +34,7 @@
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<div class="min-h-screen bg-base-100 p-4 md:p-8 pt-16 md:pt-24">
+<div class="min-h-screen bg-base-100 px-4 py-6 md:px-8 md:py-8">
 	
 	<div class="max-w-6xl mx-auto space-y-8">
 		
