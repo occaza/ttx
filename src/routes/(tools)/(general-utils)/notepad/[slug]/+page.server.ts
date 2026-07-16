@@ -216,11 +216,17 @@ export const actions = {
 				// Ambil history yang sudah ada untuk deduplikasi
 				const { data: historyData } = await supabaseAdmin
 					.from('notepad_history')
-					.select('text')
-					.eq('slug', slug);
+					.select('id, text')
+					.eq('slug', slug)
+					.order('created_at', { ascending: false });
 
 				const previouslyDeletedLines = new Set<string>();
-				if (historyData) {
+				let existingHistoryId: string | null = null;
+				let existingText = '';
+
+				if (historyData && historyData.length > 0) {
+					existingHistoryId = historyData[0].id;
+					existingText = historyData[0].text;
 					historyData.forEach(row => {
 						const lines = row.text.replace(/\r\n/g, '\n').split('\n');
 						lines.forEach(l => previouslyDeletedLines.add(l.trim()));
@@ -233,11 +239,21 @@ export const actions = {
 				if (deletedLines.length > 0) {
 					const deletedText = deletedLines.join('\n');
 					try {
-						// Simpan sebagai plaintext (tanpa enkripsi)
-						await supabaseAdmin.from('notepad_history').insert({
-							slug,
-							text: deletedText
-						});
+						if (existingHistoryId) {
+							// Update record yang sudah ada (append)
+							await supabaseAdmin.from('notepad_history')
+								.update({ 
+									text: existingText + '\n' + deletedText,
+									created_at: new Date().toISOString() // perbarui waktu agar naik ke atas
+								})
+								.eq('id', existingHistoryId);
+						} else {
+							// Simpan sebagai record baru
+							await supabaseAdmin.from('notepad_history').insert({
+								slug,
+								text: deletedText
+							});
+						}
 					} catch (err) {
 						console.error('Gagal menyimpan ke notepad_history:', err);
 					}
