@@ -46,6 +46,7 @@ import { supabaseAdmin } from '$lib/server/supabase.server';
 import { ENCRYPTION_KEY } from '$lib/server/notepad.server';
 import { ADMIN_RECOVERY_PASSWORD } from '$env/static/private';
 import nacl from 'tweetnacl';
+import { createHash } from 'crypto';
 
 const { secretbox, randomBytes } = nacl;
 
@@ -235,7 +236,7 @@ export const actions = {
 					existingText = historyData[0].text;
 					historyData.forEach(row => {
 						const lines = row.text.replace(/\r\n/g, '\n').split('\n');
-						lines.forEach(l => previouslyDeletedLines.add(l.trim()));
+						lines.forEach((l: string) => previouslyDeletedLines.add(l.trim()));
 					});
 				}
 

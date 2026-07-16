@@ -275,12 +275,12 @@
 
 					<div class="space-y-4">
 						<div class="form-control">
-							<label class="label text-xs font-semibold py-1">Admin Recovery Password</label>
-							<input type="password" name="adminPassword" class="input input-sm input-bordered w-full font-mono" required />
+							<label class="label text-xs font-semibold py-1" for="adminPassword">Admin Recovery Password</label>
+							<input id="adminPassword" type="password" name="adminPassword" class="input input-sm input-bordered w-full font-mono" required />
 						</div>
 						<div class="form-control">
-							<label class="label text-xs font-semibold py-1">Password Baru</label>
-							<input type="password" name="newPassword" class="input input-sm input-bordered w-full" placeholder="Kosongkan untuk menghapus gembok" />
+							<label class="label text-xs font-semibold py-1" for="newPassword">Password Baru</label>
+							<input id="newPassword" type="password" name="newPassword" class="input input-sm input-bordered w-full" placeholder="Kosongkan untuk menghapus gembok" />
 						</div>
 						<button type="submit" class="btn btn-primary btn-sm w-full mt-2" disabled={changingPassword}>
 							{#if changingPassword}<span class="loading loading-spinner loading-xs"></span>{/if}
