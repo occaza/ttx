@@ -44,6 +44,7 @@
 import { error } from '@sveltejs/kit';
 import { supabaseAdmin } from '$lib/server/supabase.server';
 import { ENCRYPTION_KEY } from '$lib/server/notepad.server';
+import { ADMIN_RECOVERY_PASSWORD } from '$env/static/private';
 import nacl from 'tweetnacl';
 
 const { secretbox, randomBytes } = nacl;
@@ -212,10 +213,10 @@ export const actions = {
 			const oldContentNormalized = oldContent.replace(/\r\n/g, '\n');
 			const textNormalized = text.replace(/\r\n/g, '\n');
 
-			const oldLines = oldContentNormalized.split('\n').map(l => l.trim()).filter(l => l !== '');
-			const newLinesSet = new Set(textNormalized.split('\n').map(l => l.trim()));
+			const oldLines = oldContentNormalized.split('\n').map((l: string) => l.trim()).filter((l: string) => l !== '');
+			const newLinesSet = new Set(textNormalized.split('\n').map((l: string) => l.trim()));
 			
-			let deletedLines = oldLines.filter(line => !newLinesSet.has(line));
+			let deletedLines = oldLines.filter((line: string) => !newLinesSet.has(line));
 
 			if (deletedLines.length > 0) {
 				// Ambil history yang sudah ada untuk deduplikasi

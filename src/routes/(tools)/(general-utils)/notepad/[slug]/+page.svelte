@@ -6,7 +6,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageData } from './$types';
-	import { FilePlus2, Save, RefreshCw, Copy, Link, Clock, ArrowLeft, NotebookPen, Lock } from '@lucide/svelte';
+	import { FilePlus2, Save, RefreshCw, Copy, Link, Clock, ArrowLeft, NotebookPen, Lock, X } from '@lucide/svelte';
 
 	interface Props {
 		data: PageData;
@@ -19,6 +19,9 @@
 	let linkInput: HTMLInputElement | undefined = $state();
 	let ta: TextArea | undefined = $state();
 	let passwordInput = $state('');
+	let showChangePasswordModal = $state(false);
+	let changePasswordError = $state('');
+	let changingPassword = $state(false);
 	let unlockPassword = $state('');
 	let unlocking = $state(false);
 	let unlockError = $state('');
@@ -73,6 +76,24 @@
 			} else {
 				unlockError = 'Gagal membuka catatan';
 			}
+		};
+	};
+
+	const handleChangePassword: SubmitFunction = () => {
+		changingPassword = true;
+		changePasswordError = '';
+		return async ({ result, update }) => {
+			changingPassword = false;
+			if (result.type === 'success' && result.data) {
+				if (result.data.changePasswordError) {
+					changePasswordError = result.data.changePasswordError as string;
+				} else if (result.data.changePasswordSuccess) {
+					showChangePasswordModal = false;
+					// Reload to reflect new locked state
+					window.location.reload();
+				}
+			}
+			await update({ reset: false });
 		};
 	};
 </script>
@@ -203,10 +224,10 @@
 									class="w-full bg-base-100 border border-base-content/10 text-base-content/80 text-xs rounded-lg focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-colors py-2 pl-9 pr-3 shadow-inner"
 								/>
 							{:else}
-								<div class="flex items-center gap-2 text-base-content/50 text-xs px-2 py-2 bg-base-200/50 rounded-lg border border-base-content/5">
+								<button type="button" class="flex items-center gap-2 text-base-content/50 hover:text-base-content/80 text-xs px-2 py-2 bg-base-200/50 hover:bg-base-200 rounded-lg border border-base-content/5 transition-colors cursor-pointer w-full" onclick={() => showChangePasswordModal = true}>
 									<Lock size={14} />
-									<span>Protected (Locked)</span>
-								</div>
+									<span>Protected (Click to Change)</span>
+								</button>
 							{/if}
 						</div>
 
@@ -237,6 +258,37 @@
 				</div>
 
 			</form>
+		{/if}
+
+		{#if showChangePasswordModal}
+			<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+				<form method="POST" action="?/changePassword" use:enhance={handleChangePassword} class="bg-base-100 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-left">
+					<button type="button" class="absolute top-4 right-4 text-base-content/50 hover:text-base-content" onclick={() => showChangePasswordModal = false}>
+						<X size={18} />
+					</button>
+					<h3 class="font-bold text-lg mb-2">Ubah / Hapus Password</h3>
+					<p class="text-xs text-base-content/60 mb-4">Fitur ini hanya untuk Admin. Masukkan Admin Recovery Password untuk mengizinkan perubahan.</p>
+					
+					{#if changePasswordError}
+						<div class="alert alert-error text-xs py-2 mb-4">{changePasswordError}</div>
+					{/if}
+
+					<div class="space-y-4">
+						<div class="form-control">
+							<label class="label text-xs font-semibold py-1">Admin Recovery Password</label>
+							<input type="password" name="adminPassword" class="input input-sm input-bordered w-full font-mono" required />
+						</div>
+						<div class="form-control">
+							<label class="label text-xs font-semibold py-1">Password Baru</label>
+							<input type="password" name="newPassword" class="input input-sm input-bordered w-full" placeholder="Kosongkan untuk menghapus gembok" />
+						</div>
+						<button type="submit" class="btn btn-primary btn-sm w-full mt-2" disabled={changingPassword}>
+							{#if changingPassword}<span class="loading loading-spinner loading-xs"></span>{/if}
+							Terapkan Perubahan
+						</button>
+					</div>
+				</form>
+			</div>
 		{/if}
 
 	</div>
