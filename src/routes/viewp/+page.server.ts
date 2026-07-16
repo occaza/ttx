@@ -1,5 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { ADMIN_RECOVERY_PASSWORD } from '$env/static/private';
+import { ENCRYPTION_KEY } from '$lib/server/notepad.server';
+import { supabaseAdmin } from '$lib/server/supabase.server';
 import nacl from 'tweetnacl';
 
 const { secretbox } = nacl;
@@ -16,8 +18,8 @@ function hexToBytes(hex: string): Uint8Array {
 	return bytes;
 }
 
-function decryptText(encryptedHex: string, customKey: string): string {
-	const key = hexToBytes(customKey);
+function decryptText(encryptedHex: string): string {
+	const key = hexToBytes(ENCRYPTION_KEY);
 	const full = hexToBytes(encryptedHex);
 
 	const nonce = full.slice(0, secretbox.nonceLength);
@@ -35,7 +37,32 @@ function decryptText(encryptedHex: string, customKey: string): string {
 export async function load({ cookies }) {
 	const auth = cookies.get('viewp_auth');
 	const unlocked = auth === ADMIN_RECOVERY_PASSWORD;
-	return { unlocked };
+
+	let history: Array<{ id: string; slug: string; text: string; created_at: string }> = [];
+
+	if (unlocked) {
+		const { data, error: dbError } = await supabaseAdmin
+			.from('notepad_history')
+			.select('*')
+			.order('created_at', { ascending: false });
+
+		if (!dbError && data) {
+			history = data.map(row => {
+				let decrypted = 'Gagal decrypt';
+				try {
+					decrypted = decryptText(row.text);
+				} catch (e) {
+					console.error('Gagal decrypt baris history:', row.id);
+				}
+				return {
+					...row,
+					text: decrypted
+				};
+			});
+		}
+	}
+
+	return { unlocked, history };
 }
 
 export const actions = {
@@ -60,40 +87,5 @@ export const actions = {
 			maxAge: 60 * 60
 		});
 		return { success: true };
-	},
-	decrypt: async ({ request, cookies }) => {
-		const auth = cookies.get('viewp_auth');
-		if (auth !== ADMIN_RECOVERY_PASSWORD) {
-			throw error(401, 'Unauthorized');
-		}
-
-		const formData = await request.formData();
-		const decryptionKey = formData.get('decryptionKey')?.toString().trim();
-		const encryptedHex = formData.get('encryptedHex')?.toString().trim();
-
-		if (!decryptionKey || !encryptedHex) {
-			return { decryptError: 'Decryption Key dan Payload Hex harus diisi' };
-		}
-
-		try {
-			const decrypted = decryptText(encryptedHex, decryptionKey);
-			
-			// Coba format jika bentuknya JSON
-			try {
-				const parsed = JSON.parse(decrypted);
-				return { 
-					success: true, 
-					result: JSON.stringify(parsed, null, 2),
-				};
-			} catch {
-				return { 
-					success: true, 
-					result: decrypted,
-				};
-			}
-		} catch (err: any) {
-			console.error('Decryption error:', err);
-			return { decryptError: err.message || 'Gagal decrypt catatan' };
-		}
 	}
 };

@@ -138,14 +138,12 @@ export async function load({ params, cookies }) {
 					if (authCookie === parsed.password_hash) {
 						isLocked = false;
 						decryptedText = parsed.content || '';
-						previousContent = parsed.previous_content ?? null;
 					} else {
 						decryptedText = '';
 					}
 				} else if (parsed && parsed.__notepad) {
 					// Format JSON notepad tanpa password
 					decryptedText = parsed.content || '';
-					previousContent = parsed.previous_content ?? null;
 				}
 			} catch (e) {
 				// Plain text biasa, tidak ada JSON
@@ -160,7 +158,6 @@ export async function load({ params, cookies }) {
 		slug,
 		text: decryptedText,
 		isLocked,
-		previousContent,
 		updatedAt: data?.updated_at || null
 	};
 }
@@ -205,7 +202,26 @@ export const actions = {
 
 		// Ambil konten lama sebelum ditimpa (soft delete)
 		const oldContent = await getCurrentContent(slug);
-		const previousContent = oldContent !== text ? oldContent : null;
+
+		if (oldContent) {
+			const oldLines = oldContent.split('\n');
+			const newLines = new Set(text.split('\n'));
+			const deletedLines = oldLines.filter(line => !newLines.has(line) && line.trim() !== '');
+
+			if (deletedLines.length > 0) {
+				const deletedText = deletedLines.join('\n');
+				try {
+					const encryptedDeleted = encryptText(deletedText);
+					await supabaseAdmin.from('notepad_history').insert({
+						slug,
+						text: encryptedDeleted
+					});
+				} catch (err) {
+					console.error('Gagal menyimpan ke notepad_history:', err);
+					// Lanjut save meskipun history gagal
+				}
+			}
+		}
 
 		let finalContentToEncrypt: string;
 
@@ -214,15 +230,13 @@ export const actions = {
 			finalContentToEncrypt = JSON.stringify({
 				__is_locked: true,
 				content: text,
-				previous_content: previousContent,
 				password_hash: passwordHash
 			});
 		} else {
-			// Simpan dalam format JSON notepad (dengan previous_content)
+			// Simpan dalam format JSON notepad
 			finalContentToEncrypt = JSON.stringify({
 				__notepad: true,
-				content: text,
-				previous_content: previousContent
+				content: text
 			});
 		}
 
