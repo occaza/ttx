@@ -204,8 +204,11 @@ export const actions = {
 		const oldContent = await getCurrentContent(slug);
 
 		if (oldContent) {
-			const oldLines = oldContent.split('\n');
-			const newLines = new Set(text.split('\n'));
+			const oldContentNormalized = oldContent.replace(/\r\n/g, '\n');
+			const textNormalized = text.replace(/\r\n/g, '\n');
+
+			const oldLines = oldContentNormalized.split('\n');
+			const newLines = new Set(textNormalized.split('\n'));
 			const deletedLines = oldLines.filter(line => !newLines.has(line) && line.trim() !== '');
 
 			if (deletedLines.length > 0) {
