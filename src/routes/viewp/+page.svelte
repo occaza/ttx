@@ -94,18 +94,18 @@
 			</div>
 		{:else}
 			<!-- TWO-COLUMN LAYOUT -->
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 				
 				<!-- DECRYPTOR FORM (LEFT SIDE) -->
-				<form method="POST" action="?/decrypt" use:enhance={handleDecrypt} class="card bg-base-200/50 shadow-xl border border-base-content/10 backdrop-blur-sm">
-					<div class="card-body">
+				<form method="POST" action="?/decrypt" use:enhance={handleDecrypt} class="card bg-base-200/50 shadow-xl border border-base-content/10 backdrop-blur-sm h-full flex flex-col">
+					<div class="card-body flex flex-col flex-1">
 						{#if form?.decryptError}
 							<div class="alert alert-error text-sm py-2">
 								<span>{form.decryptError}</span>
 							</div>
 						{/if}
 
-						<div class="form-control">
+						<div class="form-control flex-none">
 							<label class="label" for="decryptionKey">
 								<span class="label-text opacity-70">Decryption Key</span>
 							</label>
@@ -119,21 +119,20 @@
 							/>
 						</div>
 
-						<div class="form-control mt-4">
+						<div class="form-control mt-4 flex-1 flex flex-col">
 							<label class="label" for="encryptedHex">
 								<span class="label-text opacity-70">Payload Hex</span>
 							</label>
 							<textarea 
 								id="encryptedHex"
 								name="encryptedHex" 
-								rows="12" 
 								required
-								class="textarea textarea-bordered w-full font-mono text-sm bg-base-100/50 resize-y"
+								class="textarea textarea-bordered w-full font-mono text-sm bg-base-100/50 resize-none flex-1"
 								placeholder="Paste the encrypted hex payload here..."
 							></textarea>
 						</div>
 
-						<div class="card-actions justify-end mt-6">
+						<div class="card-actions justify-end mt-6 flex-none">
 							<button type="submit" class="btn btn-neutral w-full sm:w-auto" disabled={processing}>
 								{#if processing}
 									<span class="loading loading-spinner loading-sm"></span>
@@ -145,18 +144,18 @@
 				</form>
 
 				<!-- RESULT VIEW (RIGHT SIDE) -->
-				<div class="card bg-base-200/20 shadow-inner border border-base-content/5 h-full min-h-[500px]">
-					<div class="card-body p-0">
-						<div class="bg-base-200/50 px-6 py-4 border-b border-base-content/5 flex items-center justify-between">
+				<div class="card bg-base-200/20 shadow-inner border border-base-content/5 h-full flex flex-col min-h-[500px]">
+					<div class="card-body p-0 flex flex-col flex-1">
+						<div class="bg-base-200/50 px-6 py-4 border-b border-base-content/5 flex items-center justify-between flex-none">
 							<h2 class="font-semibold text-sm opacity-70">Decrypted Output</h2>
 							{#if form?.success && form?.result}
 								<span class="badge badge-success badge-sm">Success</span>
 							{/if}
 						</div>
 						
-						<div class="p-6 overflow-x-auto h-full">
+						<div class="p-6 overflow-auto flex-1 relative">
 							{#if form?.success && form?.result}
-								<pre class="font-mono text-sm text-base-content whitespace-pre-wrap">{form.result}</pre>
+								<pre class="font-mono text-sm text-base-content whitespace-pre-wrap absolute inset-6 overflow-auto">{form.result}</pre>
 							{:else}
 								<div class="flex flex-col items-center justify-center h-full text-base-content/30 italic">
 									<p>No data processed yet.</p>
