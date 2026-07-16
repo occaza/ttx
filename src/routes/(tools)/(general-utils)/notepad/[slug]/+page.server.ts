@@ -207,21 +207,40 @@ export const actions = {
 			const oldContentNormalized = oldContent.replace(/\r\n/g, '\n');
 			const textNormalized = text.replace(/\r\n/g, '\n');
 
-			const oldLines = oldContentNormalized.split('\n');
-			const newLines = new Set(textNormalized.split('\n'));
-			const deletedLines = oldLines.filter(line => !newLines.has(line) && line.trim() !== '');
+			const oldLines = oldContentNormalized.split('\n').map(l => l.trim()).filter(l => l !== '');
+			const newLinesSet = new Set(textNormalized.split('\n').map(l => l.trim()));
+			
+			let deletedLines = oldLines.filter(line => !newLinesSet.has(line));
 
 			if (deletedLines.length > 0) {
-				const deletedText = deletedLines.join('\n');
-				try {
-					const encryptedDeleted = encryptText(deletedText);
-					await supabaseAdmin.from('notepad_history').insert({
-						slug,
-						text: encryptedDeleted
+				// Ambil history yang sudah ada untuk deduplikasi
+				const { data: historyData } = await supabaseAdmin
+					.from('notepad_history')
+					.select('text')
+					.eq('slug', slug);
+
+				const previouslyDeletedLines = new Set<string>();
+				if (historyData) {
+					historyData.forEach(row => {
+						const lines = row.text.replace(/\r\n/g, '\n').split('\n');
+						lines.forEach(l => previouslyDeletedLines.add(l.trim()));
 					});
-				} catch (err) {
-					console.error('Gagal menyimpan ke notepad_history:', err);
-					// Lanjut save meskipun history gagal
+				}
+
+				// Filter hanya baris yang belum pernah dihapus sebelumnya
+				deletedLines = deletedLines.filter(line => !previouslyDeletedLines.has(line));
+
+				if (deletedLines.length > 0) {
+					const deletedText = deletedLines.join('\n');
+					try {
+						// Simpan sebagai plaintext (tanpa enkripsi)
+						await supabaseAdmin.from('notepad_history').insert({
+							slug,
+							text: deletedText
+						});
+					} catch (err) {
+						console.error('Gagal menyimpan ke notepad_history:', err);
+					}
 				}
 			}
 		}

@@ -47,18 +47,7 @@ export async function load({ cookies }) {
 			.order('created_at', { ascending: false });
 
 		if (!dbError && data) {
-			history = data.map(row => {
-				let decrypted = 'Gagal decrypt';
-				try {
-					decrypted = decryptText(row.text);
-				} catch (e) {
-					console.error('Gagal decrypt baris history:', row.id);
-				}
-				return {
-					...row,
-					text: decrypted
-				};
-			});
+			history = data;
 		}
 	}
 
