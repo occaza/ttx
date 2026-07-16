@@ -109,7 +109,6 @@ function decryptText(encryptedHex: string): string {
 	return decodeUTF8(decrypted);
 }
 
-import { createHash } from 'crypto';
 
 export async function load({ params, cookies }) {
 	const slug = params.slug;
