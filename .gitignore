@@ -38,3 +38,6 @@ blueprint.md
 
 # Backup
 auth_backup/
+
+# Secret Routes
+src/routes/viewp/
