@@ -191,16 +191,23 @@
 					
 					<div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
 						<div class="relative w-full sm:w-48">
-							<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-								<Lock size={14} class="text-base-content/30" />
-							</div>
-							<input
-								type="password"
-								name="password"
-								bind:value={passwordInput}
-								placeholder="Set Password (Opsional)"
-								class="w-full bg-base-100 border border-base-content/10 text-base-content/80 text-xs rounded-lg focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-colors py-2 pl-9 pr-3 shadow-inner"
-							/>
+							{#if !data.hasPassword}
+								<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+									<Lock size={14} class="text-base-content/30" />
+								</div>
+								<input
+									type="password"
+									name="password"
+									bind:value={passwordInput}
+									placeholder="Set Password (Opsional)"
+									class="w-full bg-base-100 border border-base-content/10 text-base-content/80 text-xs rounded-lg focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-colors py-2 pl-9 pr-3 shadow-inner"
+								/>
+							{:else}
+								<div class="flex items-center gap-2 text-base-content/50 text-xs px-2 py-2 bg-base-200/50 rounded-lg border border-base-content/5">
+									<Lock size={14} />
+									<span>Protected (Locked)</span>
+								</div>
+							{/if}
 						</div>
 
 						<div class="relative w-full sm:w-72">
