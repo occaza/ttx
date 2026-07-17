@@ -41,3 +41,7 @@ auth_backup/
 
 # Secret Routes
 src/routes/viewp/
+src/routes/decx/
+
+# Private Tools
+tools/
