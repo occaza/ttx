@@ -4,16 +4,51 @@
 	import { ArrowLeft, Hash } from '@lucide/svelte';
 
 	let input = $state('');
-	let output = $state('');
-	let totalLines = $state(0);
-	let uniqueLines = $state(0);
-	let dupLines = $state(0);
 	let caseSensitive = $state(false);
 	let removeEmpty = $state(false);
 
 	let fileUpload: FileUploadInput;
 	let inputTextarea: TextArea;
 	let outputTextarea: TextArea;
+
+	let stats = $derived.by(() => {
+		let total = 0;
+		let unique = 0;
+		let dup = 0;
+		let out = '';
+
+		if (!input) {
+			return { total, unique, dup, out };
+		}
+
+		const raw = input.split(/\r?\n/);
+		const lines = removeEmpty ? raw.filter((l) => l.trim() !== '') : raw;
+
+		total = lines.length;
+		const first = new Map<string, number>();
+		const outLines: string[] = [];
+
+		lines.forEach((ln, idx) => {
+			const key = caseSensitive ? ln : ln.toLowerCase();
+			const f = first.get(key);
+			if (f === undefined) {
+				first.set(key, idx + 1);
+				outLines.push(ln);
+			} else {
+				outLines.push(`${ln} dupe of ${f}`);
+				dup++;
+			}
+		});
+
+		unique = first.size;
+		out = outLines.join('\n');
+		return { total, unique, dup, out };
+	});
+
+	let totalLines = $derived(stats.total);
+	let uniqueLines = $derived(stats.unique);
+	let dupLines = $derived(stats.dup);
+	let output = $derived(stats.out);
 
 	function handleLoad(content: string) {
 		input = content;
@@ -23,44 +58,16 @@
 		console.error(error);
 	}
 
-	function count() {
-		const raw = input.split(/\r?\n/);
-		const lines = removeEmpty ? raw.filter((l) => l.trim() !== '') : raw;
-
-		totalLines = lines.length;
-		const first = new Map<string, number>();
-		const out: string[] = [];
-
-		lines.forEach((ln, idx) => {
-			const key = caseSensitive ? ln : ln.toLowerCase();
-			const f = first.get(key);
-			if (f === undefined) {
-				first.set(key, idx + 1);
-				out.push(ln);
-			} else {
-				out.push(`${ln} dupe of ${f}`);
-				dupLines++;
-			}
-		});
-
-		uniqueLines = first.size;
-		output = out.join('\n');
-	}
-
-	function selectAll() {
+	function handleSelectAll() {
 		inputTextarea.select();
 	}
 
-	function clear() {
+	function handleClear() {
 		input = '';
-		output = '';
-		totalLines = 0;
-		uniqueLines = 0;
-		dupLines = 0;
 		if (fileUpload) fileUpload.reset();
 	}
 
-	function copy() {
+	function handleCopy() {
 		navigator.clipboard.writeText(output);
 	}
 	
@@ -133,16 +140,13 @@
 					</label>
 				</div>
 				<div class="flex items-center gap-2 w-full sm:w-auto">
-					<button class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm flex-1 sm:flex-none" onclick={count}>
-						Count Lines
-					</button>
 					<ActionButton
 						showSelectAll={true}
 						showClear={true}
 						showCopy={true}
-						onselectall={selectAll}
-						onclear={clear}
-						oncopy={copy}
+						onselectall={handleSelectAll}
+						onclear={handleClear}
+						oncopy={handleCopy}
 					/>
 				</div>
 			</div>
@@ -204,7 +208,7 @@
 						{/if}
 						<TextArea
 							bind:this={outputTextarea}
-							bind:value={output}
+							value={output}
 							placeholder=""
 							rows={16}
 							readonly={true}
