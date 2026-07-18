@@ -10,6 +10,7 @@
 		onchange?: (e: Event) => void;
 		onfocus?: (e: FocusEvent) => void;
 		onblur?: (e: FocusEvent) => void;
+		onscroll?: (e: Event) => void;
 	}
 
 	let {
@@ -22,7 +23,8 @@
 		oninput,
 		onchange,
 		onfocus,
-		onblur
+		onblur,
+		onscroll
 	}: Props = $props();
 
 	let textareaEl: HTMLTextAreaElement;
@@ -48,4 +50,5 @@
 	{onchange}
 	{onfocus}
 	{onblur}
+	{onscroll}
 ></textarea>

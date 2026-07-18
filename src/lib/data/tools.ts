@@ -2,7 +2,7 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, NotebookPen, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors
 } from '@lucide/svelte';
 
 export const tools = [
@@ -13,6 +13,7 @@ export const tools = [
     { title: 'Split File', desc: 'Pecah teks menjadi file-file kecil.', href: '/split-files', icon: Split, category: 'Text Operations' },
     { title: 'Split Random Delimiter', desc: 'Pisahkan teks berdasarkan delimiter acak.', href: '/split-random-delimiter', icon: SeparatorHorizontal, category: 'Text Operations' },
     { title: 'Caption Formater', desc: 'Rapikan dan format caption media sosial.', href: '/captions-formatter', icon: Type, category: 'Text Operations' },
+    { title: 'Extract Lines', desc: 'Potong dan ambil jumlah baris spesifik dari teks.', href: '/slice-lines', icon: Scissors, category: 'Text Operations' },
     { title: 'Sort Lines', desc: 'Urutkan baris teks secara alfabetis.', href: '/sort-lines', icon: ArrowDown, category: 'Text Operations' },
 
     { title: 'Word Counter & Stats', desc: 'Hitung kata, karakter, dan statistik teks.', href: '/word-counter', icon: ChartBar, category: 'Data & Parsing' },

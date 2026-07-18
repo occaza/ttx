@@ -18,6 +18,7 @@
 	let refreshing = $state(false);
 	let linkInput: HTMLInputElement | undefined = $state();
 	let ta: TextArea | undefined = $state();
+	let lineNumbersEl: HTMLDivElement | undefined = $state();
 	let passwordInput = $state('');
 	let showChangePasswordModal = $state(false);
 	let changePasswordError = $state('');
@@ -29,6 +30,14 @@
 	$effect(() => {
 		text = data.text;
 	});
+
+	let lineCount = $derived(text ? text.split('\n').length : 1);
+
+	function syncScroll(e: Event) {
+		if (lineNumbersEl) {
+			lineNumbersEl.scrollTop = (e.target as HTMLTextAreaElement).scrollTop;
+		}
+	}
 
 	function selectAll() {
 		ta?.select();
@@ -192,14 +201,24 @@
 			<form method="POST" action="?/save" use:enhance={afterSave} class="flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
 				
 				<!-- Main Editor -->
-				<div class="bg-base-100/50 flex-col relative rounded-t-2xl">
+				<div class="bg-base-100/50 flex rounded-t-2xl overflow-hidden h-[600px]">
+					<!-- Line Numbers Gutter -->
+					<div
+						bind:this={lineNumbersEl}
+						class="w-12 shrink-0 bg-base-200/20 border-r border-base-content/5 text-right pr-3 pt-5 overflow-hidden text-base-content/25 font-mono text-sm select-none"
+					>
+						{#each Array(lineCount) as _, i}
+							<div class="leading-6">{i + 1}</div>
+						{/each}
+					</div>
 					<TextArea
 						bind:this={ta}
 						bind:value={text}
 						name="text"
 						placeholder="Tulis catatan kamu di sini..."
 						rows={25}
-						className="w-full resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono min-h-[500px] rounded-t-2xl"
+						onscroll={syncScroll}
+						className="w-full flex-1 h-full resize-none border-none bg-transparent p-5 text-sm leading-6 outline-none focus:ring-0 font-mono overflow-y-auto"
 					/>
 				</div>
 
