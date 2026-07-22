@@ -25,13 +25,7 @@
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
-			if (_session?.user) {
-				authenticatedUser = _session.user;
-			} else if (event === 'SIGNED_OUT') {
-				authenticatedUser = null;
-			}
-
-			if (event === 'SIGNED_OUT' || event === 'SIGNED_IN') {
+			if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
 				invalidate('supabase:auth');
 			}
 		});
@@ -55,7 +49,7 @@
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="texy.yusupmabd.my.id" />
+	<meta property="og:url" content="https://texy.vercel.app" />
 	<meta property="og:title" content="TEXY — Kumpulan Tools Online Gratis & Tanpa Login" />
 	<meta
 		property="og:description"
@@ -68,7 +62,7 @@
 
 	<!-- Twitter -->
 	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content="texy.yusupmabd.my.id" />
+	<meta property="twitter:url" content="https://texy.vercel.app" />
 	<meta property="twitter:title" content="TEXY — Kumpulan Tools Online Gratis & Tanpa Login" />
 	<meta
 		property="twitter:description"

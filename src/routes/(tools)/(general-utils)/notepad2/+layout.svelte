@@ -94,14 +94,15 @@
 		<!-- User Area -->
 		<div class="border-t border-base-content/10 p-3 shrink-0 flex justify-center">
 			{#if data.user}
+				{@const displayName = data.profile?.first_name || data.profile?.username || data.user?.user_metadata?.first_name || data.user?.user_metadata?.username || data.user?.email?.split('@')[0] || 'User'}
 				<div class="flex items-center {isSidebarOpen ? 'justify-between w-full' : 'justify-center'}">
-					<div class="flex items-center gap-2 overflow-hidden" title={!isSidebarOpen ? data.user?.email : ""}>
-						<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary shrink-0 font-bold">
-							{data.user?.email?.[0].toUpperCase() || 'U'}
+					<div class="flex items-center gap-2 overflow-hidden" title={!isSidebarOpen ? displayName : ""}>
+						<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary shrink-0 font-bold uppercase">
+							{displayName[0]}
 						</div>
 						{#if isSidebarOpen}
 							<div class="flex flex-col overflow-hidden">
-								<span class="text-xs font-medium truncate">{data.user?.email}</span>
+								<span class="text-xs font-medium truncate">{displayName}</span>
 								<span class="text-[10px] text-base-content/50">Free User</span>
 							</div>
 						{/if}

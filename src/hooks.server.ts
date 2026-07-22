@@ -48,17 +48,36 @@ const supabase: Handle = async ({ event, resolve }) => {
 		const expiresAt = session.expires_at;
 		const now = Math.floor(Date.now() / 1000);
 
+		let finalSession = session;
+		let finalUser = user;
+
 		if (expiresAt && now > expiresAt - 300) {
 			// Session akan expired dalam 5 menit, refresh dulu
 			const {
 				data: { session: refreshedSession }
 			} = await event.locals.supabase.auth.refreshSession();
 			if (refreshedSession) {
-				return { session: refreshedSession, user };
+				finalSession = refreshedSession;
 			}
 		}
 
-		return { session, user };
+		// Hindari Supabase warning "Using the user object as returned from getSession()"
+		// SvelteKit serializer akan memicu getter pada finalSession.user
+		// Kita override session menjadi plain object menggunakan user yang tervalidasi
+		if (!finalUser) {
+			return { session: null, user: null };
+		}
+
+		const safeSessionObj = {
+			access_token: finalSession.access_token,
+			refresh_token: finalSession.refresh_token,
+			expires_in: finalSession.expires_in,
+			expires_at: finalSession.expires_at,
+			token_type: finalSession.token_type,
+			user: finalUser
+		} satisfies import('@supabase/supabase-js').Session;
+
+		return { session: safeSessionObj, user: finalUser };
 	};
 
 	return resolve(event, {

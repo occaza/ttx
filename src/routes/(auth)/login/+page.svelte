@@ -8,21 +8,27 @@
 	let password = $state('');
 	let loading = $state(false);
 	let errorMsg = $state('');
-	let oauthLoading = $state(false);
+	let googleLoading = $state(false);
+	let facebookLoading = $state(false);
 
 	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
-	async function handleOAuthLogin(provider: 'google') {
-		oauthLoading = true;
+	async function handleOAuthLogin(provider: 'google' | 'facebook') {
+		if (provider === 'google') googleLoading = true;
+		else facebookLoading = true;
+
+		const scopes = provider === 'facebook' ? 'email,public_profile' : undefined;
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider,
 			options: {
-				redirectTo: `${window.location.origin}/auth/callback`
+				redirectTo: `${window.location.origin}/auth/callback`,
+				scopes
 			}
 		});
 		if (error) {
 			errorMsg = error.message;
-			oauthLoading = false;
+			if (provider === 'google') googleLoading = false;
+			else facebookLoading = false;
 		}
 	}
 
@@ -126,47 +132,51 @@
 					</div>
 				</div>
 
-				<div class="mt-6 flex justify-center">
+				<div class="mt-6 flex flex-col gap-3">
+					<!-- Google -->
 					<button
 						type="button"
-						class="gsi-material-button"
+						class="gsi-material-button w-full"
 						onclick={() => handleOAuthLogin('google')}
-						disabled={oauthLoading}
+						disabled={googleLoading}
 					>
 						<div class="gsi-material-button-state"></div>
 						<div class="gsi-material-button-content-wrapper">
 							<div class="gsi-material-button-icon">
-								{#if oauthLoading}
-									<span class="loading loading-sm loading-spinner" style="width:20px;height:20px;"
-									></span>
+								{#if googleLoading}
+									<span class="loading loading-sm loading-spinner" style="width:20px;height:20px;"></span>
 								{:else}
-									<svg
-										version="1.1"
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 48 48"
-										style="display: block;"
-									>
-										<path
-											fill="#EA4335"
-											d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-										></path>
-										<path
-											fill="#4285F4"
-											d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-										></path>
-										<path
-											fill="#FBBC05"
-											d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-										></path>
-										<path
-											fill="#34A853"
-											d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-										></path>
+									<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style="display: block;">
+										<path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+										<path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+										<path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+										<path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
 										<path fill="none" d="M0 0h48v48H0z"></path>
 									</svg>
 								{/if}
 							</div>
 							<span class="gsi-material-button-contents">Continue with Google</span>
+						</div>
+					</button>
+
+					<!-- Facebook -->
+					<button
+						type="button"
+						class="fb-oauth-button w-full"
+						onclick={() => handleOAuthLogin('facebook')}
+						disabled={facebookLoading}
+					>
+						<div class="fb-oauth-button-content">
+							<div class="fb-oauth-button-icon">
+								{#if facebookLoading}
+									<span class="loading loading-sm loading-spinner" style="width:20px;height:20px;"></span>
+								{:else}
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display:block;width:20px;height:20px;">
+										<path fill="#ffffff" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+									</svg>
+								{/if}
+							</div>
+							<span>Continue with Facebook</span>
 						</div>
 					</button>
 				</div>
@@ -290,4 +300,53 @@
 		background-color: #303030;
 		opacity: 8%;
 	}
+
+	/* Facebook OAuth Button */
+	.fb-oauth-button {
+		appearance: none;
+		background-color: #1877f2;
+		border: none;
+		border-radius: 4px;
+		box-sizing: border-box;
+		color: #ffffff;
+		cursor: pointer;
+		font-family: 'Roboto', arial, sans-serif;
+		font-size: 14px;
+		font-weight: 500;
+		height: 40px;
+		letter-spacing: 0.25px;
+		outline: none;
+		padding: 0 12px;
+		transition: background-color 0.218s, box-shadow 0.218s;
+		white-space: nowrap;
+	}
+
+	.fb-oauth-button:hover:not(:disabled) {
+		background-color: #166fe5;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+	}
+
+	.fb-oauth-button:disabled {
+		opacity: 0.6;
+		cursor: default;
+	}
+
+	.fb-oauth-button-content {
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		gap: 12px;
+		height: 100%;
+		justify-content: center;
+	}
+
+	.fb-oauth-button-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+	}
+
 </style>
