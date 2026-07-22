@@ -2,12 +2,13 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, NotebookPen, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen, Scissors
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText
 } from '@lucide/svelte';
 
 export const tools = [
     { title: 'Remove Duplicate Lines', desc: 'Hapus baris duplikat dari teks Anda.', href: '/remove-duplicate-lines', icon: Copy, category: 'Text Operations' },
-    { title: 'Markdown Preview', desc: 'Editor Markdown dengan live preview.', href: '/markdown-preview', icon: BookOpen, category: 'Text Operations' },
+    { title: 'Markdown Editor', desc: 'Editor Markdown dengan toolbar dan live preview.', href: '/markdown-editor', icon: FileText, category: 'Text Operations' },
+    { title: 'Markdown Preview (Old)', desc: 'Editor Markdown versi klasik.', href: '/markdown-preview', icon: BookOpen, category: 'Text Operations' },
     { title: 'Add Prefix/Suffix into Line', desc: 'Tambahkan prefix atau suffix di setiap baris.', href: '/add-prefix-suffix', icon: TextCursor, category: 'Text Operations' },
     { title: 'Case Converter', desc: 'Ubah format teks ke UPPERCASE, camelCase, snake_case, dll.', href: '/case-converter', icon: Type, category: 'Text Operations' },
     { title: 'Split File', desc: 'Pecah teks menjadi file-file kecil.', href: '/split-files', icon: Split, category: 'Text Operations' },

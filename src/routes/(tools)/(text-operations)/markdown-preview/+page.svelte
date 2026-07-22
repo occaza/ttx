@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { ActionButton, TextArea, FileUploadInput, SaveFiles } from '$lib';
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 	import { ArrowLeft, BookOpen, Code, FileText, ChevronDown } from '@lucide/svelte';
 	import { marked } from 'marked';
 	import DOMPurify from 'dompurify';
+
+	const purify = browser ? DOMPurify : null;
 
 	let input = $state(`# Heading 1 — Judul Utama
 ## Heading 2 — Sub Judul
@@ -149,7 +152,10 @@ Garis pemisah bisa dibuat dengan tiga strip:
 		}
 	];
 
-	const compiledHtml = $derived(input ? DOMPurify.sanitize(marked.parse(input) as string) : '');
+	const compiledHtml = $derived.by(() => {
+		if (!browser || !input) return '';
+		return DOMPurify.sanitize(marked.parse(input) as string);
+	});
 
 	function handleLoad(content: string) {
 		input = content;

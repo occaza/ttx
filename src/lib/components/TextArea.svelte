@@ -36,6 +36,10 @@
 	export function focus() {
 		textareaEl?.focus();
 	}
+
+	export function getElement() {
+		return textareaEl;
+	}
 </script>
 
 <textarea

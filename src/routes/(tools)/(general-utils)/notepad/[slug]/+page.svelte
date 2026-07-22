@@ -6,7 +6,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { PageData } from './$types';
-	import { FilePlus2, Save, RefreshCw, Copy, Link, Clock, ArrowLeft, NotebookPen, Lock, X } from '@lucide/svelte';
+	import { FilePlus2, Save, RefreshCw, Copy, Link, Clock, ArrowLeft, NotebookPen, Lock, X, Zap } from '@lucide/svelte';
 
 	interface Props {
 		data: PageData;
@@ -16,6 +16,8 @@
 	let text = $state(data.text);
 	let saved = $state(false);
 	let refreshing = $state(false);
+	let showSaveWarning = $state(false);
+	let saveFormEl: HTMLFormElement | undefined = $state();
 	let linkInput: HTMLInputElement | undefined = $state();
 	let ta: TextArea | undefined = $state();
 	let lineNumbersEl: HTMLDivElement | undefined = $state();
@@ -32,6 +34,15 @@
 	});
 
 	let lineCount = $derived(text ? text.split('\n').length : 1);
+	const LINE_LIMIT = 1000;
+	let showUpgradeModal = $state(false);
+	let upgradeModalDismissed = $state(false);
+
+	$effect(() => {
+		if (lineCount > LINE_LIMIT && !upgradeModalDismissed) {
+			showUpgradeModal = true;
+		}
+	});
 
 	function syncScroll(e: Event) {
 		if (lineNumbersEl) {
@@ -61,6 +72,18 @@
 			ta?.focus();
 		};
 	};
+
+	function handleSaveClick(e: MouseEvent) {
+		if (lineCount > LINE_LIMIT) {
+			e.preventDefault();
+			showSaveWarning = true;
+		}
+	}
+
+	function confirmSave() {
+		showSaveWarning = false;
+		saveFormEl?.requestSubmit();
+	}
 
 	async function refresh() {
 		refreshing = true;
@@ -198,7 +221,7 @@
 				</form>
 			</div>
 		{:else}
-			<form method="POST" action="?/save" use:enhance={afterSave} class="flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
+			<form method="POST" action="?/save" use:enhance={afterSave} bind:this={saveFormEl} class="flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
 				
 				<!-- Main Editor -->
 				<div class="bg-base-100/50 flex rounded-t-2xl overflow-hidden h-[600px]">
@@ -266,7 +289,7 @@
 							<Copy size={14} /> Copy
 						</button>
 						<div class="flex items-center gap-2">
-							<button type="submit" class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm gap-1.5">
+							<button type="submit" class="btn btn-sm btn-primary rounded-lg font-bold shadow-sm gap-1.5" onclick={handleSaveClick}>
 								<Save size={14} /> Save
 							</button>
 							{#if saved}
@@ -307,6 +330,104 @@
 						</button>
 					</div>
 				</form>
+			</div>
+		{/if}
+
+		<!-- Save Warning Modal (>1000 lines) -->
+		{#if showSaveWarning}
+			<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+				<div class="bg-base-100 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-base-content/10">
+					<h3 class="text-lg font-bold mb-2">Perhatian: Data Akan Terpotong</h3>
+					<p class="text-sm text-base-content/60 mb-2">
+						Dokumen kamu saat ini memiliki <strong class="text-base-content">{lineCount.toLocaleString()} baris</strong>.
+					</p>
+					<p class="text-sm text-base-content/60 mb-6">
+						Shared Notepad hanya menyimpan <strong class="text-base-content">1.000 baris pertama</strong>. Baris ke-{(LINE_LIMIT + 1).toLocaleString()} sampai ke-{lineCount.toLocaleString()} akan <strong class="text-error">dibuang permanen</strong>.
+					</p>
+					<div class="flex gap-3">
+						<button
+							type="button"
+							class="btn btn-ghost flex-1"
+							onclick={() => showSaveWarning = false}
+						>
+							Batal
+						</button>
+						<button
+							type="button"
+							class="btn btn-error flex-1"
+							onclick={confirmSave}
+						>
+							Ya, Simpan 1.000 Baris
+						</button>
+					</div>
+					<div class="mt-4 pt-4 border-t border-base-content/10">
+						{#if $page.data.user}
+							<a href="/notepad2" class="flex items-center justify-center gap-2 text-xs text-primary font-medium hover:underline">
+								<Zap size={13} /> Buka Notepad Pro untuk simpan tanpa batas
+							</a>
+						{:else}
+							<a href="/register" class="flex items-center justify-center gap-2 text-xs text-primary font-medium hover:underline">
+								<Zap size={13} /> Upgrade ke Pro untuk simpan tanpa batas
+							</a>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/if}
+
+		<!-- Upgrade Modal -->
+		{#if showUpgradeModal}
+			<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+				<div class="bg-base-100 rounded-2xl max-w-md w-full p-8 shadow-2xl relative text-left border border-base-content/10">
+					<button
+						type="button"
+						class="absolute top-4 right-4 text-base-content/40 hover:text-base-content transition-colors"
+						onclick={() => { showUpgradeModal = false; upgradeModalDismissed = true; }}
+					>
+						<X size={18} />
+					</button>
+
+					<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+						<Zap size={24} />
+					</div>
+
+					<h3 class="text-xl font-bold mb-2">Batas 1.000 Baris Tercapai</h3>
+					<p class="text-sm text-base-content/60 mb-6">
+						Shared Notepad gratis dibatasi <strong class="text-base-content">1.000 baris</strong>. Upgrade ke <strong class="text-primary">Notepad Pro</strong> untuk mendapatkan:
+					</p>
+
+					<ul class="space-y-2 mb-8">
+						{#each ['Dokumen tanpa batas baris', 'Simpan banyak dokumen sekaligus', 'Akses dari mana saja lewat akun', 'Editor lebih canggih (CodeMirror)'] as benefit}
+							<li class="flex items-center gap-2 text-sm">
+								<span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">✓</span>
+								{benefit}
+							</li>
+						{/each}
+					</ul>
+
+					{#if $page.data.user}
+						<div class="flex flex-col gap-3">
+							<a href="/notepad2" class="btn btn-primary w-full gap-2">
+								<Zap size={16} />
+								Buka Notepad Pro
+							</a>
+						</div>
+					{:else}
+						<div class="flex flex-col sm:flex-row gap-3">
+							<a href="/register" class="btn btn-primary flex-1 gap-2">
+								<Zap size={16} />
+								Daftar Gratis
+							</a>
+							<a href="/login" class="btn btn-ghost flex-1">
+								Sudah punya akun
+							</a>
+						</div>
+					{/if}
+
+					<p class="text-center text-xs text-base-content/40 mt-4">
+						Anda masih bisa terus menulis di bawah 1.000 baris tanpa batasan.
+					</p>
+				</div>
 			</div>
 		{/if}
 

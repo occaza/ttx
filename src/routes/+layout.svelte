@@ -6,45 +6,38 @@
 	import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import Footer from '$lib/components/Footer.svelte';
 	import Nav from '$lib/components/Nav.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import { page } from '$app/stores';
 
 	let { children, data } = $props();
 	let authenticatedUser: User | null = $state(data.user ?? null);
-	let isLoading: boolean = $state(true);
+	let isLoading: boolean = $state(false); // Tidak perlu loading lama karena data user dari SSR
+	let isNotepad2 = $derived($page.url.pathname.startsWith('/notepad2') || $page.url.pathname.startsWith('/login') || $page.url.pathname.startsWith('/register'));
 	let supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
+	$effect(() => {
+		// Sinkronisasi data user dari SSR ketika terjadi navigasi
+		authenticatedUser = data.user ?? null;
+	});
+
 	onMount(() => {
-		let authSubscription: { unsubscribe: () => void };
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange((event, _session) => {
+			if (_session?.user) {
+				authenticatedUser = _session.user;
+			} else if (event === 'SIGNED_OUT') {
+				authenticatedUser = null;
+			}
 
-		(async () => {
-			// Initial user check
-			const {
-				data: { user }
-			} = await supabase.auth.getUser();
-			authenticatedUser = user;
-			isLoading = false;
-
-			const {
-				data: { subscription }
-			} = supabase.auth.onAuthStateChange(async (event, _session) => {
-				if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-					const {
-						data: { user }
-					} = await supabase.auth.getUser();
-					authenticatedUser = user;
-				} else if (event === 'SIGNED_OUT') {
-					authenticatedUser = null;
-				}
+			if (event === 'SIGNED_OUT' || event === 'SIGNED_IN') {
 				invalidate('supabase:auth');
-			});
-
-			authSubscription = subscription;
-		})();
+			}
+		});
 
 		return () => {
-			authSubscription?.unsubscribe();
+			subscription?.unsubscribe();
 		};
 	});
 </script>
@@ -90,14 +83,14 @@
 	<meta name="theme-color" content="#0ea5e9" />
 </svelte:head>
 
-<div class="min-h-screen bg-base-100">
-	{#if !$page.error}
+<div class="flex min-h-screen flex-col bg-base-100">
+	{#if !$page.error && !isNotepad2}
 		<Nav />
 	{/if}
-	<div class={$page.error ? '' : 'pt-16'}>
+	<main class="flex-1 {$page.error ? '' : (isNotepad2 ? '' : 'pt-16')}">
 		{@render children?.()}
-	</div>
-	{#if !$page.error}
+	</main>
+	{#if !$page.error && !isNotepad2}
 		<Footer />
 	{/if}
 </div>

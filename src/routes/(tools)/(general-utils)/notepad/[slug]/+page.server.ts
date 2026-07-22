@@ -174,8 +174,13 @@ export const actions = {
 		}
 
 		const formData = await request.formData();
-		const text = (formData.get('text') || '').toString().trim();
+		const rawText = (formData.get('text') || '').toString().trim();
 		const password = (formData.get('password') || '').toString();
+
+		// Batasi 1000 baris untuk shared notepad (guest)
+		const LINE_LIMIT = 1000;
+		const lines = rawText.split('\n');
+		const text = lines.length > LINE_LIMIT ? lines.slice(0, LINE_LIMIT).join('\n') : rawText;
 
 		if (!text) {
 			throw error(400, 'Text tidak boleh kosong');
