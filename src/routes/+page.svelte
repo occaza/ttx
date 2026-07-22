@@ -31,6 +31,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>TEXY — Kumpulan Tools Online Gratis & Tanpa Login</title>
+</svelte:head>
+
 <!-- Grid Background Pattern -->
 <div class="relative overflow-hidden">
 	<div class="absolute inset-0 bg-[linear-gradient(to_right,#80808010_1px,transparent_1px),linear-gradient(to_bottom,#80808010_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
