@@ -9,26 +9,24 @@
 	let loading = $state(false);
 	let errorMsg = $state('');
 	let googleLoading = $state(false);
-	let facebookLoading = $state(false);
+	// let facebookLoading = $state(false);
 
 	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
-	async function handleOAuthLogin(provider: 'google' | 'facebook') {
+	async function handleOAuthLogin(provider: 'google') {
 		if (provider === 'google') googleLoading = true;
-		else facebookLoading = true;
-
-		const scopes = provider === 'facebook' ? 'email,public_profile' : undefined;
+		
+		// const scopes = provider === 'facebook' ? 'email,public_profile' : undefined;
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider,
 			options: {
 				redirectTo: `${window.location.origin}/auth/callback`,
-				scopes
+				// scopes
 			}
 		});
 		if (error) {
 			errorMsg = error.message;
 			if (provider === 'google') googleLoading = false;
-			else facebookLoading = false;
 		}
 	}
 
@@ -159,7 +157,8 @@
 						</div>
 					</button>
 
-					<!-- Facebook -->
+					<!-- Facebook (Commented Out) -->
+					<!--
 					<button
 						type="button"
 						class="fb-oauth-button w-full"
@@ -179,6 +178,7 @@
 							<span>Continue with Facebook</span>
 						</div>
 					</button>
+					-->
 				</div>
 			</div>
 		</div>
@@ -301,7 +301,7 @@
 		opacity: 8%;
 	}
 
-	/* Facebook OAuth Button */
+	/* Facebook OAuth Button (Commented Out)
 	.fb-oauth-button {
 		appearance: none;
 		background-color: #1877f2;
@@ -348,5 +348,5 @@
 		height: 20px;
 		flex-shrink: 0;
 	}
-
+	*/
 </style>
