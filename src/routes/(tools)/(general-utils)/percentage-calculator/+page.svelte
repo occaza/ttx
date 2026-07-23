@@ -20,13 +20,15 @@
     let c4_x_str = $state('');
     let c4_x = $derived(c4_x_str ? parseFloat(c4_x_str.replace(/\./g, '').replace(/,/g, '.')) || null : null);
     let c4_y = $state<number | null>(null);
-    let c4_result = $derived(c4_x != null && c4_y != null ? c4_x + (c4_x * (c4_y / 100)) : null);
+    let c4_cut = $derived(c4_x != null && c4_y != null ? (c4_x * (c4_y / 100)) : null);
+    let c4_result = $derived(c4_x != null && c4_y != null ? c4_x + c4_cut! : null);
 
     // Calculator 5: Subtract percentage X - Y%
     let c5_x_str = $state('');
     let c5_x = $derived(c5_x_str ? parseFloat(c5_x_str.replace(/\./g, '').replace(/,/g, '.')) || null : null);
     let c5_y = $state<number | null>(null);
-    let c5_result = $derived(c5_x != null && c5_y != null ? c5_x - (c5_x * (c5_y / 100)) : null);
+    let c5_cut = $derived(c5_x != null && c5_y != null ? (c5_x * (c5_y / 100)) : null);
+    let c5_result = $derived(c5_x != null && c5_y != null ? c5_x - c5_cut! : null);
 
     // Input Currency Formatter
     function formatInputCurrency(val: string) {
@@ -84,22 +86,28 @@
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow md:col-span-2">
             <div class="card-body p-5 flex-row items-center justify-between flex-wrap gap-4">
                 <div class="flex-1">
-                    <div class="w-full flex justify-between items-start mb-2">
-                        <h3 class="card-title text-base">Kurangi Persentase (Diskon Harga)</h3>
-                        <button class="btn btn-ghost btn-xs text-base-content/40 hover:text-error hover:bg-error/10" onclick={() => { c5_x_str = ''; c5_y = null; }} title="Clear">
-                            <RotateCcw size={14} />
-                        </button>
-                    </div>
+                    <h3 class="card-title text-base mb-3">Kurangi Persentase (Diskon Harga)</h3>
                     <div class="flex items-center gap-2 flex-wrap">
                         <input type="text" value={c5_x_str} oninput={(e) => c5_x_str = formatInputCurrency(e.currentTarget.value)} class="input input-sm input-bordered w-32 text-center font-mono shadow-inner" placeholder="Harga Awal" />
                         <span class="text-sm font-medium opacity-70">didiskon</span>
                         <input type="number" bind:value={c5_y} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="%" />
                         <span class="text-sm font-medium opacity-70">%</span>
+                        
+                        <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c5_x_str = ''; c5_y = null; }} title="Clear">
+                            <RotateCcw size={14} /> Reset
+                        </button>
                     </div>
                 </div>
-                <div class="p-3 bg-base-100 rounded-xl border border-base-content/5 flex flex-col justify-center min-w-[200px] shadow-inner">
-                    <span class="text-xs font-semibold opacity-50">Harga Setelah Diskon:</span>
-                    <span class="text-2xl font-bold text-primary font-mono">{formatCurrency(c5_result)}</span>
+                <div class="p-3 bg-base-100 rounded-xl border border-base-content/5 flex flex-col justify-center min-w-[200px] shadow-inner gap-2">
+                    <div class="flex justify-between items-center text-xs font-semibold opacity-50">
+                        <span>Potongan:</span>
+                        <span class="text-error font-mono font-bold text-sm">-{formatCurrency(c5_cut)}</span>
+                    </div>
+                    <div class="divider m-0 h-0"></div>
+                    <div class="flex justify-between items-end">
+                        <span class="text-xs font-semibold opacity-50 mb-1">Harga Akhir:</span>
+                        <span class="text-2xl font-bold text-primary font-mono">{formatCurrency(c5_result)}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,18 +115,16 @@
         <!-- Card 1 -->
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="card-title text-base">Berapa X% dari Y?</h3>
-                    <button class="btn btn-ghost btn-xs text-base-content/40 hover:text-error hover:bg-error/10" onclick={() => { c1_x = null; c1_y = null; }} title="Clear">
-                        <RotateCcw size={14} />
-                    </button>
-                </div>
+                <h3 class="card-title text-base mb-3">Berapa X% dari Y?</h3>
                 <div class="flex items-center gap-2 flex-wrap">
                     <span class="text-sm font-medium opacity-70">Berapa</span>
                     <input type="number" bind:value={c1_x} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="X" />
                     <span class="text-sm font-medium opacity-70">% dari</span>
                     <input type="number" bind:value={c1_y} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Y" />
                     <span class="text-sm font-medium opacity-70">?</span>
+                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c1_x = null; c1_y = null; }} title="Clear">
+                        <RotateCcw size={14} /> Reset
+                    </button>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
                     <span class="text-sm font-semibold opacity-50">Hasil:</span>
@@ -130,17 +136,15 @@
         <!-- Card 2 -->
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="card-title text-base">X adalah berapa persen dari Y?</h3>
-                    <button class="btn btn-ghost btn-xs text-base-content/40 hover:text-error hover:bg-error/10" onclick={() => { c2_x = null; c2_y = null; }} title="Clear">
-                        <RotateCcw size={14} />
-                    </button>
-                </div>
+                <h3 class="card-title text-base mb-3">X adalah berapa persen dari Y?</h3>
                 <div class="flex items-center gap-2 flex-wrap">
                     <input type="number" bind:value={c2_x} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="X" />
                     <span class="text-sm font-medium opacity-70">brp % dari</span>
                     <input type="number" bind:value={c2_y} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Y" />
                     <span class="text-sm font-medium opacity-70">?</span>
+                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c2_x = null; c2_y = null; }} title="Clear">
+                        <RotateCcw size={14} /> Reset
+                    </button>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
                     <span class="text-sm font-semibold opacity-50">Hasil:</span>
@@ -152,17 +156,15 @@
         <!-- Card 3 -->
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="card-title text-base">Perubahan (Kenaikan/Penurunan)</h3>
-                    <button class="btn btn-ghost btn-xs text-base-content/40 hover:text-error hover:bg-error/10" onclick={() => { c3_x = null; c3_y = null; }} title="Clear">
-                        <RotateCcw size={14} />
-                    </button>
-                </div>
+                <h3 class="card-title text-base mb-3">Perubahan (Kenaikan/Penurunan)</h3>
                 <div class="flex items-center gap-2 flex-wrap">
                     <span class="text-sm font-medium opacity-70">Dari</span>
                     <input type="number" bind:value={c3_x} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Awal" />
                     <span class="text-sm font-medium opacity-70">menjadi</span>
                     <input type="number" bind:value={c3_y} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Akhir" />
+                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c3_x = null; c3_y = null; }} title="Clear">
+                        <RotateCcw size={14} /> Reset
+                    </button>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
                     <span class="text-sm font-semibold opacity-50">Perubahan:</span>
@@ -176,21 +178,27 @@
         <!-- Card 4 -->
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
-                <div class="flex justify-between items-start mb-2">
-                    <h3 class="card-title text-base">Tambah Persentase (Pajak/Margin)</h3>
-                    <button class="btn btn-ghost btn-xs text-base-content/40 hover:text-error hover:bg-error/10" onclick={() => { c4_x_str = ''; c4_y = null; }} title="Clear">
-                        <RotateCcw size={14} />
-                    </button>
-                </div>
+                <h3 class="card-title text-base mb-3">Tambah Persentase (Pajak/Margin)</h3>
                 <div class="flex items-center gap-2 flex-wrap">
                     <input type="text" value={c4_x_str} oninput={(e) => c4_x_str = formatInputCurrency(e.currentTarget.value)} class="input input-sm input-bordered w-28 text-center font-mono shadow-inner" placeholder="Nilai" />
                     <span class="text-sm font-medium opacity-70">ditambah</span>
                     <input type="number" bind:value={c4_y} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="%" />
                     <span class="text-sm font-medium opacity-70">%</span>
+                    
+                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c4_x_str = ''; c4_y = null; }} title="Clear">
+                        <RotateCcw size={14} /> Reset
+                    </button>
                 </div>
-                <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
-                    <span class="text-sm font-semibold opacity-50">Total Akhir:</span>
-                    <span class="text-xl font-bold text-primary font-mono">{formatCurrency(c4_result)}</span>
+                <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex flex-col shadow-inner gap-1">
+                    <div class="flex justify-between items-center text-xs font-semibold opacity-50">
+                        <span>Tambahan:</span>
+                        <span class="text-success font-mono font-bold">+{formatCurrency(c4_cut)}</span>
+                    </div>
+                    <div class="divider m-0 h-0 my-1"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-semibold opacity-50">Total Akhir:</span>
+                        <span class="text-xl font-bold text-primary font-mono">{formatCurrency(c4_result)}</span>
+                    </div>
                 </div>
             </div>
         </div>
