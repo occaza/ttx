@@ -2,7 +2,7 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, NotebookPen, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent
 } from '@lucide/svelte';
 
 export const tools = [
@@ -25,6 +25,7 @@ export const tools = [
     { title: 'Shared Notepad', desc: 'Catatan online yang bisa diakses lintas browser.', href: '/notepad', icon: NotebookPen, category: 'General Utilities' },
     { title: 'Emoji Browser', desc: 'Cari dan salin emoji dengan mudah.', href: '/emoji-picker', icon: Smile, category: 'General Utilities' },
     { title: 'Page Identifier', desc: 'Identifikasi halaman dan query parameter.', href: '/pageid?id=Demo', icon: Map, category: 'General Utilities' },
+    { title: 'Percentage Calculator', desc: 'Perhitungan persentase praktis dan cepat.', href: '/percentage-calculator', icon: Percent, category: 'General Utilities' },
 
     { title: 'JS Obfuscator', desc: 'Lindungi JavaScript Anda dari reverse engineering.', href: '/obfuscate', icon: Lock, category: 'Security & Misc' },
     { title: 'Random Number', desc: 'Buat angka acak sesuai kebutuhan.', href: '/random-number-generator', icon: Shuffle, category: 'Security & Misc' }

@@ -28,6 +28,8 @@
 	let unlockPassword = $state('');
 	let unlocking = $state(false);
 	let unlockError = $state('');
+	let cutLinesCount = $state(10);
+	let cutting = $state(false);
 
 	$effect(() => {
 		text = data.text;
@@ -128,6 +130,15 @@
 			await update({ reset: false });
 		};
 	};
+
+	function cutTopLines() {
+		const n = Math.max(1, cutLinesCount);
+		const lines = text ? text.split('\n') : [];
+		if (lines.length === 0) return;
+		const cut = lines.slice(0, n).join('\n');
+		navigator.clipboard.writeText(cut).catch(() => {});
+		text = lines.slice(n).join('\n');
+	}
 </script>
 
 <svelte:head>
@@ -223,8 +234,37 @@
 		{:else}
 			<form method="POST" action="?/save" use:enhance={afterSave} bind:this={saveFormEl} class="flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
 				
+				<!-- Editor Toolbar -->
+				<div class="flex items-center justify-between border-b border-base-content/10 bg-base-200/30 px-4 py-2.5 rounded-t-2xl">
+					<div class="text-xs font-semibold text-base-content/40 flex items-center gap-1.5 uppercase tracking-wider">
+						<NotebookPen size={14} /> Editor
+					</div>
+					
+					<!-- Cut Lines Action -->
+					<div class="flex items-center gap-2">
+						<span class="text-xs text-base-content/50 font-medium">Cut top</span>
+						<input
+							type="number"
+							min="1"
+							max={lineCount}
+							bind:value={cutLinesCount}
+							class="input input-xs w-16 bg-base-100 border border-base-content/10 font-mono text-center focus:outline-none focus:border-primary/50"
+						/>
+						<button
+							type="button"
+							class="btn btn-xs bg-base-100 border border-base-content/10 hover:bg-base-200 hover:border-base-content/20 gap-1.5 font-mono shadow-sm transition-all"
+							onclick={cutTopLines}
+							disabled={lineCount === 0 || cutting}
+							title="Cut and copy lines to clipboard"
+						>
+							<Zap size={12} class="text-warning" />
+							Cut
+						</button>
+					</div>
+				</div>
+
 				<!-- Main Editor -->
-				<div class="bg-base-100/50 flex rounded-t-2xl overflow-hidden h-[600px]">
+				<div class="bg-base-100/50 flex overflow-hidden h-[600px]">
 					<!-- Line Numbers Gutter -->
 					<div
 						bind:this={lineNumbersEl}
@@ -247,9 +287,11 @@
 
 				<!-- Bottom Footer (Info & Share) -->
 				<div class="flex flex-col sm:flex-row items-center justify-between border-t border-base-content/10 bg-base-200/20 px-4 py-3 gap-4 rounded-b-2xl">
-					<div class="flex items-center gap-2 text-xs font-medium text-base-content/40">
+					<div class="flex items-center gap-3 text-xs font-medium text-base-content/40">
 						<Clock size={14} />
 						<span>Last edited: {formatDate(data.updatedAt)}</span>
+						<span class="text-base-content/20">|</span>
+						<span class="font-mono text-base-content/50">{lineCount} line{lineCount !== 1 ? 's' : ''}</span>
 					</div>
 					
 					<div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
@@ -298,7 +340,6 @@
 						</div>
 					</div>
 				</div>
-
 			</form>
 		{/if}
 
