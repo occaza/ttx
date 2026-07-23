@@ -87,15 +87,20 @@
             <div class="card-body p-5 flex-row items-center justify-between flex-wrap gap-4">
                 <div class="flex-1">
                     <h3 class="card-title text-base mb-3">Kurangi Persentase (Diskon Harga)</h3>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <input type="text" value={c5_x_str} oninput={(e) => c5_x_str = formatInputCurrency(e.currentTarget.value)} class="input input-sm input-bordered w-32 text-center font-mono shadow-inner" placeholder="Harga Awal" />
-                        <span class="text-sm font-medium opacity-70">didiskon</span>
-                        <input type="number" bind:value={c5_y} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="%" />
-                        <span class="text-sm font-medium opacity-70">%</span>
-                        
-                        <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c5_x_str = ''; c5_y = null; }} title="Clear">
-                            <RotateCcw size={14} /> Reset
-                        </button>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
+                        <div class="flex items-center gap-2 flex-1">
+                            <input type="text" value={c5_x_str} oninput={(e) => c5_x_str = formatInputCurrency(e.currentTarget.value)} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="Harga Awal" />
+                            <span class="text-sm font-medium opacity-70 shrink-0">didiskon</span>
+                        </div>
+                        <div class="flex items-center gap-2 flex-[0.7]">
+                            <input type="number" bind:value={c5_y} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="%" />
+                            <span class="text-sm font-medium opacity-70 shrink-0">%</span>
+                        </div>
+                        <div class="flex justify-end mt-2 sm:mt-0">
+                            <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 gap-1" onclick={() => { c5_x_str = ''; c5_y = null; }} title="Clear">
+                                <RotateCcw size={14} /> Reset
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="p-3 bg-base-100 rounded-xl border border-base-content/5 flex flex-col justify-center min-w-[200px] shadow-inner gap-2">
@@ -116,15 +121,21 @@
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
                 <h3 class="card-title text-base mb-3">Berapa X% dari Y?</h3>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-sm font-medium opacity-70">Berapa</span>
-                    <input type="number" bind:value={c1_x} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="X" />
-                    <span class="text-sm font-medium opacity-70">% dari</span>
-                    <input type="number" bind:value={c1_y} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Y" />
-                    <span class="text-sm font-medium opacity-70">?</span>
-                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c1_x = null; c1_y = null; }} title="Clear">
-                        <RotateCcw size={14} /> Reset
-                    </button>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="text-sm font-medium opacity-70 shrink-0">Berapa</span>
+                        <input type="number" bind:value={c1_x} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="X" />
+                    </div>
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="text-sm font-medium opacity-70 shrink-0">% dari</span>
+                        <input type="number" bind:value={c1_y} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="Y" />
+                        <span class="text-sm font-medium opacity-70 shrink-0">?</span>
+                    </div>
+                    <div class="flex justify-end mt-2 sm:mt-0">
+                        <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 gap-1" onclick={() => { c1_x = null; c1_y = null; }} title="Clear">
+                            <RotateCcw size={14} /> Reset
+                        </button>
+                    </div>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
                     <span class="text-sm font-semibold opacity-50">Hasil:</span>
@@ -137,14 +148,20 @@
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
                 <h3 class="card-title text-base mb-3">X adalah berapa persen dari Y?</h3>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <input type="number" bind:value={c2_x} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="X" />
-                    <span class="text-sm font-medium opacity-70">brp % dari</span>
-                    <input type="number" bind:value={c2_y} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Y" />
-                    <span class="text-sm font-medium opacity-70">?</span>
-                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c2_x = null; c2_y = null; }} title="Clear">
-                        <RotateCcw size={14} /> Reset
-                    </button>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
+                    <div class="flex items-center gap-2 flex-[0.7]">
+                        <input type="number" bind:value={c2_x} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="X" />
+                        <span class="text-sm font-medium opacity-70 shrink-0">brp % dari</span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-1">
+                        <input type="number" bind:value={c2_y} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="Y" />
+                        <span class="text-sm font-medium opacity-70 shrink-0">?</span>
+                    </div>
+                    <div class="flex justify-end mt-2 sm:mt-0">
+                        <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 gap-1" onclick={() => { c2_x = null; c2_y = null; }} title="Clear">
+                            <RotateCcw size={14} /> Reset
+                        </button>
+                    </div>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
                     <span class="text-sm font-semibold opacity-50">Hasil:</span>
@@ -157,14 +174,20 @@
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
                 <h3 class="card-title text-base mb-3">Perubahan (Kenaikan/Penurunan)</h3>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <span class="text-sm font-medium opacity-70">Dari</span>
-                    <input type="number" bind:value={c3_x} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Awal" />
-                    <span class="text-sm font-medium opacity-70">menjadi</span>
-                    <input type="number" bind:value={c3_y} class="input input-sm input-bordered w-24 text-center font-mono shadow-inner" placeholder="Akhir" />
-                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c3_x = null; c3_y = null; }} title="Clear">
-                        <RotateCcw size={14} /> Reset
-                    </button>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="text-sm font-medium opacity-70 shrink-0">Dari</span>
+                        <input type="number" bind:value={c3_x} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="Awal" />
+                    </div>
+                    <div class="flex items-center gap-2 flex-1">
+                        <span class="text-sm font-medium opacity-70 shrink-0">menjadi</span>
+                        <input type="number" bind:value={c3_y} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="Akhir" />
+                    </div>
+                    <div class="flex justify-end mt-2 sm:mt-0">
+                        <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 gap-1" onclick={() => { c3_x = null; c3_y = null; }} title="Clear">
+                            <RotateCcw size={14} /> Reset
+                        </button>
+                    </div>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex items-center justify-between shadow-inner">
                     <span class="text-sm font-semibold opacity-50">Perubahan:</span>
@@ -179,15 +202,20 @@
         <div class="card bg-base-200/50 border border-base-content/10 shadow-sm hover:shadow-md transition-shadow">
             <div class="card-body p-5">
                 <h3 class="card-title text-base mb-3">Tambah Persentase (Pajak/Margin)</h3>
-                <div class="flex items-center gap-2 flex-wrap">
-                    <input type="text" value={c4_x_str} oninput={(e) => c4_x_str = formatInputCurrency(e.currentTarget.value)} class="input input-sm input-bordered w-28 text-center font-mono shadow-inner" placeholder="Nilai" />
-                    <span class="text-sm font-medium opacity-70">ditambah</span>
-                    <input type="number" bind:value={c4_y} class="input input-sm input-bordered w-20 text-center font-mono shadow-inner" placeholder="%" />
-                    <span class="text-sm font-medium opacity-70">%</span>
-                    
-                    <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 ml-auto gap-1" onclick={() => { c4_x_str = ''; c4_y = null; }} title="Clear">
-                        <RotateCcw size={14} /> Reset
-                    </button>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
+                    <div class="flex items-center gap-2 flex-1">
+                        <input type="text" value={c4_x_str} oninput={(e) => c4_x_str = formatInputCurrency(e.currentTarget.value)} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="Nilai" />
+                        <span class="text-sm font-medium opacity-70 shrink-0">ditambah</span>
+                    </div>
+                    <div class="flex items-center gap-2 flex-[0.7]">
+                        <input type="number" bind:value={c4_y} class="input input-sm input-bordered flex-1 min-w-0 text-center font-mono shadow-inner" placeholder="%" />
+                        <span class="text-sm font-medium opacity-70 shrink-0">%</span>
+                    </div>
+                    <div class="flex justify-end mt-2 sm:mt-0">
+                        <button class="btn btn-ghost btn-sm text-base-content/50 hover:text-error hover:bg-error/10 gap-1" onclick={() => { c4_x_str = ''; c4_y = null; }} title="Clear">
+                            <RotateCcw size={14} /> Reset
+                        </button>
+                    </div>
                 </div>
                 <div class="mt-4 p-3 bg-base-100 rounded-xl border border-base-content/5 flex flex-col shadow-inner gap-1">
                     <div class="flex justify-between items-center text-xs font-semibold opacity-50">
