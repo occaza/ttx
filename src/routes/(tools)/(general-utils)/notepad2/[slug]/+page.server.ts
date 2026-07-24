@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect, fail } from '@sveltejs/kit';
 import { supabaseAdmin } from '$lib/server/supabase.server';
 import type { PageServerLoad, Actions } from './$types';
 import crypto from 'crypto';
@@ -31,7 +31,25 @@ export const actions: Actions = {
 		if (!user) throw error(401, 'Unauthorized');
 
 		const formData = await request.formData();
-		const content = (formData.get('content') ?? '').toString();
+		let content = (formData.get('content') ?? '').toString();
+
+		// Cek tier user
+		const { data: profile } = await supabaseAdmin.from('profiles').select('tier').eq('id', user.id).single();
+		const tier = profile?.tier ?? 'free';
+
+		// Batasi 2000 baris untuk user gratis
+		if (tier === 'free') {
+			const lines = content.split('\n');
+			if (lines.length > 2000) {
+				content = lines.slice(0, 2000).join('\n');
+			}
+		}
+
+		// Batasi konten maksimum 500KB
+		const MAX_CONTENT_BYTES = 500 * 1024;
+		if (Buffer.byteLength(content, 'utf8') > MAX_CONTENT_BYTES) {
+			throw error(400, 'Konten terlalu besar (maksimum 500KB)');
+		}
 
 		const { error: dbError } = await supabaseAdmin
 			.from('notepad2_docs')
@@ -55,18 +73,16 @@ export const actions: Actions = {
 		let counter = 1;
 		let isUnique = false;
 
-		while (!isUnique) {
-			const { data: existing } = await supabaseAdmin
-				.from('notepad2_docs')
-				.select('slug')
-				.eq('user_id', user.id)
-				.eq('title', finalTitle)
-				.neq('slug', params.slug)
-				.limit(1);
+		const { data: existing } = await supabaseAdmin
+			.from('notepad2_docs')
+			.select('title')
+			.eq('user_id', user.id)
+			.neq('slug', params.slug)
+			.ilike('title', `${title}%`);
 
-			if (!existing || existing.length === 0) {
-				isUnique = true;
-			} else {
+		if (existing && existing.length > 0) {
+			const existingTitles = existing.map(d => d.title);
+			while (existingTitles.includes(finalTitle)) {
 				finalTitle = `${title} (${counter})`;
 				counter++;
 			}
@@ -87,21 +103,35 @@ export const actions: Actions = {
 		const { user } = await locals.safeGetSession();
 		if (!user) throw error(401, 'Unauthorized');
 
+		// Cek tier user
+		const { data: profile } = await supabaseAdmin.from('profiles').select('tier').eq('id', user.id).single();
+		const tier = profile?.tier ?? 'free';
+
+		if (tier === 'free') {
+			const { count, error: countError } = await supabaseAdmin
+				.from('notepad2_docs')
+				.select('*', { count: 'exact', head: true })
+				.eq('user_id', user.id);
+			
+			if (countError) throw error(500, 'Gagal memverifikasi batasan dokumen');
+			if (count !== null && count >= 4) {
+				return fail(403, { limitReached: true, message: 'Batas maksimal 4 dokumen.' });
+			}
+		}
+
 		let finalTitle = 'Untitled';
 		let counter = 1;
 		let isUnique = false;
 
-		while (!isUnique) {
-			const { data: existing } = await supabaseAdmin
-				.from('notepad2_docs')
-				.select('slug')
-				.eq('user_id', user.id)
-				.eq('title', finalTitle)
-				.limit(1);
+		const { data: existing } = await supabaseAdmin
+			.from('notepad2_docs')
+			.select('title')
+			.eq('user_id', user.id)
+			.ilike('title', 'Untitled%');
 
-			if (!existing || existing.length === 0) {
-				isUnique = true;
-			} else {
+		if (existing && existing.length > 0) {
+			const existingTitles = existing.map(d => d.title);
+			while (existingTitles.includes(finalTitle)) {
 				finalTitle = `Untitled (${counter})`;
 				counter++;
 			}
@@ -121,7 +151,7 @@ export const actions: Actions = {
 
 		if (dbError || !newDoc) throw error(500, 'Gagal membuat dokumen');
 
-		return { ok: true, newSlug: newDoc.slug };
+		throw redirect(302, `/notepad2/${newDoc.slug}`);
 	},
 
 	delete: async ({ params, locals }) => {

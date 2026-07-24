@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { enhance } from '$app/forms';
 	import { Home, FileText, Plus, LogOut, ChevronLeft, ChevronRight, Settings } from '@lucide/svelte';
 	import { ThemeSwitcher } from '$lib';
 
 	let { data, children } = $props();
 
 	let isSidebarOpen = $state(true);
+	let showUpgradeModal = $state(false);
 
 	function toggleSidebar() {
 		isSidebarOpen = !isSidebarOpen;
@@ -48,7 +50,15 @@
 		<!-- New Doc Button (hanya untuk user yang login) -->
 		{#if data.user}
 		<div class="p-3 shrink-0">
-			<form method="POST" action="?/create">
+			<form method="POST" action="?/create" use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result.type === 'failure' && result.data?.limitReached) {
+						showUpgradeModal = true;
+					} else {
+						await update();
+					}
+				};
+			}}>
 				<button
 					type="submit"
 					class="btn btn-sm btn-primary w-full gap-2 rounded-lg font-medium shadow-sm whitespace-nowrap {isSidebarOpen ? '' : 'px-0'}"
@@ -103,7 +113,7 @@
 						{#if isSidebarOpen}
 							<div class="flex flex-col overflow-hidden">
 								<span class="text-xs font-medium truncate">{displayName}</span>
-								<span class="text-[10px] text-base-content/50">Free User</span>
+								<span class="text-[10px] {data.profile?.tier === 'pro' ? 'text-primary font-bold' : 'text-base-content/50'}">{data.profile?.tier === 'pro' ? 'Pro User' : 'Free User'}</span>
 							</div>
 						{/if}
 					</div>
@@ -152,6 +162,28 @@
 		{@render children?.()}
 	</div>
 </div>
+
+{#if showUpgradeModal}
+<dialog class="modal modal-open bg-base-300/60 backdrop-blur-sm">
+	<div class="modal-box text-center p-8">
+		<div class="flex justify-center text-primary mb-4">
+			<FileText size={48} />
+		</div>
+		<h3 class="font-bold text-2xl mb-2">Batas Dokumen Tercapai</h3>
+		<p class="py-4 text-base-content/70">
+			Kamu telah menggunakan semua <strong class="text-base-content">4 kuota dokumen gratis</strong>. 
+			Untuk membuat dokumen baru, silakan hapus dokumen lama atau upgrade akunmu ke versi <strong class="text-primary">Pro</strong>!
+		</p>
+		<div class="modal-action justify-center gap-3 mt-6">
+			<button class="btn btn-ghost" onclick={() => showUpgradeModal = false}>Tutup</button>
+			<button class="btn btn-primary px-8" onclick={() => {
+				showUpgradeModal = false;
+				alert('Halaman Pembayaran Belum Tersedia');
+			}}>Upgrade ke Pro</button>
+		</div>
+	</div>
+</dialog>
+{/if}
 
 <style>
 	/* Custom scrollbar for sidebar */
