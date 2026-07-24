@@ -40,7 +40,7 @@
 >
 	<nav
 		class="relative mx-auto flex items-center transition-all duration-300 {isScrolled
-			? 'h-14 max-w-4xl rounded-full border border-base-content/10 bg-base-100/30 px-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-2xl'
+			? 'h-14 w-full max-w-7xl rounded-2xl border border-base-content/10 bg-base-100/40 px-4 shadow-md backdrop-blur-sm md:px-8'
 			: 'h-16 w-full max-w-7xl border-b border-transparent bg-transparent px-4 md:px-8'}"
 	>
 		<div class="flex w-full items-center justify-between">

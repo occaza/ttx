@@ -173,6 +173,12 @@ Garis pemisah bisa dibuat dengan tiga strip:
 		input = '';
 		if (fileUpload) fileUpload.reset();
 	}
+
+	function copy() {
+		if (input) {
+			navigator.clipboard.writeText(input);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -312,15 +318,15 @@ Garis pemisah bisa dibuat dengan tiga strip:
 
 			<!-- Right: Unified Split Editor -->
 			<div
-				class="flex h-full w-full flex-1 flex-col overflow-hidden rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md"
+				class="flex h-full w-full flex-1 flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md"
 			>
 				<div
-					class="grid h-full flex-1 grid-cols-1 divide-y divide-base-content/10 bg-base-100/50 lg:grid-cols-2 lg:divide-x lg:divide-y-0"
+					class="grid h-full flex-1 grid-cols-1 divide-y divide-base-content/10 bg-base-100/50 rounded-2xl lg:grid-cols-2 lg:divide-x lg:divide-y-0"
 				>
 					<!-- Input Editor -->
 					<div class="relative flex h-full min-h-[300px] flex-col">
 						<div
-							class="flex h-14 items-center justify-between border-b border-base-content/5 bg-base-200/20 px-4"
+							class="flex h-14 items-center justify-between border-b border-base-content/5 bg-base-200/20 px-4 rounded-t-2xl lg:rounded-tr-none"
 						>
 							<span
 								class="flex items-center gap-1.5 text-xs font-bold tracking-widest text-base-content/40 uppercase"
@@ -329,9 +335,10 @@ Garis pemisah bisa dibuat dengan tiga strip:
 							<ActionButton
 								showSelectAll={true}
 								showClear={true}
-								showCopy={false}
+								showCopy={true}
 								onselectall={selectAll}
 								onclear={clear}
+								oncopy={copy}
 							/>
 						</div>
 						<div class="relative flex-1">
@@ -340,7 +347,7 @@ Garis pemisah bisa dibuat dengan tiga strip:
 								bind:value={input}
 								placeholder="Tulis markdown di sini..."
 								rows={20}
-								className="w-full h-full absolute inset-0 resize-none border-none bg-transparent p-5 text-base md:text-[13px] leading-relaxed outline-none focus:ring-0 font-mono text-base-content/90"
+								className="w-full h-full absolute inset-0 resize-none border-none bg-transparent p-5 text-base md:text-[13px] leading-relaxed outline-none focus:ring-0 font-mono text-base-content/90 rounded-b-2xl lg:rounded-br-none lg:rounded-bl-2xl"
 							/>
 						</div>
 					</div>
@@ -348,7 +355,7 @@ Garis pemisah bisa dibuat dengan tiga strip:
 					<!-- Output Preview -->
 					<div class="relative flex h-full min-h-[300px] flex-col bg-base-100">
 						<div
-							class="z-10 flex h-14 items-center justify-between border-b border-base-content/5 bg-base-200/10 px-4"
+							class="z-10 flex h-14 items-center justify-between border-b border-base-content/5 bg-base-200/10 px-4 rounded-t-2xl lg:rounded-tl-none"
 						>
 							<span
 								class="flex items-center gap-1.5 text-xs font-bold tracking-widest text-base-content/40 uppercase"

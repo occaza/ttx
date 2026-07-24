@@ -182,13 +182,13 @@
 			</div>
 
 			<!-- Right: Unified Split Editor -->
-			<div class="w-full flex-1 flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md overflow-hidden min-h-0">
+			<div class="w-full flex-1 flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md min-h-0">
 
-				<div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-base-content/10 bg-base-100/50 flex-1 min-h-0">
+				<div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-base-content/10 bg-base-100/50 flex-1 min-h-0 rounded-2xl">
 					
 					<!-- Input Editor -->
 					<div class="flex flex-col relative h-full min-h-[300px] lg:min-h-0">
-						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/20 h-14 px-4 shrink-0">
+						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/20 h-14 px-4 shrink-0 rounded-t-2xl lg:rounded-tr-none">
 							<span class="text-xs font-bold text-base-content/40 uppercase tracking-widest">Input ({maxLines} baris)</span>
 							<ActionButton
 								showSelectAll={true}
@@ -198,7 +198,7 @@
 								onclear={handleClear}
 							/>
 						</div>
-						<div class="flex flex-1 w-full relative overflow-hidden bg-transparent min-h-0">
+						<div class="flex flex-1 w-full relative overflow-hidden bg-transparent min-h-0 rounded-b-2xl lg:rounded-br-none lg:rounded-bl-2xl">
 							<div
 								bind:this={inputLinesEl}
 								class="w-12 shrink-0 bg-base-200/20 border-r border-base-content/5 text-right pr-3 py-5 overflow-hidden text-base-content/30 font-mono text-base md:text-sm select-none"
@@ -220,7 +220,7 @@
 
 					<!-- Output Editor -->
 					<div class="flex flex-col relative h-full min-h-[300px] lg:min-h-0 bg-base-200/5">
-						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/30 h-14 px-4 shrink-0 z-10">
+						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/30 h-14 px-4 shrink-0 z-10 rounded-t-2xl lg:rounded-tl-none">
 							<span class="text-xs font-bold text-base-content/40 uppercase tracking-widest">Output</span>
 							<div class="flex items-center gap-2">
 								<SaveFiles content={output} defaultName="extracted.txt" />

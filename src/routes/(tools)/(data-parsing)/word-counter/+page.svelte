@@ -119,10 +119,10 @@
 		<div class="flex flex-col lg:flex-row gap-6 items-stretch lg:min-h-[560px]">
 
 			<!-- Left Side: Editor -->
-			<div class="w-full flex-1 flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md overflow-hidden">
+			<div class="w-full flex-1 flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
 				
 				<!-- Editor Toolbar -->
-				<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-base-content/10 bg-base-200/30 p-3 sm:px-4 sm:h-14 gap-3">
+				<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-base-content/10 bg-base-200/30 p-3 sm:px-4 sm:h-14 gap-3 rounded-t-2xl">
 					<div class="flex items-center gap-3">
 						<div class="w-48">
 							<FileUploadInput

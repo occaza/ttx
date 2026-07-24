@@ -241,13 +241,13 @@
 			</div>
 
 			<!-- Right: Unified Split Editor -->
-			<div class="w-full flex-1 flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md overflow-hidden">
+			<div class="w-full flex-1 flex flex-col rounded-2xl border border-base-content/10 bg-base-100 shadow-xl backdrop-blur-md">
 
-				<div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-base-content/10 bg-base-100/50 flex-1">
+				<div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-base-content/10 bg-base-100/50 flex-1 rounded-2xl">
 					
 					<!-- Input Editor -->
 					<div class="flex flex-col relative h-full min-h-[300px]">
-						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/20 h-14 px-4">
+						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/20 h-14 px-4 rounded-t-2xl lg:rounded-tr-none">
 							<span class="text-xs font-bold text-base-content/40 uppercase tracking-widest">Input</span>
 							<ActionButton
 								showSelectAll={true}
@@ -262,13 +262,13 @@
 							bind:value={input}
 							placeholder="Tulis atau paste teks Anda di sini..."
 							rows={14}
-							className="w-full h-full absolute inset-0 pt-14 resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono"
+							className="w-full flex-1 resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono rounded-b-2xl lg:rounded-br-none lg:rounded-bl-2xl"
 						/>
 					</div>
 
 					<!-- Output Editor -->
 					<div class="flex flex-col relative h-full min-h-[300px] bg-base-200/5">
-						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/30 h-14 px-4 z-10">
+						<div class="flex items-center justify-between border-b border-base-content/5 bg-base-200/30 h-14 px-4 z-10 lg:rounded-tr-2xl">
 							<span class="text-xs font-bold text-base-content/40 uppercase tracking-widest">Output</span>
 							<div class="flex items-center gap-2">
 								<SaveFiles content={output} defaultName="case-converter-output.txt" />
@@ -282,7 +282,7 @@
 						</div>
 						<div class="flex-1 relative flex flex-col h-full">
 							{#if !output && !input}
-								<div class="absolute inset-0 pt-14 flex flex-col items-center justify-center text-base-content/20 pointer-events-none">
+								<div class="absolute inset-0 flex flex-col items-center justify-center text-base-content/20 pointer-events-none">
 									<Type size={40} strokeWidth={1} class="mb-3 opacity-50" />
 									<p class="text-sm font-medium">Hasil konversi akan muncul di sini</p>
 								</div>
@@ -293,7 +293,7 @@
 								rows={14}
 								readonly={true}
 								placeholder=""
-								className="w-full h-full absolute inset-0 pt-14 resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono {output ? 'text-base-content/80' : ''}"
+								className="w-full flex-1 resize-none border-none bg-transparent p-5 text-base md:text-sm outline-none focus:ring-0 font-mono rounded-b-2xl {output ? 'text-base-content/80' : ''}"
 							/>
 						</div>
 					</div>

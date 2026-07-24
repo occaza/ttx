@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Percent, RotateCcw } from '@lucide/svelte';
+    import { Percent, RotateCcw, ArrowLeft } from '@lucide/svelte';
     
     // Calculator 1: What is X% of Y?
     let c1_x = $state<number | null>(null);
@@ -70,15 +70,22 @@
     <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
 
     <div class="relative mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
-        <div class="mb-8 flex items-center gap-4 border-b border-base-content/10 pb-4">
-            <div class="p-3 bg-primary/10 text-primary rounded-xl shadow-sm">
-                <Percent size={28} />
-            </div>
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-base-content">Percentage Calculator</h1>
-                <p class="text-sm opacity-50 mt-1">Berbagai perhitungan persentase instan dalam satu halaman.</p>
-            </div>
-        </div>
+		<!-- Header -->
+		<div class="mb-8">
+			<a href="/" class="mb-5 inline-flex items-center text-sm font-medium text-base-content/40 hover:text-base-content transition-colors">
+				<ArrowLeft size={16} class="mr-1.5" />
+				Kembali ke Tools
+			</a>
+			<div class="flex items-center gap-4">
+				<div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-base-content/10 bg-base-200/50 text-base-content/70 shadow-sm backdrop-blur-md">
+					<Percent size={26} strokeWidth={1.5} />
+				</div>
+				<div>
+					<h1 class="text-3xl font-extrabold tracking-tight text-base-content">Percentage Calculator</h1>
+					<p class="mt-1 text-sm text-base-content/50">Berbagai perhitungan persentase instan dalam satu halaman.</p>
+				</div>
+			</div>
+		</div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 

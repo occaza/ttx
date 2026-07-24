@@ -1,85 +1,61 @@
 <script lang="ts">
 	import { FileUploadInput, ActionButton, TextArea, SaveFiles } from '$lib';
 	import { page } from '$app/stores';
-	import { ArrowLeft, Scissors, ChevronDown } from '@lucide/svelte';
+	import { ArrowLeft, Scissors, ChevronDown, Check, X } from '@lucide/svelte';
 
 	let input = $state('');
-	let output = $state('');
 	let copied = $state(false);
-	let delimiter = $state('');
 	let customDelimiter = $state('');
 	let delimiterOption = $state('');
-	let segmen = $state<string[]>([]);
-	let pickSet = $state(new Set<number>());
-	let segCount = $state(0);
 	let inputTextarea: TextArea;
 	let outputTextarea: TextArea;
 	let fileUpload: FileUploadInput;
 
 	const maxLabelLength = 10;
 
-	$effect(() => {
-		if (input) preview();
+	let delimiter = $derived(
+		delimiterOption === 'custom' ? customDelimiter || '|' : delimiterOption
+	);
+
+	let rows = $derived.by(() => {
+		if (!delimiter || !input) return [];
+		return input.split(/\r?\n/).filter((l) => l.includes(delimiter));
 	});
 
-	$effect(() => {
-		delimiter = delimiterOption === 'custom' ? customDelimiter || '|' : delimiterOption;
-		if (delimiter) {
-			preview();
-			extract();
-		} else {
-			segCount = 0;
-			segmen = [];
-			output = '';
-		}
+	let segCount = $derived.by(() => {
+		if (!rows.length || !delimiter) return 0;
+		return Math.max(...rows.map((r) => r.split(delimiter).length));
 	});
 
-	function preview() {
-		if (!delimiter) {
-			segCount = 0;
-			segmen = [];
-			return;
-		}
-
-		const rows = input.split(/\r?\n/).filter((l) => l.includes(delimiter));
-		if (!rows.length) {
-			segmen = [];
-			segCount = 0;
-			pickSet.clear();
-			output = '';
-			return;
-		}
-
-		segCount = Math.max(...rows.map((r) => r.split(delimiter).length));
-		pickSet.clear();
-		for (let i = 0; i < segCount; i++) pickSet.add(i);
-		pickSet = pickSet;
-
-		segmen = rows[0].split(delimiter).map((s) => {
+	let segmen = $derived.by(() => {
+		if (!rows.length || !delimiter) return [];
+		return rows[0].split(delimiter).map((s) => {
 			const trimmed = s.trim();
 			return trimmed.length > maxLabelLength
 				? trimmed.substring(0, maxLabelLength) + '...'
 				: trimmed;
 		});
-	}
+	});
 
-	function extract() {
-		if (!delimiter) {
-			output = '';
-			return;
+	let picks = $state<boolean[]>([]);
+
+	$effect(() => {
+		if (segCount !== picks.length) {
+			picks = Array(segCount).fill(true);
 		}
+	});
 
-		const rows = input.split(/\r?\n/).filter((l) => l.includes(delimiter));
-		const picks = Array.from(pickSet).sort((a, b) => a - b);
-		output = rows
+	let output = $derived.by(() => {
+		if (!rows.length || !delimiter) return '';
+		return rows
 			.map((r) =>
 				r
 					.split(delimiter)
-					.filter((_, i) => picks.includes(i))
+					.filter((_, i) => picks[i] !== false)
 					.join(delimiter)
 			)
 			.join('\n');
-	}
+	});
 
 	function handleLoad(content: string) {
 		input = content;
@@ -95,14 +71,10 @@
 
 	function clear() {
 		input = '';
-		output = '';
 		copied = false;
-		delimiter = '';
 		customDelimiter = '';
 		delimiterOption = '';
-		pickSet = new Set<number>();
-		segCount = 0;
-		segmen = [];
+		picks = [];
 		if (fileUpload) fileUpload.reset();
 	}
 
@@ -112,14 +84,8 @@
 		setTimeout(() => (copied = false), 2000);
 	}
 
-	function handleCheckboxChange(index: number, checked: boolean) {
-		if (checked) {
-			pickSet.add(index);
-		} else {
-			pickSet.delete(index);
-		}
-		pickSet = pickSet;
-		extract();
+	function togglePick(index: number) {
+		picks[index] = !picks[index];
 	}
 </script>
 
@@ -232,21 +198,20 @@
 							</div>
 							<div class="flex flex-wrap gap-2">
 								{#each Array(segCount) as _, i (i)}
-									<label
-										class="flex cursor-pointer items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-semibold transition-all
-											{pickSet.has(i)
-												? 'bg-primary/10 border-primary/30 text-primary'
-												: 'bg-base-200/40 border-base-content/10 text-base-content/50 hover:border-base-content/20'}"
-										title={segmen[i] || `seg ${i + 1}`}
+									{@const kept = picks[i] !== false}
+									<button
+										type="button"
+										onclick={() => togglePick(i)}
+										class="seg-pill {kept ? 'seg-pill--kept' : 'seg-pill--excluded'}"
+										title={kept ? `Keep: ${segmen[i] || `Seg ${i + 1}`}` : `Exclude: ${segmen[i] || `Seg ${i + 1}`}`}
 									>
-										<input
-											type="checkbox"
-											class="hidden"
-											checked={pickSet.has(i)}
-											onchange={(e) => handleCheckboxChange(i, e.currentTarget.checked)}
-										/>
+										{#if kept}
+											<Check size={11} class="shrink-0" />
+										{:else}
+											<X size={11} class="shrink-0" />
+										{/if}
 										{segmen[i] || `Seg ${i + 1}`}
-									</label>
+									</button>
 								{/each}
 							</div>
 						</div>
@@ -256,7 +221,6 @@
 				<div class="mt-auto pt-6 border-t border-base-content/10">
 					<button
 						class="btn btn-primary w-full rounded-xl shadow-lg hover:scale-[1.02] transition-all font-bold gap-2 h-12"
-						onclick={extract}
 						disabled={!delimiter || !input}
 					>
 						<Scissors size={18} />
@@ -322,3 +286,42 @@
 </div>
 
 
+<style>
+	.seg-pill {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		padding: 6px 10px;
+		border-radius: 8px;
+		border: 1px solid;
+		font-size: 11px;
+		font-weight: 600;
+		cursor: pointer;
+		user-select: none;
+		transition: all 0.15s ease;
+	}
+
+	.seg-pill--kept {
+		background-color: rgba(34, 197, 94, 0.12);
+		border-color: rgba(34, 197, 94, 0.45);
+		color: rgb(34, 197, 94);
+	}
+
+	.seg-pill--kept:hover {
+		background-color: rgba(34, 197, 94, 0.2);
+	}
+
+	.seg-pill--excluded {
+		background-color: rgba(255, 50, 50, 0.05);
+		border-color: rgba(255, 80, 80, 0.2);
+		color: rgba(200, 100, 100, 0.7);
+		text-decoration: line-through;
+		opacity: 0.65;
+	}
+
+	.seg-pill--excluded:hover {
+		background-color: rgba(255, 50, 50, 0.1);
+		border-color: rgba(255, 80, 80, 0.4);
+		opacity: 1;
+	}
+</style>

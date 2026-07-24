@@ -1,33 +1,39 @@
-<footer class="relative overflow-hidden border-t border-base-content/10 bg-base-100">
-	<!-- Subtle grid continuation -->
-	<div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+<script lang="ts">
+	import { Heart } from '@lucide/svelte';
+</script>
 
-	<div class="relative mx-auto max-w-7xl px-4 py-10 md:px-8">
-		<div class="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center">
-			<!-- Brand -->
-			<div>
-				<a href="/" class="text-xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
-					TEXY<span class="text-primary">.</span>
-				</a>
-				<p class="mt-1.5 max-w-xs text-sm text-base-content/50">
-					Utilitas teks ringan yang berjalan langsung di browser.
-				</p>
-			</div>
+<div class="bg-base-100 border-t border-base-content/10">
+	<footer class="footer sm:footer-horizontal max-w-7xl mx-auto text-base-content p-10 md:px-8">
+		<aside>
+			<a href="/" class="text-2xl font-bold tracking-tight text-base-content hover:text-primary transition-colors">
+				TEXY<span class="text-primary">.</span>
+			</a>
+			<p class="max-w-xs text-sm text-base-content/60 mt-2">
+				Utilitas teks ringan yang berjalan langsung di browser.<br />
+				100% gratis, tanpa instalasi, tanpa menyimpan data di server.
+			</p>
+		</aside>
+		<nav>
+			<h6 class="footer-title">Tools Populer</h6>
+			<a href="/text-tools/remove-duplicate-lines" class="link link-hover text-base-content/70">Hapus Baris Duplikat</a>
+			<a href="/text-tools/sort-lines" class="link link-hover text-base-content/70">Urutkan Baris</a>
+			<a href="/notepad" class="link link-hover text-base-content/70">Notepad</a>
+			<a href="/emoji-picker" class="link link-hover text-base-content/70">Emoji Browser</a>
+		</nav>
+		<nav>
+			<h6 class="footer-title">Legal & Privasi</h6>
+			<a href="/privacy-policy" class="link link-hover text-base-content/70">Privacy Policy</a>
+			<a href="/disclaimer" class="link link-hover text-base-content/70">Disclaimer</a>
+			<a href="/data-deletion" class="link link-hover text-base-content/70">Penghapusan Data</a>
+		</nav>
+	</footer>
+</div>
 
-			<!-- Quick links -->
-			<nav class="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-				<a href="/text-tools/remove-duplicate-lines" class="text-base-content/50 transition-colors hover:text-base-content">Remove Duplicates</a>
-				<a href="/text-tools/sort-lines" class="text-base-content/50 transition-colors hover:text-base-content">Sort Lines</a>
-				<a href="/notepad" class="text-base-content/50 transition-colors hover:text-base-content">Notepad</a>
-				<a href="/emoji-picker" class="text-base-content/50 transition-colors hover:text-base-content">Emoji Browser</a>
-			</nav>
-		</div>
-
-		<!-- Bottom bar -->
-		<div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-base-content/8 pt-6 text-xs text-base-content/40 sm:flex-row">
-			<p>&copy; {new Date().getFullYear()} TEXY. Semua proses berjalan di browser Anda.</p>
-			<p>Dibuat dengan penuh perhatian.</p>
-		</div>
-	</div>
-</footer>
-
+<div class="bg-base-200/50 border-t border-base-content/10">
+	<footer class="footer sm:footer-horizontal footer-center max-w-7xl mx-auto text-base-content/60 p-6 md:px-8">
+		<aside>
+			<p>&copy; {new Date().getFullYear()} TEXY. Semua proses berjalan secara lokal di browser Anda.</p>
+			<p class="text-xs mt-1 flex items-center justify-center gap-1">made with <Heart size={12} class="fill-error text-error" /> by texy</p>
+		</aside>
+	</footer>
+</div>
