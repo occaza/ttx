@@ -1,127 +1,138 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { supabaseAdmin } from '$lib/server/supabase.server';
+import type { PageServerLoad, Actions } from './$types';
 
-export const load = async ({ url }) => {
-	try {
-		const page = parseInt(url.searchParams.get('page') || '1');
-		const limit = parseInt(url.searchParams.get('limit') || '10');
-		const offset = (page - 1) * limit;
+export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase } }) => {
+	const { session, user } = await safeGetSession();
 
-		const {
-			data: accounts,
-			error: err,
-			count
-		} = await supabaseAdmin
-			.from('cookies')
-			.select('*', { count: 'exact' })
-			.order('added_at', { ascending: false })
-			.range(offset, offset + limit - 1);
-
-		if (err) {
-			console.error('Supabase load error:', err);
-			return { accounts: [], totalPages: 0, currentPage: page, limit };
-		}
-
-		const totalPages = Math.ceil((count || 0) / limit);
-
-		return {
-			accounts: accounts || [],
-			totalPages,
-			currentPage: page,
-			limit,
-			totalCount: count || 0
-		};
-	} catch (err) {
-		console.error('Load function error:', err);
-		return { accounts: [], totalPages: 0, currentPage: 1, limit: 10, totalCount: 0 };
+	if (!session || !user) {
+		throw redirect(303, '/login');
 	}
+
+	const { data: profile } = await supabase
+		.from('profiles')
+		.select('first_name, last_name, username, email, phone, role, tier')
+		.eq('id', user.id)
+		.single();
+
+	return {
+		user,
+		profile,
+		hasEmailProvider: user.app_metadata?.providers?.includes('email') ?? false
+	};
 };
 
-export const actions = {
-	create: async ({ request }) => {
-		try {
-			const fd = await request.formData();
-			const uid = (fd.get('uid') || '').toString().trim();
-			const pwd = (fd.get('password') || '').toString().trim();
-			const cook = (fd.get('cookies') || '').toString().trim();
+export const actions: Actions = {
+	updateProfile: async ({ request, locals: { safeGetSession } }) => {
+		const { user } = await safeGetSession();
+		if (!user) return fail(401, { message: 'Tidak terautentikasi.' });
 
-			if (!uid || !pwd) {
-				return fail(400, { message: 'UID dan Password wajib diisi' });
+		const fd = await request.formData();
+		const first_name = (fd.get('first_name') ?? '').toString().trim();
+		const last_name = (fd.get('last_name') ?? '').toString().trim();
+		const username = (fd.get('username') ?? '').toString().trim();
+		const phone = (fd.get('phone') ?? '').toString().trim();
+
+		if (!first_name) {
+			return fail(400, { message: 'Nama depan wajib diisi.' });
+		}
+
+		if (username && username.length < 3) {
+			return fail(400, { message: 'Username minimal 3 karakter.' });
+		}
+
+		// Cek username unik (kalau diisi)
+		if (username) {
+			const { data: existing } = await supabaseAdmin
+				.from('profiles')
+				.select('id')
+				.eq('username', username)
+				.neq('id', user.id)
+				.single();
+
+			if (existing) {
+				return fail(409, { message: 'Username sudah dipakai, coba yang lain.' });
 			}
+		}
 
-			const { error: err } = await supabaseAdmin.from('cookies').insert({
-				uid,
-				pwd,
-				cookies: cook || null
+		const { error } = await supabaseAdmin
+			.from('profiles')
+			.update({ first_name, last_name, username: username || null, phone: phone || null })
+			.eq('id', user.id);
+
+		if (error) {
+			console.error('Update profile error:', error);
+			return fail(500, { message: 'Gagal menyimpan perubahan. Coba lagi.' });
+		}
+
+		return { success: true, message: 'Profil berhasil diperbarui.' };
+	},
+
+	changeEmail: async ({ request, locals: { safeGetSession, supabase } }) => {
+		const { user } = await safeGetSession();
+		if (!user) return fail(401, { message: 'Tidak terautentikasi.' });
+
+		const fd = await request.formData();
+		const newEmail = (fd.get('email') ?? '').toString().trim().toLowerCase();
+
+		if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+			return fail(400, { message: 'Format email tidak valid.' });
+		}
+
+		if (newEmail === user.email) {
+			return fail(400, { message: 'Email baru sama dengan email saat ini.' });
+		}
+
+		const { error } = await supabase.auth.updateUser({ email: newEmail });
+
+		if (error) {
+			return fail(500, { message: error.message || 'Gagal mengubah email.' });
+		}
+
+		return { success: true, message: 'Email konfirmasi telah dikirim ke alamat baru.' };
+	},
+
+	changePassword: async ({ request, locals: { safeGetSession, supabase } }) => {
+		const { user } = await safeGetSession();
+		if (!user) return fail(401, { message: 'Tidak terautentikasi.' });
+
+		const fd = await request.formData();
+		const oldPassword = (fd.get('old_password') ?? '').toString();
+		const newPassword = (fd.get('password') ?? '').toString();
+		const confirmPassword = (fd.get('confirm_password') ?? '').toString();
+
+		if (newPassword.length < 8) {
+			return fail(400, { message: 'Password minimal 8 karakter.' });
+		}
+
+		if (newPassword !== confirmPassword) {
+			return fail(400, { message: 'Konfirmasi password tidak cocok.' });
+		}
+
+		const hasEmailProvider = user.app_metadata?.providers?.includes('email');
+		
+		if (hasEmailProvider) {
+			if (!oldPassword) {
+				return fail(400, { message: 'Password lama wajib diisi.' });
+			}
+			
+			// Verifikasi password lama
+			const { error: signInError } = await supabase.auth.signInWithPassword({
+				email: user.email as string,
+				password: oldPassword
 			});
-
-			if (err) {
-				console.error('Supabase insert error:', err);
-				if (err.code === '23505') {
-					return fail(409, { message: 'UID sudah tersimpan sebelumnya' });
-				}
-				return fail(500, { message: 'Gagal menyimpan ke database' });
+			
+			if (signInError) {
+				return fail(400, { message: 'Password lama salah.' });
 			}
-
-			return { success: true, message: 'Akun berhasil disimpan!' };
-		} catch (err) {
-			console.error('Action error:', err);
-			return fail(500, { message: 'Terjadi kesalahan server' });
 		}
-	},
 
-	update: async ({ request }) => {
-		try {
-			const fd = await request.formData();
-			const uid = (fd.get('uid') || '').toString().trim();
-			const pwd = (fd.get('password') || '').toString().trim();
-			const cook = (fd.get('cookies') || '').toString().trim();
+		const { error } = await supabase.auth.updateUser({ password: newPassword });
 
-			if (!uid || !pwd) {
-				return fail(400, { message: 'UID dan Password wajib diisi' });
-			}
-
-			const { error: err } = await supabaseAdmin
-				.from('cookies')
-				.update({
-					pwd,
-					cookies: cook || null,
-					last_login: new Date().toISOString()
-				})
-				.eq('uid', uid);
-
-			if (err) {
-				console.error('Supabase update error:', err);
-				return fail(500, { message: 'Gagal update data' });
-			}
-
-			return { success: true, message: 'Data berhasil diupdate!' };
-		} catch (err) {
-			console.error('Update error:', err);
-			return fail(500, { message: 'Terjadi kesalahan server' });
+		if (error) {
+			return fail(500, { message: error.message || 'Gagal mengubah password.' });
 		}
-	},
 
-	delete: async ({ request }) => {
-		try {
-			const fd = await request.formData();
-			const uid = (fd.get('uid') || '').toString().trim();
-
-			if (!uid) {
-				return fail(400, { message: 'UID tidak valid' });
-			}
-
-			const { error: err } = await supabaseAdmin.from('cookies').delete().eq('uid', uid);
-
-			if (err) {
-				console.error('Supabase delete error:', err);
-				return fail(500, { message: 'Gagal menghapus data' });
-			}
-
-			return { success: true, message: 'Data berhasil dihapus!' };
-		} catch (err) {
-			console.error('Delete error:', err);
-			return fail(500, { message: 'Terjadi kesalahan server' });
-		}
+		return { success: true, message: 'Password berhasil diubah.' };
 	}
 };

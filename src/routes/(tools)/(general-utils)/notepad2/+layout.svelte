@@ -106,17 +106,17 @@
 			{#if data.user}
 				{@const displayName = data.profile?.first_name || data.profile?.username || data.user?.user_metadata?.first_name || data.user?.user_metadata?.username || data.user?.email?.split('@')[0] || 'User'}
 				<div class="flex items-center {isSidebarOpen ? 'justify-between w-full' : 'justify-center'}">
-					<div class="flex items-center gap-2 overflow-hidden" title={!isSidebarOpen ? displayName : ""}>
-						<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary shrink-0 font-bold uppercase">
+					<a href="/account" class="group flex items-center gap-2 overflow-hidden rounded-lg hover:bg-base-300 transition-colors p-1 -ml-1" title={!isSidebarOpen ? displayName : "Pengaturan Akun"}>
+						<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-primary shrink-0 font-bold uppercase transition-colors group-hover:bg-primary/30">
 							{displayName[0]}
 						</div>
 						{#if isSidebarOpen}
 							<div class="flex flex-col overflow-hidden">
-								<span class="text-xs font-medium truncate">{displayName}</span>
+								<span class="text-xs font-medium truncate group-hover:text-base-content">{displayName}</span>
 								<span class="text-[10px] {data.profile?.tier === 'pro' ? 'text-primary font-bold' : 'text-base-content/50'}">{data.profile?.tier === 'pro' ? 'Pro User' : 'Free User'}</span>
 							</div>
 						{/if}
-					</div>
+					</a>
 					{#if isSidebarOpen}
 						<button 
 							class="btn btn-ghost btn-sm btn-square text-base-content/50 hover:text-error hover:bg-error/10 transition-colors" 

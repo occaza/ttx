@@ -26,22 +26,7 @@ vite.config.ts.timestamp-*
 
 .vercel
 
-bak/
-testpage/
-
-*.code-workspace
-
-*.pdf
-
-# Documentation
-blueprint.md
-
-# Backup
-auth_backup/
-
-# Secret Routes
-src/routes/viewp/
-src/routes/decx/
-
-# Private Tools
-tools/
+# Experimental / Backups
+experimental/
+src/routes/(experimental)/
+*backup*
