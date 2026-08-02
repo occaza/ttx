@@ -32,6 +32,12 @@
 	let cutting = $state(false);
 
 	$effect(() => {
+		if (cutLinesCount > lineCount) {
+			cutLinesCount = lineCount;
+		}
+	});
+
+	$effect(() => {
 		text = data.text;
 	});
 
