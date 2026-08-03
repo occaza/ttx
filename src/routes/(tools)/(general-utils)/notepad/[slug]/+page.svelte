@@ -1,6 +1,5 @@
 <script lang="ts">
 	import ActionButton from '$lib/components/ActionButton.svelte';
-	import TextArea from '$lib/components/TextArea.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
@@ -19,8 +18,8 @@
 	let showSaveWarning = $state(false);
 	let saveFormEl: HTMLFormElement | undefined = $state();
 	let linkInput: HTMLInputElement | undefined = $state();
-	let ta: TextArea | undefined = $state();
-	let lineNumbersEl: HTMLDivElement | undefined = $state();
+	let ta: HTMLTextAreaElement | undefined = $state();
+	let textareaScrollTop = $state(0);
 	let passwordInput = $state('');
 	let showChangePasswordModal = $state(false);
 	let changePasswordError = $state('');
@@ -53,9 +52,7 @@
 	});
 
 	function syncScroll(e: Event) {
-		if (lineNumbersEl) {
-			lineNumbersEl.scrollTop = (e.target as HTMLTextAreaElement).scrollTop;
-		}
+		textareaScrollTop = (e.target as HTMLTextAreaElement).scrollTop;
 	}
 
 	function selectAll() {
@@ -272,23 +269,25 @@
 				<!-- Main Editor -->
 				<div class="bg-base-100/50 flex overflow-hidden h-[600px]">
 					<!-- Line Numbers Gutter -->
-					<div
-						bind:this={lineNumbersEl}
-						class="w-12 shrink-0 bg-base-200/20 border-r border-base-content/5 text-right pr-3 pt-5 overflow-hidden text-base-content/25 font-mono text-sm select-none"
-					>
-						{#each Array(lineCount) as _, i}
-							<div class="leading-6">{i + 1}</div>
-						{/each}
+					<div class="w-12 shrink-0 bg-base-200/20 border-r border-base-content/5 overflow-hidden select-none">
+						<div style="transform: translateY({-textareaScrollTop}px);">
+							<!-- Spacer matching textarea padding-top -->
+							<div style="height: 20px;"></div>
+							{#each Array(lineCount) as _, i}
+								<div class="text-right pr-3 text-base-content/25 font-mono text-sm" style="height: 24px; line-height: 24px;">{i + 1}</div>
+							{/each}
+						</div>
 					</div>
-					<TextArea
+					<textarea
 						bind:this={ta}
 						bind:value={text}
 						name="text"
 						placeholder="Tulis catatan kamu di sini..."
 						rows={25}
 						onscroll={syncScroll}
-						className="w-full flex-1 h-full resize-none border-none bg-transparent p-5 text-sm leading-6 outline-none focus:ring-0 font-mono overflow-y-auto"
-					/>
+						style="padding: 20px; line-height: 24px; margin: 0;"
+						class="w-full flex-1 h-full resize-none border-none bg-transparent text-sm outline-none focus:ring-0 font-mono overflow-y-auto"
+					></textarea>
 				</div>
 
 				<!-- Bottom Footer (Info & Share) -->
