@@ -2,6 +2,7 @@
 	import ToolCard from '$lib/components/ToolCard.svelte';
 	import { Search } from '@lucide/svelte';
 	import { tools } from '$lib/data/tools';
+	import { page } from '$app/stores';
 
 	let query = $state('');
 
@@ -26,7 +27,35 @@
 </script>
 
 <svelte:head>
-	<title>TEXY Workspace</title>
+	<title>TEXY Workspace - Kumpulan Tools Teks & Utilitas</title>
+	<meta name="description" content="TEXY Workspace menyediakan berbagai tools gratis untuk manipulasi teks, parsing data, shared notepad, hingga case converter untuk produktivitas Anda." />
+	<meta name="keywords" content="texy workspace, text tools, notepad online, text converter, developer tools, text editor" />
+	
+	<!-- Open Graph / Facebook -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="TEXY Workspace - Kumpulan Tools Teks & Utilitas" />
+	<meta property="og:description" content="TEXY Workspace menyediakan berbagai tools gratis untuk manipulasi teks, parsing data, shared notepad, hingga case converter untuk produktivitas Anda." />
+	<meta property="og:url" content={$page.url.href} />
+	
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="TEXY Workspace - Kumpulan Tools Teks & Utilitas" />
+	<meta name="twitter:description" content="TEXY Workspace menyediakan berbagai tools gratis untuk manipulasi teks, parsing data, shared notepad, hingga case converter untuk produktivitas Anda." />
+
+	<!-- Structured Data -->
+	{@html `
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": "TEXY Workspace",
+		"url": "${$page.url.origin}",
+		"description": "Kumpulan tools gratis untuk manipulasi teks, parsing data, dan utilitas developer.",
+		"applicationCategory": "DeveloperApplication",
+		"operatingSystem": "All"
+	}
+	</script>
+	`}
 </svelte:head>
 
 <div class="min-h-screen bg-base-100">
