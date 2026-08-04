@@ -2,4 +2,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://texy.space/sitemap.xml
+Sitemap: https://texy.vercel.app/sitemap.xml
