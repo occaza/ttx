@@ -193,9 +193,7 @@ export const actions = {
 		const lines = rawText.split('\n');
 		const text = lines.length > LINE_LIMIT ? lines.slice(0, LINE_LIMIT).join('\n') : rawText;
 
-		if (!text) {
-			throw error(400, 'Text tidak boleh kosong');
-		}
+
 
 		const { data: currentDbData } = await supabaseAdmin
 			.from('notepad')
