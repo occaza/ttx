@@ -2,11 +2,12 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, NotebookPen, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex
 } from '@lucide/svelte';
 
 export const tools = [
     { title: 'Remove Duplicate Lines', desc: 'Hapus baris duplikat dari teks Anda.', href: '/remove-duplicate-lines', icon: Copy, category: 'Text Operations' },
+    { title: 'Regex Tool & Tester', desc: 'Uji regex, ekstrak data pola, dan ganti isi teks.', href: '/regex-tool', icon: Regex, category: 'Text Operations' },
     { title: 'Markdown Editor', desc: 'Editor Markdown dengan toolbar dan live preview.', href: '/markdown-editor', icon: FileText, category: 'Text Operations' },
     { title: 'Markdown Preview (Old)', desc: 'Editor Markdown versi klasik.', href: '/markdown-preview', icon: BookOpen, category: 'Text Operations' },
     { title: 'Add Prefix/Suffix into Line', desc: 'Tambahkan prefix atau suffix di setiap baris.', href: '/add-prefix-suffix', icon: TextCursor, category: 'Text Operations' },

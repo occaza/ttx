@@ -113,8 +113,19 @@
 					</a>
 				</div>
 
-				<!-- Kuota (hanya free user) -->
-				{#if !isPro}
+				<!-- Kuota (Pro vs Free) -->
+				{#if isPro}
+					<div class="flex items-center justify-between rounded-xl border border-warning/20 bg-warning/5 px-4 py-3">
+						<div class="flex items-center gap-2.5">
+							<Crown size={15} class="text-warning shrink-0" />
+							<span class="text-xs font-semibold text-base-content/80">Paket Pro Aktif</span>
+							<span class="text-xs text-base-content/40 hidden sm:inline">• Kuota dokumen tak terbatas</span>
+						</div>
+						<span class="badge badge-warning badge-xs font-mono font-semibold px-2.5 py-2">
+							{docCount} dokumen
+						</span>
+					</div>
+				{:else}
 					<div class="rounded-xl border border-base-content/10 bg-base-200/30 p-4">
 						<div class="flex items-center justify-between mb-2">
 							<span class="text-xs font-semibold text-base-content/60">Dokumen digunakan</span>
@@ -198,8 +209,21 @@
 					</div>
 				</div>
 
-				<!-- Upgrade card (hanya free) -->
-				{#if !isPro}
+				<!-- Subscription card -->
+				{#if isPro}
+					<div class="rounded-2xl border border-base-content/10 bg-base-100/60 p-5">
+						<div class="flex items-center justify-between mb-2">
+							<div class="flex items-center gap-2">
+								<Crown size={14} class="text-warning" />
+								<h3 class="text-xs font-bold text-base-content/60 uppercase tracking-widest">Keanggotaan</h3>
+							</div>
+							<span class="badge badge-warning badge-xs font-bold px-2 py-1">PRO</span>
+						</div>
+						<p class="text-xs text-base-content/50 mt-1 leading-relaxed">
+							Semua fitur premium aktif. Kuota dokumen tanpa batas di Notepad Pro.
+						</p>
+					</div>
+				{:else}
 					<div class="rounded-2xl border border-warning/20 bg-warning/5 p-5">
 						<div class="flex items-center gap-2 mb-2">
 							<Crown size={14} class="text-warning" />

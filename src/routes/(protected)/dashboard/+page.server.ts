@@ -30,9 +30,25 @@ export const load: PageServerLoad = async ({ locals: { supabase, safeGetSession 
 	// Ambil profile user jika ada
 	const { data: profile } = await supabaseAdmin
 		.from('profiles')
-		.select('first_name, username, plan')
+		.select('*')
 		.eq('id', user.id)
 		.single();
+
+	const userTier = (
+		profile?.tier ??
+		profile?.plan ??
+		user.app_metadata?.tier ??
+		user.user_metadata?.tier ??
+		'free'
+	)
+		.toString()
+		.toLowerCase();
+
+	const userRole = (profile?.role ?? user.app_metadata?.role ?? '')
+		.toString()
+		.toLowerCase();
+
+	const isPro = userTier === 'pro' || userRole === 'admin';
 
 	return {
 		session,
@@ -40,6 +56,6 @@ export const load: PageServerLoad = async ({ locals: { supabase, safeGetSession 
 		profile,
 		docs: docs || [],
 		docLimit: FREE_DOC_LIMIT,
-		isPro: profile?.plan === 'pro'
+		isPro
 	};
 };
