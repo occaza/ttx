@@ -12,11 +12,13 @@
 		ArrowRight,
 		Wrench,
 		Crown,
-		FilePen
+		FilePen,
+		ChevronLeft,
+		ChevronRight,
+		Search
 	} from '@lucide/svelte';
 
 	let { data } = $props();
-
 
 	let supabase = $state<SupabaseClient | null>(null);
 
@@ -24,6 +26,30 @@
 	let docs = $derived(data.docs ?? []);
 	let docLimit = $derived(data.docLimit);
 	let isPro = $derived(data.isPro);
+
+	let searchQuery = $state('');
+	let currentPage = $state(1);
+	const pageSize = 5;
+
+	let filteredDocs = $derived(
+		searchQuery.trim() === ''
+			? docs
+			: docs.filter((d) =>
+					(d.title || 'Untitled').toLowerCase().includes(searchQuery.toLowerCase())
+			  )
+	);
+
+	let totalPages = $derived(Math.max(1, Math.ceil(filteredDocs.length / pageSize)));
+
+	let paginatedDocs = $derived(
+		filteredDocs.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+	);
+
+	$effect(() => {
+		if (currentPage > totalPages) {
+			currentPage = 1;
+		}
+	});
 
 	let displayName = $derived(
 		profile?.first_name ||
@@ -103,14 +129,32 @@
 
 			<!-- Dokumen (main area) -->
 			<div class="lg:col-span-2 flex flex-col gap-4">
-				<div class="flex items-center justify-between">
+				<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 					<div class="flex items-center gap-2">
 						<FilePen size={16} class="text-base-content/50" />
 						<h2 class="text-sm font-bold text-base-content/50 uppercase tracking-widest">Dokumen Saya</h2>
+						{#if docs.length > 0}
+							<span class="badge badge-sm badge-ghost font-mono text-xs text-base-content/60">
+								{docs.length}
+							</span>
+						{/if}
 					</div>
-					<a href="/notepad2" class="btn btn-primary btn-sm gap-1.5 rounded-xl">
-						<Plus size={14} /> Buka Editor
-					</a>
+					<div class="flex items-center gap-2">
+						{#if docs.length > pageSize}
+							<div class="relative">
+								<Search size={13} class="absolute left-2.5 top-1/2 -translate-y-1/2 text-base-content/40" />
+								<input
+									type="search"
+									bind:value={searchQuery}
+									placeholder="Cari judul..."
+									class="input input-xs input-bordered pl-7 pr-2 rounded-lg bg-base-200/40 text-xs w-36 sm:w-44 focus:bg-base-100 transition-all"
+								/>
+							</div>
+						{/if}
+						<a href="/notepad2" class="btn btn-primary btn-sm gap-1.5 rounded-xl shrink-0">
+							<Plus size={14} /> Buka Editor
+						</a>
+					</div>
 				</div>
 
 				<!-- Kuota (Pro vs Free) -->
@@ -155,9 +199,13 @@
 							<Plus size={14} /> Buat Dokumen Pertama
 						</a>
 					</div>
+				{:else if filteredDocs.length === 0}
+					<div class="rounded-2xl border border-base-content/10 bg-base-100/60 p-8 text-center">
+						<p class="text-sm text-base-content/50">Tidak ada dokumen dengan judul "{searchQuery}".</p>
+					</div>
 				{:else}
 					<div class="flex flex-col gap-2">
-						{#each docs as doc}
+						{#each paginatedDocs as doc (doc.id)}
 							<a
 								href="/notepad2/{doc.slug}"
 								class="group flex items-center justify-between rounded-xl border border-base-content/10 bg-base-100/60 px-4 py-3.5 hover:border-primary/30 hover:bg-primary/5 transition-all"
@@ -177,6 +225,35 @@
 							</a>
 						{/each}
 					</div>
+
+					{#if totalPages > 1}
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-base-content/10 text-xs text-base-content/60 gap-2">
+							<span>
+								Menampilkan {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filteredDocs.length)} dari {filteredDocs.length} dokumen
+							</span>
+							<div class="flex items-center gap-1.5 self-end sm:self-auto">
+								<button
+									type="button"
+									class="btn btn-xs rounded-lg border border-base-content/15 bg-base-100 hover:bg-base-200"
+									disabled={currentPage <= 1}
+									onclick={() => (currentPage = Math.max(1, currentPage - 1))}
+								>
+									<ChevronLeft size={13} />
+									Sebelumnya
+								</button>
+								<span class="px-2 font-mono font-medium">{currentPage} / {totalPages}</span>
+								<button
+									type="button"
+									class="btn btn-xs rounded-lg border border-base-content/15 bg-base-100 hover:bg-base-200"
+									disabled={currentPage >= totalPages}
+									onclick={() => (currentPage = Math.min(totalPages, currentPage + 1))}
+								>
+									Selanjutnya
+									<ChevronRight size={13} />
+								</button>
+							</div>
+						</div>
+					{/if}
 				{/if}
 			</div>
 
