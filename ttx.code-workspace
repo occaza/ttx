@@ -5,6 +5,12 @@
 		},
 		{
 			"path": "../../playground"
+		},
+		{
+			"path": "../test-postgre"
+		},
+		{
+			"path": "../QRStudio"
 		}
 	],
 	"settings": {}
