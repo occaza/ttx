@@ -263,78 +263,84 @@
 				</button>
 			</div>
 
-			<!-- Header Row -->
-			<div class="hidden sm:grid sm:grid-cols-12 gap-2 mb-2">
-				<span class="col-span-5 text-[10px] font-medium uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga (Rp)</span>
-				<span class="col-span-3 text-[10px] font-medium uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">Diskon (%)</span>
-				<span class="col-span-3 text-[10px] font-medium uppercase tracking-wider text-right {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga Akhir</span>
-				<span class="col-span-1"></span>
-			</div>
-
-			<!-- Item Rows -->
-			<div class="flex flex-col gap-2">
-				{#each multiItems as item, i (item.id)}
-					{@const price = parsePrice(item.price_str)}
-					{@const cut = price != null && item.discount != null ? price * (item.discount / 100) : null}
-					{@const final_price = price != null && cut != null ? price - cut : null}
-					<div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center rounded-lg border p-2.5 sm:p-2 {isDark
-						? 'border-[#1b2742] bg-[#10192e]'
-						: 'border-slate-100 bg-slate-50'}">
-						<!-- Harga -->
-						<div class="sm:col-span-5">
-							<span class="sm:hidden mb-1 block text-[10px] font-medium {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga #{i + 1} (Rp)</span>
-							<input
-								type="text"
-								value={item.price_str}
-								oninput={(e) => (item.price_str = formatInputCurrency(e.currentTarget.value))}
-								placeholder="contoh: 50.000"
-								class="h-8 w-full rounded-md px-2.5 font-mono text-xs outline-none {isDark
-									? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-									: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
-							/>
-						</div>
-						<!-- Diskon -->
-						<div class="sm:col-span-3">
-							<span class="sm:hidden mb-1 block text-[10px] font-medium {isDark ? 'text-slate-500' : 'text-slate-400'}">Diskon (%)</span>
-							<div class="relative">
-								<input
-									type="number"
-									bind:value={item.discount}
-									placeholder="0"
-									min="0"
-									max="100"
-									class="h-8 w-full rounded-md px-2.5 pr-6 font-mono text-xs outline-none {isDark
-										? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-										: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
-								/>
-								<span class="pointer-events-none absolute right-2 top-2 text-[10px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">%</span>
-							</div>
-						</div>
-						<!-- Harga Akhir -->
-						<div class="sm:col-span-3 flex flex-col items-start sm:items-end gap-0.5">
-							<span class="sm:hidden text-[10px] font-medium {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga Akhir</span>
-							{#if final_price != null}
-								<span class="font-mono text-xs font-bold {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(final_price)}</span>
-								<span class="font-mono text-[10px] text-rose-400 line-through">Rp {formatCurrency(price)}</span>
-							{:else}
-								<span class="font-mono text-xs {isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
-							{/if}
-						</div>
-						<!-- Delete -->
-						<div class="sm:col-span-1 flex justify-end">
-							<button
-								type="button"
-								onclick={() => removeMultiItem(item.id)}
-								disabled={multiItems.length <= 1}
-								class="flex h-7 w-7 items-center justify-center rounded-md transition-colors {isDark
-									? 'text-slate-600 hover:text-rose-400 hover:bg-rose-400/10 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-600'
-									: 'text-slate-300 hover:text-rose-500 hover:bg-rose-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300'}"
-							>
-								<Trash2 size={13} />
-							</button>
-						</div>
-					</div>
-				{/each}
+			<!-- POS / Cashier Style Table -->
+			<div class="overflow-x-auto rounded-lg border {isDark ? 'border-[#1b2742] bg-[#10192e]' : 'border-slate-200 bg-white'}">
+				<table class="w-full text-left border-collapse text-xs">
+					<thead>
+						<tr class="border-b {isDark ? 'border-[#1e2e50] bg-[#111a2f]/70 text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-600'}">
+							<th class="py-2.5 px-3 w-12 text-center font-semibold text-[10px] uppercase tracking-wider">#</th>
+							<th class="py-2.5 px-3 min-w-[160px] font-semibold text-[10px] uppercase tracking-wider">Harga (Rp)</th>
+							<th class="py-2.5 px-3 w-32 font-semibold text-[10px] uppercase tracking-wider">Diskon</th>
+							<th class="py-2.5 px-3 min-w-[120px] text-right font-semibold text-[10px] uppercase tracking-wider">Potongan</th>
+							<th class="py-2.5 px-3 min-w-[140px] text-right font-semibold text-[10px] uppercase tracking-wider">Harga Akhir</th>
+							<th class="py-2.5 px-2 w-10 text-center"></th>
+						</tr>
+					</thead>
+					<tbody class="divide-y {isDark ? 'divide-[#1b2742]' : 'divide-slate-100'}">
+						{#each multiItems as item, i (item.id)}
+							{@const price = parsePrice(item.price_str)}
+							{@const cut = price != null && item.discount != null ? price * (item.discount / 100) : null}
+							{@const final_price = price != null && cut != null ? price - cut : null}
+							<tr class="hover:bg-blue-500/5 transition-colors">
+								<td class="py-2 px-3 text-center font-mono text-[11px] {isDark ? 'text-slate-500' : 'text-slate-400'}">
+									{i + 1}
+								</td>
+								<td class="py-2 px-3">
+									<input
+										type="text"
+										value={item.price_str}
+										oninput={(e) => (item.price_str = formatInputCurrency(e.currentTarget.value))}
+										placeholder="contoh: 50.000"
+										class="h-8 w-full rounded-md px-2.5 font-mono text-xs outline-none {isDark
+											? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
+											: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+									/>
+								</td>
+								<td class="py-2 px-3">
+									<div class="relative">
+										<input
+											type="number"
+											bind:value={item.discount}
+											placeholder="0"
+											min="0"
+											max="100"
+											class="h-8 w-full rounded-md px-2.5 pr-6 font-mono text-xs outline-none {isDark
+												? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
+												: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+										/>
+										<span class="pointer-events-none absolute right-2 top-2 text-[10px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">%</span>
+									</div>
+								</td>
+								<td class="py-2 px-3 text-right font-mono">
+									{#if cut != null}
+										<span class="text-rose-400 text-xs font-medium">-Rp {formatCurrency(cut)}</span>
+									{:else}
+										<span class="{isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
+									{/if}
+								</td>
+								<td class="py-2 px-3 text-right font-mono">
+									{#if final_price != null}
+										<span class="font-bold text-xs {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(final_price)}</span>
+									{:else}
+										<span class="{isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
+									{/if}
+								</td>
+								<td class="py-2 px-2 text-center">
+									<button
+										type="button"
+										onclick={() => removeMultiItem(item.id)}
+										disabled={multiItems.length <= 1}
+										class="inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors {isDark
+											? 'text-slate-600 hover:text-rose-400 hover:bg-rose-400/10 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-600'
+											: 'text-slate-300 hover:text-rose-500 hover:bg-rose-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300'}"
+									>
+										<Trash2 size={13} />
+									</button>
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
 			</div>
 
 			<!-- Add Button -->
