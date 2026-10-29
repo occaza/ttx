@@ -31,10 +31,5 @@ experimental/
 src/routes/(experimental)/
 *backup*
 
-# Tools excluded from git except notepad & notepad2
-src/routes/(tools)/(data-parsing)/
-src/routes/(tools)/(security-misc)/
-src/routes/(tools)/(text-operations)/
-src/routes/(tools)/(general-utils)/*
-!src/routes/(tools)/(general-utils)/notepad/
-!src/routes/(tools)/(general-utils)/notepad2/
+# Tools archive (SvelteKit ignores _prefixed dirs, kept on disk only)
+src/routes/_tools/
