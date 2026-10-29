@@ -348,24 +348,29 @@
 				<Plus size={14} /> Tambah Item
 			</button>
 
-			<!-- Summary -->
+			<!-- Summary (Receipt Style on the right) -->
 			{#if multiSummary.validCount > 0}
-				<div
-					class="mt-3 grid grid-cols-3 gap-3 rounded-lg border p-3 {isDark
-						? 'border-[#1b2742] bg-[#10192e]'
-						: 'border-slate-200 bg-slate-50'}"
-				>
-					<div>
-						<span class="block text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">Total Awal</span>
-						<span class="font-mono text-sm font-bold {isDark ? 'text-slate-300' : 'text-slate-700'}">Rp {formatCurrency(multiSummary.totalOriginal)}</span>
-					</div>
-					<div class="text-center">
-						<span class="block text-[10px] font-bold uppercase tracking-wider text-rose-400">Total Hemat</span>
-						<span class="font-mono text-sm font-bold text-rose-400">-Rp {formatCurrency(multiSummary.totalSaved)}</span>
-					</div>
-					<div class="text-right">
-						<span class="block text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-blue-400' : 'text-blue-600'}">Total Bayar</span>
-						<span class="font-mono text-lg font-black {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(multiSummary.totalFinal)}</span>
+				<div class="mt-4 flex justify-end">
+					<div
+						class="w-full sm:w-72 rounded-lg border p-3.5 {isDark
+							? 'border-[#1b2742] bg-[#10192e]'
+							: 'border-slate-200 bg-slate-50'}"
+					>
+						<div class="flex flex-col gap-1.5">
+							<div class="flex items-center justify-between text-xs">
+								<span class="{isDark ? 'text-slate-400' : 'text-slate-500'}">Total Awal</span>
+								<span class="font-mono font-medium {isDark ? 'text-slate-200' : 'text-slate-700'}">Rp {formatCurrency(multiSummary.totalOriginal)}</span>
+							</div>
+							<div class="flex items-center justify-between text-xs">
+								<span class="text-rose-400 font-medium">Total Hemat</span>
+								<span class="font-mono font-medium text-rose-400">-Rp {formatCurrency(multiSummary.totalSaved)}</span>
+							</div>
+							<div class="my-1 border-t border-dashed {isDark ? 'border-[#1e2e50]' : 'border-slate-200'}"></div>
+							<div class="flex items-baseline justify-between">
+								<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-blue-400' : 'text-blue-600'}">Total Bayar</span>
+								<span class="font-mono text-base font-black {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(multiSummary.totalFinal)}</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			{/if}
