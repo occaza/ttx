@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Percent, RotateCcw } from '@lucide/svelte';
+	import { Percent, RotateCcw, Plus, Trash2 } from '@lucide/svelte';
 
 	let { isDark = true }: { isDark?: boolean } = $props();
 
@@ -39,6 +39,55 @@
 	let c5_y = $state<number | null>(null);
 	let c5_cut = $derived(c5_x != null && c5_y != null ? c5_x * (c5_y / 100) : null);
 	let c5_result = $derived(c5_x != null && c5_y != null ? c5_x - c5_cut! : null);
+
+	// Calculator 6: Diskon Multi Harga
+	type DiscountItem = { id: number; price_str: string; discount: number | null };
+	let multiIdCounter = $state(3);
+	let multiItems = $state<DiscountItem[]>([
+		{ id: 1, price_str: '', discount: null },
+		{ id: 2, price_str: '', discount: null }
+	]);
+
+	function parsePrice(str: string): number | null {
+		if (!str) return null;
+		return parseFloat(str.replace(/\./g, '').replace(/,/g, '.')) || null;
+	}
+
+	function addMultiItem() {
+		multiItems.push({ id: multiIdCounter++, price_str: '', discount: null });
+	}
+
+	function removeMultiItem(id: number) {
+		if (multiItems.length <= 1) return;
+		multiItems = multiItems.filter((item) => item.id !== id);
+	}
+
+	function resetMultiItems() {
+		multiIdCounter = 3;
+		multiItems = [
+			{ id: 1, price_str: '', discount: null },
+			{ id: 2, price_str: '', discount: null }
+		];
+	}
+
+	let multiSummary = $derived.by(() => {
+		let totalOriginal = 0;
+		let totalFinal = 0;
+		let totalSaved = 0;
+		let validCount = 0;
+
+		for (const item of multiItems) {
+			const price = parsePrice(item.price_str);
+			if (price == null || item.discount == null) continue;
+			const cut = price * (item.discount / 100);
+			totalOriginal += price;
+			totalFinal += price - cut;
+			totalSaved += cut;
+			validCount++;
+		}
+
+		return { totalOriginal, totalFinal, totalSaved, validCount };
+	});
 
 	function formatInputCurrency(val: string) {
 		if (!val) return '';
@@ -186,6 +235,140 @@
 					>
 				</div>
 			</div>
+		</div>
+
+		<!-- Card 6: Diskon Multi Harga -->
+		<div
+			class="md:col-span-2 rounded-xl border p-4 sm:p-5 transition-colors {isDark
+				? 'border-[#1a253c] bg-[#0d1525]'
+				: 'border-slate-200 bg-white shadow-xs'}"
+		>
+			<div class="mb-3 flex items-center justify-between">
+				<div>
+					<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+						Diskon Multi Harga
+					</h3>
+					<p class="text-[10px] mt-0.5 {isDark ? 'text-slate-500' : 'text-slate-400'}">
+						Hitung diskon berbeda untuk beberapa produk sekaligus
+					</p>
+				</div>
+				<button
+					type="button"
+					onclick={resetMultiItems}
+					class="flex items-center gap-1 text-[11px] font-medium {isDark
+						? 'text-slate-500 hover:text-rose-400'
+						: 'text-slate-400 hover:text-rose-600'}"
+				>
+					<RotateCcw size={12} /> Reset
+				</button>
+			</div>
+
+			<!-- Header Row -->
+			<div class="hidden sm:grid sm:grid-cols-12 gap-2 mb-2">
+				<span class="col-span-5 text-[10px] font-medium uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga (Rp)</span>
+				<span class="col-span-3 text-[10px] font-medium uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">Diskon (%)</span>
+				<span class="col-span-3 text-[10px] font-medium uppercase tracking-wider text-right {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga Akhir</span>
+				<span class="col-span-1"></span>
+			</div>
+
+			<!-- Item Rows -->
+			<div class="flex flex-col gap-2">
+				{#each multiItems as item, i (item.id)}
+					{@const price = parsePrice(item.price_str)}
+					{@const cut = price != null && item.discount != null ? price * (item.discount / 100) : null}
+					{@const final_price = price != null && cut != null ? price - cut : null}
+					<div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center rounded-lg border p-2.5 sm:p-2 {isDark
+						? 'border-[#1b2742] bg-[#10192e]'
+						: 'border-slate-100 bg-slate-50'}">
+						<!-- Harga -->
+						<div class="sm:col-span-5">
+							<span class="sm:hidden mb-1 block text-[10px] font-medium {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga #{i + 1} (Rp)</span>
+							<input
+								type="text"
+								value={item.price_str}
+								oninput={(e) => (item.price_str = formatInputCurrency(e.currentTarget.value))}
+								placeholder="contoh: 50.000"
+								class="h-8 w-full rounded-md px-2.5 font-mono text-xs outline-none {isDark
+									? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
+									: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+							/>
+						</div>
+						<!-- Diskon -->
+						<div class="sm:col-span-3">
+							<span class="sm:hidden mb-1 block text-[10px] font-medium {isDark ? 'text-slate-500' : 'text-slate-400'}">Diskon (%)</span>
+							<div class="relative">
+								<input
+									type="number"
+									bind:value={item.discount}
+									placeholder="0"
+									min="0"
+									max="100"
+									class="h-8 w-full rounded-md px-2.5 pr-6 font-mono text-xs outline-none {isDark
+										? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
+										: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+								/>
+								<span class="pointer-events-none absolute right-2 top-2 text-[10px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">%</span>
+							</div>
+						</div>
+						<!-- Harga Akhir -->
+						<div class="sm:col-span-3 flex flex-col items-start sm:items-end gap-0.5">
+							<span class="sm:hidden text-[10px] font-medium {isDark ? 'text-slate-500' : 'text-slate-400'}">Harga Akhir</span>
+							{#if final_price != null}
+								<span class="font-mono text-xs font-bold {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(final_price)}</span>
+								<span class="font-mono text-[10px] text-rose-400 line-through">Rp {formatCurrency(price)}</span>
+							{:else}
+								<span class="font-mono text-xs {isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
+							{/if}
+						</div>
+						<!-- Delete -->
+						<div class="sm:col-span-1 flex justify-end">
+							<button
+								type="button"
+								onclick={() => removeMultiItem(item.id)}
+								disabled={multiItems.length <= 1}
+								class="flex h-7 w-7 items-center justify-center rounded-md transition-colors {isDark
+									? 'text-slate-600 hover:text-rose-400 hover:bg-rose-400/10 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-600'
+									: 'text-slate-300 hover:text-rose-500 hover:bg-rose-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300'}"
+							>
+								<Trash2 size={13} />
+							</button>
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<!-- Add Button -->
+			<button
+				type="button"
+				onclick={addMultiItem}
+				class="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed py-2 text-xs font-medium transition-colors {isDark
+					? 'border-[#1e2e50] text-slate-500 hover:border-blue-500/50 hover:text-blue-400'
+					: 'border-slate-300 text-slate-400 hover:border-blue-400 hover:text-blue-600'}"
+			>
+				<Plus size={14} /> Tambah Item
+			</button>
+
+			<!-- Summary -->
+			{#if multiSummary.validCount > 0}
+				<div
+					class="mt-3 grid grid-cols-3 gap-3 rounded-lg border p-3 {isDark
+						? 'border-[#1b2742] bg-[#10192e]'
+						: 'border-slate-200 bg-slate-50'}"
+				>
+					<div>
+						<span class="block text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">Total Awal</span>
+						<span class="font-mono text-sm font-bold {isDark ? 'text-slate-300' : 'text-slate-700'}">Rp {formatCurrency(multiSummary.totalOriginal)}</span>
+					</div>
+					<div class="text-center">
+						<span class="block text-[10px] font-bold uppercase tracking-wider text-rose-400">Total Hemat</span>
+						<span class="font-mono text-sm font-bold text-rose-400">-Rp {formatCurrency(multiSummary.totalSaved)}</span>
+					</div>
+					<div class="text-right">
+						<span class="block text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-blue-400' : 'text-blue-600'}">Total Bayar</span>
+						<span class="font-mono text-lg font-black {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(multiSummary.totalFinal)}</span>
+					</div>
+				</div>
+			{/if}
 		</div>
 
 		<!-- Card 1: Berapa X% dari Y? -->
