@@ -1,6 +1,6 @@
 import {
     Copy, TextCursor, Split, Shuffle,
-    List, FileCode, NotebookPen, Type,
+    List, FileCode, Type,
     Smile, SeparatorHorizontal, Table, Map,
     ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode
 } from '@lucide/svelte';
@@ -24,8 +24,6 @@ export const tools = [
     { title: 'CSV/VCard Parser', desc: 'Ekstrak data dari file VCard atau CSV.', href: '/csv-parser', icon: Table, category: 'Data & Parsing' },
 
     { title: 'QR Code Generator', desc: 'Buat kode QR kustom untuk URL, teks, dan Wi-Fi.', href: '/qr-generator', icon: QrCode, category: 'General Utilities' },
-    { title: 'Shared Notepad', desc: 'Catatan online yang bisa diakses lintas browser.', href: '/notepad', icon: NotebookPen, category: 'General Utilities' },
-    { title: 'Notepad Pro (Freemium)', desc: 'Notepad cloud pribadi dengan fitur Premium.', href: '/notepad2', icon: NotebookPen, category: 'General Utilities' },
     { title: 'Emoji Browser', desc: 'Cari dan salin emoji dengan mudah.', href: '/emoji-picker', icon: Smile, category: 'General Utilities' },
     { title: 'Page Identifier', desc: 'Identifikasi halaman dan query parameter.', href: '/pageid?id=Demo', icon: Map, category: 'General Utilities' },
     { title: 'Percentage Calculator', desc: 'Perhitungan persentase praktis dan cepat.', href: '/percentage-calculator', icon: Percent, category: 'General Utilities' },

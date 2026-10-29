@@ -8,12 +8,33 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Nav from '$lib/components/Nav.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+	import { tools } from '$lib/data/tools';
 	import { page } from '$app/stores';
 
 	let { children, data } = $props();
 	let authenticatedUser: User | null = $state(data.user ?? null);
 	let isLoading: boolean = $state(false); // Tidak perlu loading lama karena data user dari SSR
-	let isNotepad2 = $derived($page.url.pathname.startsWith('/notepad2') || $page.url.pathname.startsWith('/login') || $page.url.pathname.startsWith('/register'));
+
+	const standaloneToolPaths = new Set(
+		tools
+			.filter((t) => t.href !== '/notepad')
+			.map((t) => t.href.split('?')[0])
+	);
+
+	let hideGlobalNav = $derived(
+		Boolean($page.error) ||
+		$page.url.pathname === '/' ||
+		$page.url.pathname.startsWith('/v2') ||
+		$page.url.pathname.startsWith('/notepad2') ||
+		$page.url.pathname.startsWith('/login') ||
+		$page.url.pathname.startsWith('/register') ||
+		$page.url.pathname.startsWith('/forgot-password') ||
+		$page.url.pathname.startsWith('/reset-password') ||
+		$page.url.pathname.startsWith('/privacy-policy') ||
+		$page.url.pathname.startsWith('/disclaimer') ||
+		$page.url.pathname.startsWith('/data-deletion') ||
+		standaloneToolPaths.has($page.url.pathname)
+	);
 	let supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
 	$effect(() => {
@@ -57,7 +78,7 @@
 	/>
 	<meta
 		property="og:image"
-		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+		content="{$page.url.origin}/og-image.svg"
 	/>
 
 	<!-- Twitter -->
@@ -70,7 +91,7 @@
 	/>
 	<meta
 		property="twitter:image"
-		content="{$page.url.origin}/assets/img/christopher-gower-_aXa21cf7rY-unsplash.jpg"
+		content="{$page.url.origin}/og-image.svg"
 	/>
 
 	<!-- Theme & Misc -->
@@ -78,13 +99,13 @@
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-base-100">
-	{#if !$page.error && !isNotepad2}
+	{#if !hideGlobalNav}
 		<Nav />
 	{/if}
-	<main class="flex-1 {$page.error ? '' : (isNotepad2 ? '' : 'pt-16')}">
+	<main class="flex-1 {hideGlobalNav ? '' : 'pt-16'}">
 		{@render children?.()}
 	</main>
-	{#if !$page.error && !isNotepad2}
+	{#if !hideGlobalNav}
 		<Footer />
 	{/if}
 </div>

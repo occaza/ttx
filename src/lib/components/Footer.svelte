@@ -15,8 +15,8 @@
 		</aside>
 		<nav>
 			<h6 class="footer-title">Tools Populer</h6>
-			<a href="/text-tools/remove-duplicate-lines" class="link link-hover text-base-content/70">Hapus Baris Duplikat</a>
-			<a href="/text-tools/sort-lines" class="link link-hover text-base-content/70">Urutkan Baris</a>
+			<a href="/remove-duplicate-lines" class="link link-hover text-base-content/70">Hapus Baris Duplikat</a>
+			<a href="/sort-lines" class="link link-hover text-base-content/70">Urutkan Baris</a>
 			<a href="/notepad" class="link link-hover text-base-content/70">Notepad</a>
 			<a href="/emoji-picker" class="link link-hover text-base-content/70">Emoji Browser</a>
 		</nav>

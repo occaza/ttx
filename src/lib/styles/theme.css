@@ -1,0 +1,66 @@
+/* ==========================================================================
+   TEXY Design Tokens & Theme Configuration
+   Ubah variabel di bawah untuk mengganti skema warna seluruh workspace
+   ========================================================================== */
+
+:root {
+	/* LIGHT THEME */
+	--ttx-bg-root: #f8fafc;
+	--ttx-bg-header: #ffffff;
+	--ttx-bg-sidebar: #f8fafc;
+	--ttx-bg-workspace: #f1f5f9;
+	--ttx-bg-card: #ffffff;
+	--ttx-bg-card-subtle: #f8fafc;
+	--ttx-bg-input: #f1f5f9;
+	--ttx-bg-hover: #e2e8f0;
+	--ttx-bg-active: #e0f2fe;
+
+	--ttx-border-base: #e2e8f0;
+	--ttx-border-subtle: #cbd5e1;
+	--ttx-border-focus: #3b82f6;
+
+	--ttx-text-main: #0f172a;
+	--ttx-text-muted: #64748b;
+	--ttx-text-dim: #94a3b8;
+
+	--ttx-accent: #2563eb;
+	--ttx-accent-hover: #1d4ed8;
+	--ttx-accent-light: #eff6ff;
+	--ttx-accent-text: #1d4ed8;
+
+	--ttx-hatch: rgba(0, 0, 0, 0.07);
+	--ttx-scrollbar: rgba(100, 116, 139, 0.35);
+	--ttx-scrollbar-hover: rgba(100, 116, 139, 0.65);
+}
+
+[data-theme='dark'],
+:root[data-theme='dark'] {
+	/* DARK THEME (Default) */
+	--ttx-bg-root: #091020;
+	--ttx-bg-header: #0b1326;
+	--ttx-bg-sidebar: #070d1a;
+	--ttx-bg-workspace: #070c18;
+	--ttx-bg-card: #0c1427;
+	--ttx-bg-card-subtle: #091020;
+	--ttx-bg-input: #111a2f;
+	--ttx-bg-hover: #142038;
+	--ttx-bg-active: rgba(37, 99, 235, 0.15);
+
+	--ttx-border-base: #152037;
+	--ttx-border-subtle: #1e2e50;
+	--ttx-border-focus: #3b82f6;
+
+	--ttx-text-main: #f8fafc;
+	--ttx-text-muted: #94a3b8;
+	--ttx-text-dim: #64748b;
+
+	--ttx-accent: #3b82f6;
+	--ttx-accent-hover: #60a5fa;
+	--ttx-accent-light: rgba(59, 130, 246, 0.15);
+	--ttx-accent-text: #60a5fa;
+
+	--ttx-hatch: rgba(255, 255, 255, 0.05);
+	--ttx-scrollbar: rgba(148, 163, 184, 0.25);
+	--ttx-scrollbar-hover: rgba(148, 163, 184, 0.5);
+}
+
