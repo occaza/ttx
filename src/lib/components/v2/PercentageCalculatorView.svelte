@@ -140,9 +140,9 @@
 
 	<!-- Cards Grid -->
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<!-- Card 5: Diskon Harga (Full width on top) -->
+		<!-- Card 5: Diskon Harga (Single) -->
 		<div
-			class="md:col-span-2 rounded-xl border p-4 sm:p-5 transition-colors {isDark
+			class="rounded-xl border p-4 sm:p-5 transition-colors {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white shadow-xs'}"
 		>
@@ -237,9 +237,9 @@
 			</div>
 		</div>
 
-		<!-- Card 6: Diskon Multi Harga -->
+		<!-- Card 6: Diskon Multi Harga (Kasir) -->
 		<div
-			class="md:col-span-2 rounded-xl border p-4 sm:p-5 transition-colors {isDark
+			class="rounded-xl border p-4 sm:p-5 transition-colors {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white shadow-xs'}"
 		>
@@ -268,12 +268,12 @@
 				<table class="w-full text-left border-collapse text-xs">
 					<thead>
 						<tr class="border-b {isDark ? 'border-[#1e2e50] bg-[#111a2f]/70 text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-600'}">
-							<th class="py-2.5 px-3 w-12 text-center font-semibold text-[10px] uppercase tracking-wider">#</th>
-							<th class="py-2.5 px-3 min-w-[160px] font-semibold text-[10px] uppercase tracking-wider">Harga (Rp)</th>
-							<th class="py-2.5 px-3 w-32 font-semibold text-[10px] uppercase tracking-wider">Diskon</th>
-							<th class="py-2.5 px-3 min-w-[120px] text-right font-semibold text-[10px] uppercase tracking-wider">Potongan</th>
-							<th class="py-2.5 px-3 min-w-[140px] text-right font-semibold text-[10px] uppercase tracking-wider">Harga Akhir</th>
-							<th class="py-2.5 px-2 w-10 text-center"></th>
+							<th class="py-2 px-2 w-8 text-center font-semibold text-[10px] uppercase tracking-wider">#</th>
+							<th class="py-2 px-2 min-w-[110px] font-semibold text-[10px] uppercase tracking-wider">Harga (Rp)</th>
+							<th class="py-2 px-2 w-20 font-semibold text-[10px] uppercase tracking-wider">Diskon</th>
+							<th class="py-2 px-2 min-w-[90px] text-right font-semibold text-[10px] uppercase tracking-wider">Potongan</th>
+							<th class="py-2 px-2 min-w-[100px] text-right font-semibold text-[10px] uppercase tracking-wider">Harga Akhir</th>
+							<th class="py-2 px-1 w-8 text-center"></th>
 						</tr>
 					</thead>
 					<tbody class="divide-y {isDark ? 'divide-[#1b2742]' : 'divide-slate-100'}">
@@ -282,21 +282,21 @@
 							{@const cut = price != null && item.discount != null ? price * (item.discount / 100) : null}
 							{@const final_price = price != null && cut != null ? price - cut : null}
 							<tr class="hover:bg-blue-500/5 transition-colors">
-								<td class="py-2 px-3 text-center font-mono text-[11px] {isDark ? 'text-slate-500' : 'text-slate-400'}">
+								<td class="py-1.5 px-2 text-center font-mono text-[11px] {isDark ? 'text-slate-500' : 'text-slate-400'}">
 									{i + 1}
 								</td>
-								<td class="py-2 px-3">
+								<td class="py-1.5 px-2">
 									<input
 										type="text"
 										value={item.price_str}
 										oninput={(e) => (item.price_str = formatInputCurrency(e.currentTarget.value))}
-										placeholder="contoh: 50.000"
-										class="h-8 w-full rounded-md px-2.5 font-mono text-xs outline-none {isDark
+										placeholder="50.000"
+										class="h-7 w-full rounded px-2 font-mono text-xs outline-none {isDark
 											? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
 											: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
 									/>
 								</td>
-								<td class="py-2 px-3">
+								<td class="py-1.5 px-2">
 									<div class="relative">
 										<input
 											type="number"
@@ -304,37 +304,37 @@
 											placeholder="0"
 											min="0"
 											max="100"
-											class="h-8 w-full rounded-md px-2.5 pr-6 font-mono text-xs outline-none {isDark
+											class="h-7 w-full rounded px-2 pr-5 font-mono text-xs outline-none {isDark
 												? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
 												: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
 										/>
-										<span class="pointer-events-none absolute right-2 top-2 text-[10px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">%</span>
+										<span class="pointer-events-none absolute right-1.5 top-1.5 text-[10px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">%</span>
 									</div>
 								</td>
-								<td class="py-2 px-3 text-right font-mono">
+								<td class="py-1.5 px-2 text-right font-mono">
 									{#if cut != null}
 										<span class="text-rose-400 text-xs font-medium">-Rp {formatCurrency(cut)}</span>
 									{:else}
 										<span class="{isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
 									{/if}
 								</td>
-								<td class="py-2 px-3 text-right font-mono">
+								<td class="py-1.5 px-2 text-right font-mono">
 									{#if final_price != null}
 										<span class="font-bold text-xs {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(final_price)}</span>
 									{:else}
 										<span class="{isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
 									{/if}
 								</td>
-								<td class="py-2 px-2 text-center">
+								<td class="py-1.5 px-1 text-center">
 									<button
 										type="button"
 										onclick={() => removeMultiItem(item.id)}
 										disabled={multiItems.length <= 1}
-										class="inline-flex h-7 w-7 items-center justify-center rounded-md transition-colors {isDark
+										class="inline-flex h-6 w-6 items-center justify-center rounded transition-colors {isDark
 											? 'text-slate-600 hover:text-rose-400 hover:bg-rose-400/10 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-600'
 											: 'text-slate-300 hover:text-rose-500 hover:bg-rose-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300'}"
 									>
-										<Trash2 size={13} />
+										<Trash2 size={12} />
 									</button>
 								</td>
 							</tr>
@@ -356,9 +356,9 @@
 
 			<!-- Summary (Receipt Style on the right) -->
 			{#if multiSummary.validCount > 0}
-				<div class="mt-4 flex justify-end">
+				<div class="mt-3 flex justify-end">
 					<div
-						class="w-full sm:w-72 rounded-lg border p-3.5 {isDark
+						class="w-full sm:max-w-xs rounded-lg border p-3 {isDark
 							? 'border-[#1b2742] bg-[#10192e]'
 							: 'border-slate-200 bg-slate-50'}"
 					>
