@@ -411,14 +411,6 @@
 				{/if}
 			</button>
 
-			<!-- Language Icon -->
-			<div
-				class="hidden sm:flex items-center justify-center h-9 w-9 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:bg-[var(--ttx-bg-hover)] transition-colors cursor-pointer"
-				title="Language: English / Indonesia"
-			>
-				<span class="text-base select-none">🌐</span>
-			</div>
-
 			<!-- Auth Buttons -->
 			{#if user}
 				<a
