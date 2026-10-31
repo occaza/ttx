@@ -10,10 +10,13 @@
 		Copy,
 		Check,
 		Edit2,
-		Sparkles
+		Sparkles,
+		AlertTriangle
 	} from '@lucide/svelte';
 
 	let { isDark = true }: { isDark?: boolean } = $props();
+
+	let showResetModal = $state(false);
 
 	interface CounterItem {
 		id: string;
@@ -98,11 +101,14 @@
 	}
 
 	function resetAll() {
-		if (confirm('Reset hitungan semua counter menjadi 0?')) {
-			for (const c of counters) {
-				c.count = 0;
-			}
+		showResetModal = true;
+	}
+
+	function confirmResetAll() {
+		for (const c of counters) {
+			c.count = 0;
 		}
+		showResetModal = false;
 	}
 
 	let totalCount = $derived(counters.reduce((acc, c) => acc + c.count, 0));
@@ -343,5 +349,60 @@
 			</div>
 		</button>
 	</div>
+
+	<!-- Custom Modal Konfirmasi Reset -->
+	{#if showResetModal}
+		<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+			<!-- Backdrop -->
+			<button
+				type="button"
+				class="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity"
+				onclick={() => (showResetModal = false)}
+				aria-label="Tutup modal"
+			></button>
+
+			<!-- Modal Box -->
+			<div
+				class="relative w-full max-w-sm rounded-2xl border p-5 shadow-2xl transition-all {isDark
+					? 'border-[#223558] bg-[#0d1525] text-slate-100'
+					: 'border-slate-200 bg-white text-slate-900'}"
+			>
+				<div class="flex items-center gap-3 mb-3">
+					<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20">
+						<AlertTriangle size={20} />
+					</div>
+					<div>
+						<h3 class="text-sm font-bold">Reset Semua Hitungan?</h3>
+						<p class="text-xs {isDark ? 'text-slate-400' : 'text-slate-500'}">
+							Semua nilai counter akan dikembalikan ke 0.
+						</p>
+					</div>
+				</div>
+
+				<p class="text-xs {isDark ? 'text-slate-400' : 'text-slate-600'} mb-5">
+					Tindakan ini tidak dapat dibatalkan. Nama dan kategori counter Anda akan tetap tersimpan.
+				</p>
+
+				<div class="flex items-center justify-end gap-2">
+					<button
+						type="button"
+						onclick={() => (showResetModal = false)}
+						class="px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors {isDark
+							? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white hover:bg-slate-800'
+							: 'border-slate-200 bg-white text-slate-700 hover:bg-slate-100'}"
+					>
+						Batal
+					</button>
+					<button
+						type="button"
+						onclick={confirmResetAll}
+						class="px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white bg-rose-600 hover:bg-rose-500 shadow-sm shadow-rose-600/30 transition-all active:scale-95"
+					>
+						Ya, Reset Semua
+					</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 </div>
 
