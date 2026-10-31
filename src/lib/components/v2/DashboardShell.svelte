@@ -327,9 +327,9 @@
 	}
 </style>
 
-<div class="ttx-dashboard flex flex-col h-screen w-screen overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
+<div class="ttx-dashboard flex flex-col h-[100dvh] w-full max-w-full overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
 	<!-- TOP NAVIGATION BAR -->
-	<header class="h-16 shrink-0 border-b flex items-center justify-between px-4 sm:px-6 z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs">
+	<header class="h-16 shrink-0 border-b flex items-center justify-between px-4 sm:px-6 z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)] box-content">
 		<!-- Left: Hamburger (mobile) + Brand Logo -->
 		<div class="flex items-center gap-3 sm:gap-4">
 			<button

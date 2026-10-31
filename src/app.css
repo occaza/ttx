@@ -108,3 +108,12 @@
 		font-size: 16px !important;
 	}
 }
+
+/* Fix iOS Safari mobile viewport overflow & bouncing */
+html,
+body {
+	width: 100%;
+	max-width: 100%;
+	overflow-x: hidden;
+	-webkit-text-size-adjust: 100%;
+}
