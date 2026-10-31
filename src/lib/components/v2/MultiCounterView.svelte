@@ -126,7 +126,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-5 w-full max-w-5xl">
+<div class="flex flex-col gap-5 w-full">
 	<!-- Header -->
 	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 		<div class="flex items-center gap-3">
@@ -177,15 +177,6 @@
 				<RotateCcw size={14} />
 				<span>Reset Semua</span>
 			</button>
-
-			<button
-				type="button"
-				onclick={addCounter}
-				class="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-500 shadow-sm shadow-blue-500/30 transition-all active:scale-95"
-			>
-				<Plus size={14} />
-				<span>Tambah Counter</span>
-			</button>
 		</div>
 	</div>
 
@@ -212,7 +203,7 @@
 	</div>
 
 	<!-- Counters Grid -->
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+	<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 items-stretch">
 		{#each counters as counter, i (counter.id)}
 			<div
 				class="flex flex-col justify-between rounded-xl border p-4 transition-all {isDark
@@ -325,5 +316,32 @@
 				</div>
 			</div>
 		{/each}
+
+		<!-- Add Counter Card (Same size as counter cards) -->
+		<button
+			type="button"
+			onclick={addCounter}
+			class="group flex flex-col items-center justify-center gap-3 min-h-[260px] rounded-xl border-2 border-dashed p-6 transition-all active:scale-[0.98] {isDark
+				? 'border-[#1e2e50] hover:border-blue-500/60 hover:bg-[#111a2f]/40 text-slate-400 hover:text-blue-400'
+				: 'border-slate-300 hover:border-blue-500 hover:bg-blue-50/40 text-slate-400 hover:text-blue-600'}"
+			title="Tambah Counter Baru"
+		>
+			<div
+				class="flex h-14 w-14 items-center justify-center rounded-2xl border transition-transform group-hover:scale-110 {isDark
+					? 'border-[#223558] bg-[#111a2f] text-blue-400'
+					: 'border-blue-200 bg-blue-50 text-blue-600'}"
+			>
+				<Plus size={28} />
+			</div>
+			<div class="text-center">
+				<span class="block text-xs font-bold uppercase tracking-wider">
+					Tambah Counter
+				</span>
+				<span class="block mt-0.5 text-[10px] {isDark ? 'text-slate-500' : 'text-slate-400'}">
+					Klik untuk menambah kategori baru
+				</span>
+			</div>
+		</button>
 	</div>
 </div>
+
