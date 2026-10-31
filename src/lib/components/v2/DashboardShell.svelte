@@ -330,27 +330,27 @@
 
 <div class="ttx-dashboard flex flex-col h-[100dvh] w-full max-w-full overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
 	<!-- TOP NAVIGATION BAR -->
-	<header class="shrink-0 border-b z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)] box-content">
+	<header class="shrink-0 border-b z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)]">
 		<div class="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 gap-2">
 			<!-- Left: Hamburger (mobile) + Brand Logo -->
 			<div class="flex items-center gap-2 sm:gap-4 shrink-0">
 				<button
 					type="button"
-					class="lg:hidden p-1.5 sm:p-2 rounded-lg text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					class="lg:hidden h-9 w-9 flex items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] active:scale-95 transition-all"
 					onclick={() => (isSidebarOpen = !isSidebarOpen)}
 					aria-label="Toggle menu"
 				>
 					{#if isSidebarOpen}
-						<X size={20} />
+						<X size={18} />
 					{:else}
-						<Menu size={20} />
+						<Menu size={18} />
 					{/if}
 				</button>
 
 				<!-- Brand Logo -->
 				<button
 					type="button"
-					class="flex items-center gap-2 group text-left cursor-pointer"
+					class="flex items-center gap-2 group text-left cursor-pointer select-none"
 					onclick={goHome}
 				>
 					<div class="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 shadow-md shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow shrink-0">
@@ -403,7 +403,7 @@
 				<!-- Mobile Search Toggle Button -->
 				<button
 					type="button"
-					class="md:hidden p-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					class="md:hidden h-9 w-9 flex items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] active:scale-95 transition-all {showMobileSearch ? 'border-blue-500 text-blue-400' : ''}"
 					onclick={() => (showMobileSearch = !showMobileSearch)}
 					aria-label="Search"
 				>
@@ -413,7 +413,7 @@
 				<!-- Dark / Light Mode Switcher -->
 				<button
 					type="button"
-					class="p-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-amber-400 hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					class="h-9 w-9 flex items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-amber-400 hover:bg-[var(--ttx-bg-hover)] active:scale-95 transition-all"
 					onclick={toggleTheme}
 					title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
 					aria-label="Toggle theme"
@@ -429,14 +429,14 @@
 				{#if user}
 					<a
 						href="/dashboard"
-						class="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+						class="flex items-center gap-1.5 px-2.5 sm:px-3.5 h-9 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
 					>
 						<User size={14} />
 						<span class="hidden sm:inline">Dashboard</span>
 					</a>
 					<button
 						type="button"
-						class="p-1.5 sm:p-2 text-[var(--ttx-text-muted)] hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+						class="h-9 w-9 flex items-center justify-center text-[var(--ttx-text-muted)] hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors"
 						onclick={async () => {
 							await fetch('/logout', { method: 'POST' });
 							window.location.href = '/login';
@@ -446,6 +446,17 @@
 						<LogOut size={15} />
 					</button>
 				{:else}
+					<!-- Mobile Auth Icon Button -->
+					<a
+						href="/login"
+						class="flex sm:hidden h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-blue-400 hover:border-blue-500/40 active:scale-95 transition-all"
+						title="Sign In / Register"
+						aria-label="Sign In"
+					>
+						<User size={16} />
+					</a>
+
+					<!-- Desktop Auth Buttons -->
 					<a
 						href="/login"
 						class="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
@@ -454,7 +465,7 @@
 					</a>
 					<a
 						href="/register"
-						class="inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-lg shadow-sm shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
+						class="hidden sm:inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-lg shadow-sm shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
 					>
 						Sign Up
 					</a>
@@ -464,7 +475,7 @@
 
 		<!-- Mobile Search Drawer (collapsible under navbar) -->
 		{#if showMobileSearch}
-			<div class="md:hidden px-3 pb-3 pt-1 border-t border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-header)] animate-fadeIn">
+			<div class="md:hidden px-3.5 pb-3 pt-1 border-t border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-header)]">
 				<div class="relative w-full">
 					<div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
 						<Search size={15} class="text-[var(--ttx-text-dim)]" />
@@ -472,16 +483,16 @@
 					<input
 						bind:value={searchQuery}
 						type="text"
-						placeholder="Cari tools..."
-						class="w-full h-9 pl-9 pr-9 rounded-lg text-xs outline-none bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500"
+						placeholder="Cari alat (misal: qr, counter, regex)..."
+						class="w-full h-10 pl-9 pr-9 rounded-xl text-xs outline-none bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500 shadow-inner"
 					/>
 					{#if searchQuery}
 						<button
 							type="button"
-							class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)]"
+							class="absolute inset-y-0 right-0 pr-3 flex items-center text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)]"
 							onclick={() => (searchQuery = '')}
 						>
-							<X size={14} />
+							<X size={15} />
 						</button>
 					{/if}
 				</div>
@@ -495,18 +506,40 @@
 		{#if isSidebarOpen}
 			<button
 				type="button"
-				class="fixed inset-0 bg-black/60 z-20 lg:hidden backdrop-blur-xs"
+				class="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-xs transition-opacity duration-200"
 				onclick={() => (isSidebarOpen = false)}
 				aria-label="Close backdrop"
 			></button>
 		{/if}
 
-		<!-- LEFT SIDEBAR: Solid, non-shaking sidebar column -->
+		<!-- LEFT SIDEBAR: Solid drawer on mobile, static column on desktop -->
 		<aside
-			class="fixed lg:static inset-y-0 left-0 top-16 lg:top-0 z-30 w-64 h-[calc(100vh-4rem)] lg:h-full shrink-0 flex flex-col justify-between border-r overflow-y-auto transition-transform duration-300 ease-in-out lg:translate-x-0 {isSidebarOpen
+			class="fixed lg:static inset-y-0 left-0 z-50 lg:z-30 w-72 max-w-[85vw] lg:w-64 h-[100dvh] lg:h-full shrink-0 flex flex-col justify-between border-r overflow-y-auto transition-transform duration-300 ease-in-out lg:translate-x-0 shadow-2xl lg:shadow-none {isSidebarOpen
 				? 'translate-x-0'
 				: '-translate-x-full'} bg-[var(--ttx-bg-sidebar)] border-[var(--ttx-border-base)]"
 		>
+			<!-- Mobile Drawer Header -->
+			<div class="lg:hidden flex items-center justify-between px-4 py-3.5 border-b border-[var(--ttx-border-base)] pt-[max(0.875rem,env(safe-area-inset-top))]">
+				<div class="flex items-center gap-2">
+					<div class="h-6 w-6 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 shadow-sm">
+						<div class="h-full w-full rounded-[4px] flex items-center justify-center bg-[var(--ttx-bg-root)]">
+							<svg class="h-3 w-3 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+								<polygon points="12 2 22 19 2 19"></polygon>
+							</svg>
+						</div>
+					</div>
+					<span class="text-sm font-bold tracking-tight text-[var(--ttx-text-main)]">TEXY Menu</span>
+				</div>
+				<button
+					type="button"
+					class="p-1.5 rounded-lg text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
+					onclick={() => (isSidebarOpen = false)}
+					aria-label="Tutup menu"
+				>
+					<X size={18} />
+				</button>
+			</div>
+
 			<!-- Navigation categories list with single-open collapsible dropdown -->
 			<div class="flex-1 overflow-y-auto py-5 px-3 space-y-1">
 				<p class="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
@@ -616,6 +649,24 @@
 					</button>
 				</div>
 			</div>
+
+			<!-- Mobile Drawer Bottom Auth (when logged out) -->
+			{#if !user}
+				<div class="lg:hidden p-3 border-t border-[var(--ttx-border-base)] flex items-center gap-2">
+					<a
+						href="/login"
+						class="flex-1 py-2 text-center text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					>
+						Sign In
+					</a>
+					<a
+						href="/register"
+						class="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-500 shadow-sm transition-colors"
+					>
+						Sign Up
+					</a>
+				</div>
+			{/if}
 		</aside>
 
 		<!-- MAIN SCROLL CONTAINER: spans from sidebar to screen edge with scrollbar on the far right -->
@@ -632,7 +683,7 @@
 			></div>
 
 			<!-- MAIN CONTENT CARDS -->
-			<div class="flex-1 min-w-0 px-4 py-8 sm:px-8 lg:px-10">
+			<div class="flex-1 min-w-0 px-3.5 py-5 sm:px-8 sm:py-8 lg:px-10">
 			{#if activeTool}
 				<!-- IN-PAGE TOOL PANEL -->
 				{#if activeTool === 'qr-generator'}
@@ -688,26 +739,26 @@
 				{#if searchQuery}
 					<!-- Search results status banner -->
 					<div
-						class="mb-8 flex items-center justify-between rounded-xl border px-5 py-3 text-sm {isDark
+						class="mb-6 sm:mb-8 flex items-center justify-between rounded-xl border px-4 sm:px-5 py-3 text-xs sm:text-sm {isDark
 							? 'border-blue-900/40 bg-blue-950/20 text-blue-300'
 							: 'border-blue-200 bg-blue-50 text-blue-800'}"
 					>
-						<span>
-							Menampilkan hasil pencarian untuk: <strong class={isDark ? 'text-white' : 'text-slate-900'}>"{searchQuery}"</strong> ({filteredTools.length} alat ditemukan)
+						<span class="truncate mr-2">
+							Hasil: <strong class={isDark ? 'text-white' : 'text-slate-900'}>"{searchQuery}"</strong> ({filteredTools.length} alat)
 						</span>
 						<button
 							type="button"
-							class="text-xs underline {isDark ? 'text-blue-400 hover:text-white' : 'text-blue-600 hover:text-blue-900'}"
+							class="text-xs underline shrink-0 {isDark ? 'text-blue-400 hover:text-white' : 'text-blue-600 hover:text-blue-900'}"
 							onclick={() => (searchQuery = '')}
 						>
-							Reset Pencarian
+							Reset
 						</button>
 					</div>
 				{/if}
 
 				{#if filteredTools.length === 0}
-					<div class="text-center py-24">
-						<p class="text-base {isDark ? 'text-slate-400' : 'text-slate-600'}">
+					<div class="text-center py-20">
+						<p class="text-sm sm:text-base {isDark ? 'text-slate-400' : 'text-slate-600'}">
 							Tidak ada alat yang cocok dengan kata kunci "{searchQuery}"
 						</p>
 						<button
@@ -721,36 +772,51 @@
 						</button>
 					</div>
 				{:else}
-					<div class="space-y-12">
+					<div class="space-y-8 sm:space-y-12">
 						<!-- POPULAR TOOLS SECTION -->
 						{#if !searchQuery || filteredPopular.length > 0}
 							<section id="category-popular-tools" class="scroll-mt-6">
-								<div class="flex items-center gap-2 mb-4">
-									<h2 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-400' : 'text-slate-500'}">
+								<div class="flex items-center gap-2 mb-3 sm:mb-4">
+									<div class="w-1.5 h-3.5 rounded-full bg-blue-500"></div>
+									<h2 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-700'}">
 										POPULAR TOOLS
 									</h2>
 								</div>
 
-								<div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+								<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5">
 									{#each filteredPopular as tool (tool.href)}
 										{@const ToolIcon = tool.icon}
 										{@const isEmbedded = !!(EMBEDDED_TOOLS[tool.href] || EMBEDDED_TOOLS[tool.href.split('?')[0]])}
 										<button
 											type="button"
 											onclick={() => openTool(tool.href)}
-											class="group relative flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] hover:border-[var(--ttx-accent)] hover:bg-[var(--ttx-bg-hover)] hover:shadow-lg shadow-xs transition-all duration-200 w-full text-left"
+											class="group relative flex items-center gap-3 sm:gap-3.5 p-3 sm:px-4 sm:py-3.5 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] hover:border-[var(--ttx-accent)] hover:bg-[var(--ttx-bg-hover)] active:scale-[0.99] hover:shadow-lg shadow-xs transition-all duration-200 w-full text-left"
 										>
-											<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] group-hover:text-[var(--ttx-accent-text)] group-hover:bg-[var(--ttx-accent-light)] transition-colors">
-												<ToolIcon size={18} />
+											<div class="flex h-10 w-10 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl sm:rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] group-hover:text-[var(--ttx-accent-text)] group-hover:bg-[var(--ttx-accent-light)] transition-colors">
+												<ToolIcon size={20} class="sm:hidden" />
+												<ToolIcon size={18} class="hidden sm:block" />
 											</div>
 											<div class="min-w-0 flex-1">
-												<h3 class="text-sm font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
-													{tool.title}
-												</h3>
+												<div class="flex items-center gap-2">
+													<h3 class="text-sm font-semibold sm:font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
+														{tool.title}
+													</h3>
+													{#if isEmbedded}
+														<span class="sm:hidden shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+															Instant
+														</span>
+													{/if}
+												</div>
+												<p class="text-xs text-[var(--ttx-text-muted)] line-clamp-1 mt-0.5 sm:hidden">
+													{tool.desc}
+												</p>
 											</div>
-											{#if isEmbedded}
-												<div class="shrink-0 w-1.5 h-1.5 rounded-full bg-blue-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
-											{/if}
+											<div class="shrink-0 flex items-center">
+												{#if isEmbedded}
+													<div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-blue-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+												{/if}
+												<ChevronRight size={16} class="sm:hidden text-[var(--ttx-text-dim)] group-hover:text-[var(--ttx-text-main)] transition-colors" />
+											</div>
 										</button>
 									{/each}
 								</div>
@@ -761,32 +827,47 @@
 						{#each Object.entries(groupedTools()) as [category, categoryTools]}
 							{@const categoryId = `category-${category.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
 							<section id={categoryId} class="scroll-mt-6">
-								<div class="flex items-center gap-2 mb-4">
-									<h2 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-400' : 'text-slate-500'}">
+								<div class="flex items-center gap-2 mb-3 sm:mb-4">
+									<div class="w-1.5 h-3.5 rounded-full bg-slate-500/60"></div>
+									<h2 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-700'}">
 										{category.toUpperCase()} TOOLS
 									</h2>
 								</div>
 
-								<div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
+								<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5">
 									{#each categoryTools as tool (tool.href)}
 										{@const ToolIcon = tool.icon}
 										{@const isEmbedded = !!(EMBEDDED_TOOLS[tool.href] || EMBEDDED_TOOLS[tool.href.split('?')[0]])}
 										<button
 											type="button"
 											onclick={() => openTool(tool.href)}
-											class="group relative flex items-center gap-3.5 px-4 py-3.5 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] hover:border-[var(--ttx-accent)] hover:bg-[var(--ttx-bg-hover)] hover:shadow-lg shadow-xs transition-all duration-200 w-full text-left"
+											class="group relative flex items-center gap-3 sm:gap-3.5 p-3 sm:px-4 sm:py-3.5 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] hover:border-[var(--ttx-accent)] hover:bg-[var(--ttx-bg-hover)] active:scale-[0.99] hover:shadow-lg shadow-xs transition-all duration-200 w-full text-left"
 										>
-											<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] group-hover:text-[var(--ttx-accent-text)] group-hover:bg-[var(--ttx-accent-light)] transition-colors">
-												<ToolIcon size={18} />
+											<div class="flex h-10 w-10 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl sm:rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] group-hover:text-[var(--ttx-accent-text)] group-hover:bg-[var(--ttx-accent-light)] transition-colors">
+												<ToolIcon size={20} class="sm:hidden" />
+												<ToolIcon size={18} class="hidden sm:block" />
 											</div>
 											<div class="min-w-0 flex-1">
-												<h3 class="text-sm font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
-													{tool.title}
-												</h3>
+												<div class="flex items-center gap-2">
+													<h3 class="text-sm font-semibold sm:font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
+														{tool.title}
+													</h3>
+													{#if isEmbedded}
+														<span class="sm:hidden shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+															Instant
+														</span>
+													{/if}
+												</div>
+												<p class="text-xs text-[var(--ttx-text-muted)] line-clamp-1 mt-0.5 sm:hidden">
+													{tool.desc}
+												</p>
 											</div>
-											{#if isEmbedded}
-												<div class="shrink-0 w-1.5 h-1.5 rounded-full bg-blue-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
-											{/if}
+											<div class="shrink-0 flex items-center">
+												{#if isEmbedded}
+													<div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-blue-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+												{/if}
+												<ChevronRight size={16} class="sm:hidden text-[var(--ttx-text-dim)] group-hover:text-[var(--ttx-text-main)] transition-colors" />
+											</div>
 										</button>
 									{/each}
 								</div>
