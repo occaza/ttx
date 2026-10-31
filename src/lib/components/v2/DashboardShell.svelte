@@ -73,7 +73,7 @@
 	};
 
 	let internalTool = $state<string | null>(initialTool);
-	let activeTool = $derived(internalTool ?? ($page.params.tool || null));
+	let activeTool = $derived(internalTool);
 
 	// Popular tools definition
 	const POPULAR_TOOL_HREFS = [
@@ -112,6 +112,7 @@
 	let searchInputEl: HTMLInputElement | null = $state(null);
 	let mainScrollContainer: HTMLElement | null = $state(null);
 	let isSidebarOpen = $state(false);
+	let showMobileSearch = $state(false);
 	function getInitialTheme(): boolean {
 		if (!browser) return true;
 		const savedTheme = localStorage.getItem('theme');
@@ -160,13 +161,13 @@
 		openCategory = null;
 		internalTool = null;
 		selectedCategory = 'ALL TOOLS';
+		isSidebarOpen = false;
+		searchQuery = '';
+		
 		const isV2 = browser && window.location.pathname.startsWith('/v2');
 		const homeUrl = isV2 ? '/v2' : '/';
-		if (browser && window.location.pathname !== homeUrl) {
-			window.history.pushState({}, '', homeUrl);
-		}
-		scrollToCategory('ALL TOOLS');
-		isSidebarOpen = false;
+		goto(homeUrl);
+		mainScrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
 	}
 
 	$effect(() => {
@@ -329,125 +330,163 @@
 
 <div class="ttx-dashboard flex flex-col h-[100dvh] w-full max-w-full overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
 	<!-- TOP NAVIGATION BAR -->
-	<header class="h-16 shrink-0 border-b flex items-center justify-between px-4 sm:px-6 z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)] box-content">
-		<!-- Left: Hamburger (mobile) + Brand Logo -->
-		<div class="flex items-center gap-3 sm:gap-4">
-			<button
-				type="button"
-				class="lg:hidden p-2 rounded-lg text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
-				onclick={() => (isSidebarOpen = !isSidebarOpen)}
-				aria-label="Toggle menu"
-			>
-				{#if isSidebarOpen}
-					<X size={20} />
-				{:else}
-					<Menu size={20} />
-				{/if}
-			</button>
+	<header class="shrink-0 border-b z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)] box-content">
+		<div class="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 gap-2">
+			<!-- Left: Hamburger (mobile) + Brand Logo -->
+			<div class="flex items-center gap-2 sm:gap-4 shrink-0">
+				<button
+					type="button"
+					class="lg:hidden p-1.5 sm:p-2 rounded-lg text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					onclick={() => (isSidebarOpen = !isSidebarOpen)}
+					aria-label="Toggle menu"
+				>
+					{#if isSidebarOpen}
+						<X size={20} />
+					{:else}
+						<Menu size={20} />
+					{/if}
+				</button>
 
-			<!-- Brand Logo -->
-			<button
-				type="button"
-				class="flex items-center gap-2 group text-left"
-				onclick={goHome}
-			>
-				<div class="h-8 w-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 shadow-md shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow">
-					<div class="h-full w-full rounded-[6px] flex items-center justify-center bg-[var(--ttx-bg-root)]">
-						<svg class="h-4 w-4 text-cyan-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-							<polygon points="12 2 22 19 2 19"></polygon>
-						</svg>
+				<!-- Brand Logo -->
+				<button
+					type="button"
+					class="flex items-center gap-2 group text-left cursor-pointer"
+					onclick={goHome}
+				>
+					<div class="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 shadow-md shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow shrink-0">
+						<div class="h-full w-full rounded-[6px] flex items-center justify-center bg-[var(--ttx-bg-root)]">
+							<svg class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+								<polygon points="12 2 22 19 2 19"></polygon>
+							</svg>
+						</div>
+					</div>
+					<span class="text-lg sm:text-xl font-bold tracking-tight text-[var(--ttx-text-main)] group-hover:text-cyan-400 transition-colors">
+						TEXY<span class="text-blue-500">.</span>
+					</span>
+				</button>
+			</div>
+
+			<!-- Middle: Search Bar (Desktop) -->
+			<div class="hidden md:flex flex-1 max-w-xl mx-4 sm:mx-6">
+				<div class="relative w-full">
+					<div class="pointer-events-none absolute inset-y-0 left-0 pl-3.5 flex items-center">
+						<Search size={16} class="text-[var(--ttx-text-dim)]" />
+					</div>
+					<input
+						bind:this={searchInputEl}
+						bind:value={searchQuery}
+						type="text"
+						placeholder="Search Tools"
+						class="w-full h-10 pl-10 pr-16 rounded-xl text-sm transition-all focus:outline-none focus:ring-1 focus:ring-blue-500/40 bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500 shadow-inner"
+					/>
+					<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1.5">
+						{#if searchQuery}
+							<button
+								type="button"
+								class="p-1 rounded-md transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
+								onclick={() => (searchQuery = '')}
+								aria-label="Clear search"
+							>
+								<X size={14} />
+							</button>
+						{:else}
+							<kbd class="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-mono font-medium rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-dim)]">
+								Ctrl K
+							</kbd>
+						{/if}
 					</div>
 				</div>
-				<span class="text-xl font-bold tracking-tight text-[var(--ttx-text-main)] group-hover:text-cyan-400 transition-colors">
-					TEXY<span class="text-blue-500">.</span>
-				</span>
-			</button>
-		</div>
+			</div>
 
-		<!-- Middle: Search Bar with Ctrl+K shortcut -->
-		<div class="flex-1 max-w-xl mx-2 sm:mx-6">
-			<div class="relative w-full">
-				<div class="pointer-events-none absolute inset-y-0 left-0 pl-3.5 flex items-center">
-					<Search size={16} class="text-[var(--ttx-text-dim)]" />
-				</div>
-				<input
-					bind:this={searchInputEl}
-					bind:value={searchQuery}
-					type="text"
-					placeholder="Search Tools"
-					class="w-full h-10 pl-10 pr-16 rounded-xl text-sm transition-all focus:outline-none focus:ring-1 focus:ring-blue-500/40 bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500 shadow-inner"
-				/>
-				<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1.5">
-					{#if searchQuery}
-						<button
-							type="button"
-							class="p-1 rounded-md transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
-							onclick={() => (searchQuery = '')}
-							aria-label="Clear search"
-						>
-							<X size={14} />
-						</button>
+			<!-- Right: Actions & Controls -->
+			<div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+				<!-- Mobile Search Toggle Button -->
+				<button
+					type="button"
+					class="md:hidden p-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					onclick={() => (showMobileSearch = !showMobileSearch)}
+					aria-label="Search"
+				>
+					<Search size={16} />
+				</button>
+
+				<!-- Dark / Light Mode Switcher -->
+				<button
+					type="button"
+					class="p-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-amber-400 hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					onclick={toggleTheme}
+					title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+					aria-label="Toggle theme"
+				>
+					{#if isDark}
+						<Sun size={16} />
 					{:else}
-						<kbd class="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-mono font-medium rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-dim)]">
-							Ctrl K
-						</kbd>
+						<Moon size={16} class="text-slate-700" />
 					{/if}
-				</div>
+				</button>
+
+				<!-- Auth Buttons -->
+				{#if user}
+					<a
+						href="/dashboard"
+						class="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+					>
+						<User size={14} />
+						<span class="hidden sm:inline">Dashboard</span>
+					</a>
+					<button
+						type="button"
+						class="p-1.5 sm:p-2 text-[var(--ttx-text-muted)] hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+						onclick={async () => {
+							await fetch('/logout', { method: 'POST' });
+							window.location.href = '/login';
+						}}
+						title="Sign Out"
+					>
+						<LogOut size={15} />
+					</button>
+				{:else}
+					<a
+						href="/login"
+						class="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
+					>
+						Sign In
+					</a>
+					<a
+						href="/register"
+						class="inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-lg shadow-sm shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
+					>
+						Sign Up
+					</a>
+				{/if}
 			</div>
 		</div>
 
-		<!-- Right: Theme Switcher & Actions -->
-		<div class="flex items-center gap-2 sm:gap-3 shrink-0">
-			<!-- Dark / Light Mode Switcher -->
-			<button
-				type="button"
-				class="p-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-amber-400 hover:bg-[var(--ttx-bg-hover)] transition-colors"
-				onclick={toggleTheme}
-				title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-				aria-label="Toggle theme"
-			>
-				{#if isDark}
-					<Sun size={17} />
-				{:else}
-					<Moon size={17} class="text-slate-700" />
-				{/if}
-			</button>
-
-			<!-- Auth Buttons -->
-			{#if user}
-				<a
-					href="/dashboard"
-					class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
-				>
-					<User size={14} />
-					<span>Dashboard</span>
-				</a>
-				<button
-					type="button"
-					class="p-2 text-[var(--ttx-text-muted)] hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
-					onclick={async () => {
-						await fetch('/logout', { method: 'POST' });
-						window.location.href = '/login';
-					}}
-					title="Sign Out"
-				>
-					<LogOut size={16} />
-				</button>
-			{:else}
-				<a
-					href="/login"
-					class="hidden sm:inline-flex items-center px-3.5 py-2 text-xs font-semibold rounded-lg transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
-				>
-					Sign In
-				</a>
-				<a
-					href="/register"
-					class="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-lg shadow-sm shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
-				>
-					Sign Up
-				</a>
-			{/if}
-		</div>
+		<!-- Mobile Search Drawer (collapsible under navbar) -->
+		{#if showMobileSearch}
+			<div class="md:hidden px-3 pb-3 pt-1 border-t border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-header)] animate-fadeIn">
+				<div class="relative w-full">
+					<div class="pointer-events-none absolute inset-y-0 left-0 pl-3 flex items-center">
+						<Search size={15} class="text-[var(--ttx-text-dim)]" />
+					</div>
+					<input
+						bind:value={searchQuery}
+						type="text"
+						placeholder="Cari tools..."
+						class="w-full h-9 pl-9 pr-9 rounded-lg text-xs outline-none bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500"
+					/>
+					{#if searchQuery}
+						<button
+							type="button"
+							class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)]"
+							onclick={() => (searchQuery = '')}
+						>
+							<X size={14} />
+						</button>
+					{/if}
+				</div>
+			</div>
+		{/if}
 	</header>
 
 	<!-- MAIN WORKSPACE CONTAINER -->
