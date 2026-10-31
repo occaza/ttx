@@ -31,6 +31,7 @@
 	import SplitFilesView from '$lib/components/v2/SplitFilesView.svelte';
 	import SplitRandomDelimiterView from '$lib/components/v2/SplitRandomDelimiterView.svelte';
 	import PercentageCalculatorView from '$lib/components/v2/PercentageCalculatorView.svelte';
+	import MultiCounterView from '$lib/components/v2/MultiCounterView.svelte';
 	import RandomNumberGeneratorView from '$lib/components/v2/RandomNumberGeneratorView.svelte';
 	import FilesComparationView from '$lib/components/v2/FilesComparationView.svelte';
 	import CsvParserView from '$lib/components/v2/CsvParserView.svelte';
@@ -59,6 +60,7 @@
 		'/split-files': 'split-files',
 		'/split-random-delimiter': 'split-random-delimiter',
 		'/percentage-calculator': 'percentage-calculator',
+		'/multi-counter': 'multi-counter',
 		'/random-number-generator': 'random-number-generator',
 		'/files-comparation': 'files-comparation',
 		'/csv-parser': 'csv-parser',
@@ -624,6 +626,8 @@
 					<SplitRandomDelimiterView {isDark} />
 				{:else if activeTool === 'percentage-calculator'}
 					<PercentageCalculatorView {isDark} />
+				{:else if activeTool === 'multi-counter'}
+					<MultiCounterView {isDark} />
 				{:else if activeTool === 'random-number-generator'}
 					<RandomNumberGeneratorView {isDark} />
 				{:else if activeTool === 'files-comparation'}

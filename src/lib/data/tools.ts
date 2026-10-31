@@ -27,6 +27,7 @@ export const tools = [
     { title: 'Emoji Browser', desc: 'Cari dan salin emoji dengan mudah.', href: '/emoji-picker', icon: Smile, category: 'General Utilities' },
     { title: 'Page Identifier', desc: 'Identifikasi halaman dan query parameter.', href: '/pageid?id=Demo', icon: Map, category: 'General Utilities' },
     { title: 'Percentage Calculator', desc: 'Perhitungan persentase praktis dan cepat.', href: '/percentage-calculator', icon: Percent, category: 'General Utilities' },
+    { title: 'Multi Counter & Tally', desc: 'Penghitung traffic, item, atau pengunjung dengan multi-kategori.', href: '/multi-counter', icon: List, category: 'General Utilities' },
 
     { title: 'JS Obfuscator', desc: 'Lindungi JavaScript Anda dari reverse engineering.', href: '/obfuscate', icon: Lock, category: 'Security & Misc' },
     { title: 'Random Number', desc: 'Buat angka acak sesuai kebutuhan.', href: '/random-number-generator', icon: Shuffle, category: 'Security & Misc' }
