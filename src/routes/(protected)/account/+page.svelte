@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { User, Mail, Lock, ArrowLeft, Check, AlertCircle } from '@lucide/svelte';
+	import {
+		User,
+		Mail,
+		Lock,
+		ArrowLeft,
+		Check,
+		AlertCircle,
+		Settings,
+		Shield,
+		Eye,
+		EyeOff
+	} from '@lucide/svelte';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -14,8 +25,24 @@
 	let emailLoading = $state(false);
 	let passwordLoading = $state(false);
 
+	// Password visibility
+	let showOldPass = $state(false);
+	let showNewPass = $state(false);
+	let showConfirmPass = $state(false);
+
 	// Toast
 	let toast = $state<{ type: 'success' | 'error'; message: string } | null>(null);
+
+	// Display name
+	let displayName = $derived(
+		profile?.first_name ||
+			profile?.username ||
+			user?.user_metadata?.full_name?.split(' ')[0] ||
+			user?.email?.split('@')[0] ||
+			'User'
+	);
+
+	let initials = $derived(displayName.slice(0, 2).toUpperCase());
 
 	$effect(() => {
 		if (form) {
@@ -35,40 +62,87 @@
 
 <!-- Toast -->
 {#if toast}
-	<div class="toast toast-top toast-end z-50">
-		<div class="alert {toast.type === 'success' ? 'alert-success' : 'alert-error'} shadow-lg gap-2">
+	<div class="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-200">
+		<div
+			class="flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium
+			{toast.type === 'success'
+				? 'bg-[var(--ttx-bg-card)] border-emerald-500/40 text-emerald-400'
+				: 'bg-[var(--ttx-bg-card)] border-rose-500/40 text-rose-400'}"
+		>
 			{#if toast.type === 'success'}
-				<Check size={16} />
+				<Check size={15} />
 			{:else}
-				<AlertCircle size={16} />
+				<AlertCircle size={15} />
 			{/if}
-			<span class="text-sm">{toast.message}</span>
+			<span>{toast.message}</span>
 		</div>
 	</div>
 {/if}
 
-<div class="relative min-h-[calc(100vh-4rem)] bg-base-100">
-	<div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+<div
+	class="relative min-h-[calc(100vh-4rem)] bg-[var(--ttx-bg-workspace)] text-[var(--ttx-text-main)] font-sans transition-colors duration-200"
+>
+	<!-- Background pattern -->
+	<div
+		class="absolute inset-0 pointer-events-none opacity-40"
+		style="background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, var(--ttx-hatch) 10px, var(--ttx-hatch) 11.5px);"
+		aria-hidden="true"
+	></div>
 
-	<div class="relative mx-auto max-w-7xl px-4 py-8 md:px-8">
-		<!-- Header -->
-		<div class="mb-8">
-			<a href="/dashboard" class="inline-flex items-center gap-1.5 text-sm text-base-content/50 hover:text-base-content transition-colors mb-4">
-				<ArrowLeft size={14} /> Dashboard
+	<div class="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+		<!-- HEADER -->
+		<div
+			class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs mb-8 transition-colors"
+		>
+			<div class="flex items-center gap-4">
+				<div
+					class="w-14 h-14 rounded-2xl bg-[var(--ttx-accent-light)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-accent-text)] font-bold text-lg flex items-center justify-center shadow-xs shrink-0"
+				>
+					{initials}
+				</div>
+				<div>
+					<div class="flex items-center gap-2 flex-wrap">
+						<h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--ttx-text-main)]">
+							{displayName}
+						</h1>
+						<span
+							class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-muted)]"
+						>
+							<Settings size={11} />
+							Pengaturan Akun
+						</span>
+					</div>
+					<p class="text-xs text-[var(--ttx-text-muted)] mt-1">{user?.email}</p>
+				</div>
+			</div>
+
+			<a
+				href="/dashboard"
+				class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all self-start sm:self-auto"
+			>
+				<ArrowLeft size={13} />
+				Dashboard
 			</a>
-			<h1 class="text-2xl font-bold text-base-content">Pengaturan Akun</h1>
-			<p class="text-sm text-base-content/50 mt-1">{user?.email}</p>
 		</div>
 
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-			<!-- Col Kiri: Informasi Profil (Lebih besar) -->
-			<div class="lg:col-span-2 flex flex-col gap-5">
-				<div class="rounded-2xl border border-base-content/10 bg-base-100/60 overflow-hidden">
-					<div class="flex items-center gap-2.5 px-5 py-4 border-b border-base-content/10 bg-base-200/30">
-						<User size={15} class="text-base-content/50" />
-						<h2 class="text-sm font-bold text-base-content/70">Informasi Profil</h2>
+		<!-- CONTENT GRID -->
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+			<!-- MAIN: Profil -->
+			<div class="lg:col-span-2">
+				<div
+					class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden transition-colors"
+				>
+					<!-- Card header -->
+					<div
+						class="flex items-center gap-2.5 px-5 py-4 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)]"
+					>
+						<User size={15} class="text-[var(--ttx-accent-text)]" />
+						<h2 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
+							Informasi Profil
+						</h2>
 					</div>
-					<div class="p-5 md:p-6">
+
+					<div class="p-5 sm:p-6">
 						<form
 							method="POST"
 							action="?/updateProfile"
@@ -81,66 +155,97 @@
 							}}
 							class="flex flex-col gap-5"
 						>
-							<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-								<fieldset class="fieldset">
-									<legend class="fieldset-legend text-xs text-base-content/50">Nama Depan *</legend>
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<!-- Nama Depan -->
+								<div class="flex flex-col gap-1.5">
+									<label
+										for="first_name"
+										class="text-xs font-semibold text-[var(--ttx-text-muted)]"
+									>
+										Nama Depan <span class="text-rose-400">*</span>
+									</label>
 									<input
 										type="text"
 										id="first_name"
 										name="first_name"
-										class="input input-bordered w-full"
+										class="h-9 px-3 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
 										value={profile?.first_name ?? ''}
 										placeholder="Nama depan"
 										required
 									/>
-								</fieldset>
-								<fieldset class="fieldset">
-									<legend class="fieldset-legend text-xs text-base-content/50">Nama Belakang</legend>
+								</div>
+
+								<!-- Nama Belakang -->
+								<div class="flex flex-col gap-1.5">
+									<label
+										for="last_name"
+										class="text-xs font-semibold text-[var(--ttx-text-muted)]"
+									>
+										Nama Belakang
+									</label>
 									<input
 										type="text"
 										id="last_name"
 										name="last_name"
-										class="input input-bordered w-full"
+										class="h-9 px-3 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
 										value={profile?.last_name ?? ''}
 										placeholder="Nama belakang"
 									/>
-								</fieldset>
-							</div>
+								</div>
 
-							<div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-								<fieldset class="fieldset">
-									<legend class="fieldset-legend text-xs text-base-content/50">Username</legend>
+								<!-- Username -->
+								<div class="flex flex-col gap-1.5">
+									<label
+										for="username"
+										class="text-xs font-semibold text-[var(--ttx-text-muted)]"
+									>
+										Username
+									</label>
 									<input
 										type="text"
 										id="username"
 										name="username"
-										class="input input-bordered w-full"
+										class="h-9 px-3 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
 										value={profile?.username ?? ''}
 										placeholder="username_kamu"
 										minlength="3"
 										autocomplete="username"
 									/>
-									<p class="fieldset-label text-xs text-base-content/40">Minimal 3 karakter, harus unik.</p>
-								</fieldset>
+									<p class="text-[11px] text-[var(--ttx-text-dim)]">
+										Minimal 3 karakter, harus unik.
+									</p>
+								</div>
 
-								<fieldset class="fieldset">
-									<legend class="fieldset-legend text-xs text-base-content/50">Nomor Telepon</legend>
+								<!-- Telepon -->
+								<div class="flex flex-col gap-1.5">
+									<label
+										for="phone"
+										class="text-xs font-semibold text-[var(--ttx-text-muted)]"
+									>
+										Nomor Telepon
+									</label>
 									<input
 										type="tel"
 										id="phone"
 										name="phone"
-										class="input input-bordered w-full"
+										class="h-9 px-3 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
 										value={profile?.phone ?? ''}
 										placeholder="+62 812 3456 7890"
 										autocomplete="tel"
 									/>
-								</fieldset>
+								</div>
 							</div>
 
-							<div class="flex justify-end pt-2 border-t border-base-content/10 mt-2">
-								<button type="submit" class="btn btn-primary btn-sm rounded-xl gap-1.5 mt-4" disabled={profileLoading}>
+							<div class="flex justify-end pt-4 border-t border-[var(--ttx-border-base)]">
+								<button
+									type="submit"
+									class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl shadow-sm shadow-blue-500/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+									disabled={profileLoading}
+								>
 									{#if profileLoading}
-										<span class="loading loading-spinner loading-xs"></span>
+										<span
+											class="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+										></span>
 									{:else}
 										<Check size={14} />
 									{/if}
@@ -152,18 +257,31 @@
 				</div>
 			</div>
 
-			<!-- Col Kanan: Email & Password -->
-			<div class="lg:col-span-1 flex flex-col gap-5">
+			<!-- SIDEBAR: Email & Password -->
+			<div class="flex flex-col gap-5">
 				<!-- Ubah Email -->
-				<div class="rounded-2xl border border-base-content/10 bg-base-100/60 overflow-hidden">
-					<div class="flex items-center gap-2.5 px-5 py-4 border-b border-base-content/10 bg-base-200/30">
-						<Mail size={15} class="text-base-content/50" />
-						<h2 class="text-sm font-bold text-base-content/70">Ubah Email</h2>
+				<div
+					class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden transition-colors"
+				>
+					<div
+						class="flex items-center gap-2.5 px-5 py-4 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)]"
+					>
+						<Mail size={15} class="text-[var(--ttx-accent-text)]" />
+						<h2 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
+							Ubah Email
+						</h2>
 					</div>
+
 					<div class="p-5">
-						<p class="text-xs text-base-content/40 mb-4">
-							Email saat ini: <span class="font-mono font-semibold text-base-content/60 break-all">{user?.email}</span>
-						</p>
+						<div
+							class="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] mb-4"
+						>
+							<Mail size={13} class="text-[var(--ttx-text-dim)] shrink-0" />
+							<span class="text-xs font-mono text-[var(--ttx-text-muted)] truncate"
+								>{user?.email}</span
+							>
+						</div>
+
 						<form
 							method="POST"
 							action="?/changeEmail"
@@ -174,24 +292,36 @@
 									emailLoading = false;
 								};
 							}}
-							class="flex flex-col gap-4"
+							class="flex flex-col gap-3"
 						>
-							<fieldset class="fieldset">
-								<legend class="fieldset-legend text-xs text-base-content/50">Email Baru</legend>
+							<div class="flex flex-col gap-1.5">
+								<label for="email" class="text-xs font-semibold text-[var(--ttx-text-muted)]">
+									Email Baru
+								</label>
 								<input
 									type="email"
 									id="email"
 									name="email"
-									class="input input-bordered w-full"
+									class="h-9 px-3 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
 									placeholder="email@baru.com"
 									autocomplete="email"
 									required
 								/>
-								<p class="fieldset-label text-[10px] text-base-content/40 leading-tight">Email konfirmasi akan dikirim ke alamat baru.</p>
-							</fieldset>
-							<button type="submit" class="btn btn-sm btn-outline rounded-xl gap-1.5 w-full mt-2" disabled={emailLoading}>
+								<p class="text-[11px] text-[var(--ttx-text-dim)] leading-tight">
+									Link konfirmasi dikirim ke alamat baru.
+								</p>
+							</div>
+							<button
+								type="submit"
+								class="inline-flex items-center justify-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all disabled:opacity-60"
+								disabled={emailLoading}
+							>
 								{#if emailLoading}
-									<span class="loading loading-spinner loading-xs"></span>
+									<span
+										class="w-3.5 h-3.5 border-2 border-[var(--ttx-text-dim)] border-t-[var(--ttx-text-main)] rounded-full animate-spin"
+									></span>
+								{:else}
+									<Mail size={13} />
 								{/if}
 								Kirim Konfirmasi
 							</button>
@@ -200,11 +330,18 @@
 				</div>
 
 				<!-- Ubah Password -->
-				<div class="rounded-2xl border border-base-content/10 bg-base-100/60 overflow-hidden">
-					<div class="flex items-center gap-2.5 px-5 py-4 border-b border-base-content/10 bg-base-200/30">
-						<Lock size={15} class="text-base-content/50" />
-						<h2 class="text-sm font-bold text-base-content/70">Ubah Password</h2>
+				<div
+					class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden transition-colors"
+				>
+					<div
+						class="flex items-center gap-2.5 px-5 py-4 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)]"
+					>
+						<Lock size={15} class="text-[var(--ttx-accent-text)]" />
+						<h2 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
+							Ubah Password
+						</h2>
 					</div>
+
 					<div class="p-5">
 						<form
 							method="POST"
@@ -216,59 +353,125 @@
 									passwordLoading = false;
 								};
 							}}
-							class="flex flex-col gap-4"
+							class="flex flex-col gap-3"
 						>
 							{#if hasEmailProvider}
-								<fieldset class="fieldset">
-									<legend class="fieldset-legend text-xs text-base-content/50">Password Lama *</legend>
-									<input
-										type="password"
-										id="old_password"
-										name="old_password"
-										class="input input-bordered w-full"
-										placeholder="Masukkan password lama"
-										autocomplete="current-password"
-										required
-									/>
-								</fieldset>
+								<!-- Password Lama -->
+								<div class="flex flex-col gap-1.5">
+									<label
+										for="old_password"
+										class="text-xs font-semibold text-[var(--ttx-text-muted)]"
+									>
+										Password Lama <span class="text-rose-400">*</span>
+									</label>
+									<div class="relative">
+										<input
+											type={showOldPass ? 'text' : 'password'}
+											id="old_password"
+											name="old_password"
+											class="w-full h-9 pl-3 pr-9 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
+											placeholder="Password lama"
+											autocomplete="current-password"
+											required
+										/>
+										<button
+											type="button"
+											class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)] transition-colors"
+											onclick={() => (showOldPass = !showOldPass)}
+											tabindex="-1"
+										>
+											{#if showOldPass}
+												<EyeOff size={14} />
+											{:else}
+												<Eye size={14} />
+											{/if}
+										</button>
+									</div>
+								</div>
 							{/if}
 
-							<fieldset class="fieldset">
-								<legend class="fieldset-legend text-xs text-base-content/50">Password Baru</legend>
-								<input
-									type="password"
-									id="password"
-									name="password"
-									class="input input-bordered w-full"
-									placeholder="Minimal 8 karakter"
-									minlength="8"
-									autocomplete="new-password"
-									required
-								/>
-							</fieldset>
-							<fieldset class="fieldset">
-								<legend class="fieldset-legend text-xs text-base-content/50">Konfirmasi Password</legend>
-								<input
-									type="password"
-									id="confirm_password"
-									name="confirm_password"
-									class="input input-bordered w-full"
-									placeholder="Ulangi password baru"
-									minlength="8"
-									autocomplete="new-password"
-									required
-								/>
-							</fieldset>
-							<button type="submit" class="btn btn-sm btn-outline rounded-xl gap-1.5 w-full mt-2" disabled={passwordLoading}>
+							<!-- Password Baru -->
+							<div class="flex flex-col gap-1.5">
+								<label for="password" class="text-xs font-semibold text-[var(--ttx-text-muted)]">
+									Password Baru
+								</label>
+								<div class="relative">
+									<input
+										type={showNewPass ? 'text' : 'password'}
+										id="password"
+										name="password"
+										class="w-full h-9 pl-3 pr-9 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
+										placeholder="Min. 8 karakter"
+										minlength="8"
+										autocomplete="new-password"
+										required
+									/>
+									<button
+										type="button"
+										class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)] transition-colors"
+										onclick={() => (showNewPass = !showNewPass)}
+										tabindex="-1"
+									>
+										{#if showNewPass}
+											<EyeOff size={14} />
+										{:else}
+											<Eye size={14} />
+										{/if}
+									</button>
+								</div>
+							</div>
+
+							<!-- Konfirmasi Password -->
+							<div class="flex flex-col gap-1.5">
+								<label
+									for="confirm_password"
+									class="text-xs font-semibold text-[var(--ttx-text-muted)]"
+								>
+									Konfirmasi Password
+								</label>
+								<div class="relative">
+									<input
+										type={showConfirmPass ? 'text' : 'password'}
+										id="confirm_password"
+										name="confirm_password"
+										class="w-full h-9 pl-3 pr-9 text-sm rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
+										placeholder="Ulangi password baru"
+										minlength="8"
+										autocomplete="new-password"
+										required
+									/>
+									<button
+										type="button"
+										class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)] transition-colors"
+										onclick={() => (showConfirmPass = !showConfirmPass)}
+										tabindex="-1"
+									>
+										{#if showConfirmPass}
+											<EyeOff size={14} />
+										{:else}
+											<Eye size={14} />
+										{/if}
+									</button>
+								</div>
+							</div>
+
+							<button
+								type="submit"
+								class="inline-flex items-center justify-center gap-1.5 h-9 px-3 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all disabled:opacity-60 mt-1"
+								disabled={passwordLoading}
+							>
 								{#if passwordLoading}
-									<span class="loading loading-spinner loading-xs"></span>
+									<span
+										class="w-3.5 h-3.5 border-2 border-[var(--ttx-text-dim)] border-t-[var(--ttx-text-main)] rounded-full animate-spin"
+									></span>
+								{:else}
+									<Shield size={13} />
 								{/if}
 								Ubah Password
 							</button>
 						</form>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
