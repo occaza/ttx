@@ -641,20 +641,6 @@
 					<p class="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 						Quick Links
 					</p>
-					<button
-						type="button"
-						onclick={() => { isSidebarOpen = false; openTool('/notepad'); }}
-						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors text-left {activeTool === 'shared-notepad' || activeTool === 'notepad'
-							? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] font-semibold'
-							: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
-					>
-						<span>Shared Notepad</span>
-						{#if activeTool === 'shared-notepad' || activeTool === 'notepad'}
-							<span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
-						{:else}
-							<ExternalLink size={13} class="opacity-40" />
-						{/if}
-					</button>
 					<a
 						href="/notepad2"
 						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
