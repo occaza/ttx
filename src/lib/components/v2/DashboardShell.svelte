@@ -176,6 +176,24 @@
 		}
 	});
 
+	$effect(() => {
+		if (activeTool) {
+			const current = tools.find(
+				(t) =>
+					EMBEDDED_TOOLS[t.href] === activeTool ||
+					EMBEDDED_TOOLS[t.href.split('?')[0]] === activeTool ||
+					t.href.replace('/', '') === activeTool
+			);
+			if (current) {
+				const catKey = current.category.toUpperCase();
+				if (categories.includes(catKey) && openCategory === null) {
+					openCategory = catKey;
+					selectedCategory = catKey;
+				}
+			}
+		}
+	});
+
 	onMount(() => {
 		isDark = getInitialTheme();
 
@@ -350,17 +368,10 @@
 				<!-- Brand Logo -->
 				<button
 					type="button"
-					class="flex items-center gap-2 group text-left cursor-pointer select-none"
+					class="flex items-center group text-left cursor-pointer select-none"
 					onclick={goHome}
 				>
-					<div class="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 shadow-md shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow shrink-0">
-						<div class="h-full w-full rounded-[6px] flex items-center justify-center bg-[var(--ttx-bg-root)]">
-							<svg class="h-3.5 w-3.5 sm:h-4 sm:w-4 text-cyan-400 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-								<polygon points="12 2 22 19 2 19"></polygon>
-							</svg>
-						</div>
-					</div>
-					<span class="text-lg sm:text-xl font-bold tracking-tight text-[var(--ttx-text-main)] group-hover:text-cyan-400 transition-colors">
+					<span class="text-xl sm:text-2xl font-black tracking-tight text-[var(--ttx-text-main)] group-hover:text-blue-500 transition-colors">
 						TEXY<span class="text-blue-500">.</span>
 					</span>
 				</button>
@@ -520,16 +531,9 @@
 		>
 			<!-- Mobile Drawer Header -->
 			<div class="lg:hidden flex items-center justify-between px-4 py-3.5 border-b border-[var(--ttx-border-base)] pt-[max(0.875rem,env(safe-area-inset-top))]">
-				<div class="flex items-center gap-2">
-					<div class="h-6 w-6 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 shadow-sm">
-						<div class="h-full w-full rounded-[4px] flex items-center justify-center bg-[var(--ttx-bg-root)]">
-							<svg class="h-3 w-3 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-								<polygon points="12 2 22 19 2 19"></polygon>
-							</svg>
-						</div>
-					</div>
-					<span class="text-sm font-bold tracking-tight text-[var(--ttx-text-main)]">TEXY Menu</span>
-				</div>
+				<span class="text-base font-black tracking-tight text-[var(--ttx-text-main)]">
+					TEXY<span class="text-blue-500">.</span>
+				</span>
 				<button
 					type="button"
 					class="p-1.5 rounded-lg text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
@@ -579,15 +583,21 @@
 							{#if isOpen}
 								<div class="ml-3 pl-3 border-l py-1 space-y-0.5 border-[var(--ttx-border-base)]">
 									{#each items as item}
+										{@const isItemActive = Boolean(activeTool && (EMBEDDED_TOOLS[item.href] === activeTool || EMBEDDED_TOOLS[item.href.split('?')[0]] === activeTool || item.href.replace('/', '') === activeTool))}
 										<button
 											type="button"
-											class="w-full text-left block py-1.5 px-2 rounded-md text-xs transition-colors truncate text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] hover:bg-[var(--ttx-bg-hover)]"
+											class="w-full flex items-center justify-between py-1.5 px-2 rounded-md text-xs transition-colors text-left {isItemActive
+												? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] font-semibold'
+												: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] hover:bg-[var(--ttx-bg-hover)]'}"
 											onclick={() => {
 												isSidebarOpen = false;
 												openTool(item.href);
 											}}
 										>
-											{item.title}
+											<span class="truncate">{item.title}</span>
+											{#if isItemActive}
+												<span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+											{/if}
 										</button>
 									{/each}
 								</div>
