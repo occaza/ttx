@@ -694,7 +694,7 @@
 			></div>
 
 			<!-- MAIN CONTENT CARDS -->
-			<div class="flex-1 min-w-0 px-3.5 py-5 sm:px-8 sm:py-8 lg:px-10">
+			<div class="flex-1 min-w-0 min-h-full flex flex-col px-3.5 py-5 sm:px-8 sm:py-8 lg:px-10">
 			{#if activeTool}
 				<!-- IN-PAGE TOOL PANEL -->
 				{#if activeTool === 'qr-generator'}

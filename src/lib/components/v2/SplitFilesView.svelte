@@ -71,7 +71,7 @@ Part 4 - Item 10`);
 	const totalInputLines = $derived(input ? input.split(/\r?\n/).length : 0);
 </script>
 
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
@@ -90,7 +90,7 @@ Part 4 - Item 10`);
 	</div>
 
 	<!-- Main Workspace -->
-	<div class="flex flex-col gap-4 lg:flex-row">
+	<div class="flex flex-col gap-4 lg:flex-row flex-1">
 		<!-- Left Settings Panel -->
 		<div
 			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 {isDark

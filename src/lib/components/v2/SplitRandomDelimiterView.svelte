@@ -98,7 +98,7 @@ Alice Brown|alice@example.com|Yogyakarta|User`);
 	}
 </script>
 
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
@@ -119,7 +119,7 @@ Alice Brown|alice@example.com|Yogyakarta|User`);
 	</div>
 
 	<!-- Main Layout -->
-	<div class="flex flex-col gap-4 lg:flex-row">
+	<div class="flex flex-col gap-4 lg:flex-row flex-1">
 		<!-- Left Settings Panel -->
 		<div
 			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 {isDark

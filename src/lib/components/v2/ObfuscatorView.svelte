@@ -162,7 +162,7 @@ hitungTotal(150000, 3);`);
 	}
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-5 flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
@@ -183,7 +183,7 @@ hitungTotal(150000, 3);`);
 	</div>
 
 	<!-- Main Layout -->
-	<div class="flex flex-col gap-4 lg:flex-row">
+	<div class="flex flex-col gap-4 lg:flex-row flex-1">
 		<!-- Left Settings Panel -->
 		<div
 			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-64 lg:shrink-0 {isDark

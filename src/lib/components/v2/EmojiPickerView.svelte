@@ -152,7 +152,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full flex-1">
 	<!-- Header -->
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<div class="flex items-center gap-3">

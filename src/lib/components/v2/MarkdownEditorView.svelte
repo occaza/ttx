@@ -169,7 +169,7 @@ greet("World");
 	}
 </script>
 
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-4 flex-1">
 	<!-- Header -->
 	<div class="flex items-center justify-between">
 		<div class="flex items-center gap-3">

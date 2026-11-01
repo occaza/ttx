@@ -139,7 +139,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 	}
 </script>
 
-<div class="space-y-4 animate-fade-in w-full">
+<div class="space-y-4 animate-fade-in w-full flex flex-col flex-1">
 	<!-- COMPACT SLIM HEADER -->
 	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b {isDark ? 'border-[#1a253c]' : 'border-slate-200'}">
 		<div class="flex items-center gap-3">
@@ -178,7 +178,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 	</div>
 
 	<!-- WORKSPACE CONTAINER -->
-	<div class="rounded-2xl border transition-colors overflow-hidden {isDark ? 'border-[#1a253c] bg-[#10182b] shadow-xl' : 'border-slate-200 bg-white shadow-sm'}">
+	<div class="rounded-2xl border transition-colors overflow-hidden flex flex-col flex-1 {isDark ? 'border-[#1a253c] bg-[#10182b] shadow-xl' : 'border-slate-200 bg-white shadow-sm'}">
 		<!-- Toolbar: Actions & Options -->
 		<div class="flex flex-wrap items-center justify-between gap-3 p-3 sm:px-4 border-b {isDark ? 'border-[#1a253c] bg-[#0c1424]' : 'border-slate-200 bg-slate-50'}">
 			<!-- Left: File Upload & Text Operations -->
@@ -275,7 +275,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 		</div>
 
 		<!-- Editor Area -->
-		<div class="grid {showRemoved ? 'grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x' : 'grid-cols-1'} {isDark ? 'divide-[#1a253c]' : 'divide-slate-200'}">
+		<div class="grid flex-1 {showRemoved ? 'grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x' : 'grid-cols-1'} {isDark ? 'divide-[#1a253c]' : 'divide-slate-200'}">
 			<!-- Main Text Area (Kept Lines) -->
 			<div class="relative flex flex-col min-h-[360px]">
 				<div class="flex items-center justify-between px-4 py-2 text-[11px] font-bold uppercase tracking-wider border-b {isDark ? 'border-[#1a253c] bg-[#0c1424]/60 text-slate-400' : 'border-slate-200 bg-slate-100 text-slate-600'}">

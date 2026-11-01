@@ -223,7 +223,7 @@ lemon`;
 	});
 </script>
 
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full flex-1">
 	<!-- Hidden File Inputs -->
 	<input
 		type="file"
@@ -402,10 +402,10 @@ lemon`;
 	</div>
 
 	<!-- Dual Pane Editor & Diff View -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
 		<!-- Left Pane: File / Text A -->
 		<div
-			class="flex flex-col rounded-xl border overflow-hidden {isDark
+			class="flex flex-col flex-1 rounded-xl border overflow-hidden {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white'}"
 		>
@@ -437,10 +437,10 @@ lemon`;
 				</div>
 			</div>
 
-			<div class="p-3">
+			<div class="p-3 flex flex-col flex-1">
 				{#if hasCompared && outA.length > 0}
 					<div
-						class="min-h-[380px] max-h-[500px] overflow-y-auto rounded-lg border p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
+						class="flex-1 min-h-[380px] overflow-y-auto rounded-lg border p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
 							? 'border-[#1a253c] bg-[#080d1a] text-slate-300'
 							: 'border-slate-200 bg-slate-50 text-slate-800'}"
 					>
@@ -461,8 +461,7 @@ lemon`;
 					<textarea
 						bind:value={textA}
 						placeholder="Ketik teks A di sini atau klik Unggah File..."
-						rows={16}
-						class="w-full resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
+						class="w-full flex-1 min-h-[360px] resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
 							? 'border border-[#1a253c] bg-[#080d1a] text-slate-100 placeholder-slate-500 focus:border-blue-500'
 							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
 					></textarea>
@@ -472,7 +471,7 @@ lemon`;
 
 		<!-- Right Pane: File / Text B -->
 		<div
-			class="flex flex-col rounded-xl border overflow-hidden {isDark
+			class="flex flex-col flex-1 rounded-xl border overflow-hidden {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white'}"
 		>
@@ -504,10 +503,10 @@ lemon`;
 				</div>
 			</div>
 
-			<div class="p-3">
+			<div class="p-3 flex flex-col flex-1">
 				{#if hasCompared && outB.length > 0}
 					<div
-						class="min-h-[380px] max-h-[500px] overflow-y-auto rounded-lg border p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
+						class="flex-1 min-h-[380px] overflow-y-auto rounded-lg border p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
 							? 'border-[#1a253c] bg-[#080d1a] text-slate-300'
 							: 'border-slate-200 bg-slate-50 text-slate-800'}"
 					>
@@ -528,8 +527,7 @@ lemon`;
 					<textarea
 						bind:value={textB}
 						placeholder="Ketik teks B di sini atau klik Unggah File..."
-						rows={16}
-						class="w-full resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
+						class="w-full flex-1 min-h-[360px] resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
 							? 'border border-[#1a253c] bg-[#080d1a] text-slate-100 placeholder-slate-500 focus:border-blue-500'
 							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
 					></textarea>

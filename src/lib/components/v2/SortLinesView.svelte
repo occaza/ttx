@@ -58,7 +58,7 @@
 	const lineCount = $derived(input ? input.split(/\r?\n/).length : 0);
 </script>
 
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-5 flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
@@ -77,7 +77,7 @@
 	</div>
 
 	<!-- Main layout -->
-	<div class="flex flex-col gap-4 lg:flex-row">
+	<div class="flex flex-col gap-4 lg:flex-row flex-1">
 		<!-- Options panel -->
 		<div
 			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-52 lg:shrink-0 {isDark
