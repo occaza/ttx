@@ -223,16 +223,13 @@ Klik link di bio untuk belanja sekarang.`);
 			</div>
 
 			<!-- Editor Textarea -->
-			<div class="flex-1 min-h-[360px]">
-				<textarea
-					bind:value={text}
-					placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
-					rows={16}
-					class="w-full h-full min-h-[340px] resize-none p-4 text-xs sm:text-sm font-sans leading-relaxed outline-none {isDark
-						? 'bg-[#08101e] text-slate-100 placeholder-slate-600'
-						: 'bg-white text-slate-900 placeholder-slate-400'}"
-				></textarea>
-			</div>
+			<textarea
+				bind:value={text}
+				placeholder="Paste caption Instagram kamu di sini...&#10;&#10;Baris kosong akan otomatis diformat!"
+				class="w-full flex-1 min-h-[340px] resize-none p-4 text-xs sm:text-sm font-sans leading-relaxed outline-none {isDark
+					? 'bg-[#08101e] text-slate-100 placeholder-slate-600'
+					: 'bg-white text-slate-900 placeholder-slate-400'}"
+			></textarea>
 		</div>
 	</div>
 </div>

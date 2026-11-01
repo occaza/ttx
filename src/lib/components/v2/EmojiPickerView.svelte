@@ -154,7 +154,7 @@
 
 <div class="flex flex-col gap-5 w-full flex-1">
 	<!-- Header -->
-	<div class="flex flex-wrap items-center justify-between gap-3">
+	<div class="flex flex-wrap items-center justify-between gap-3 shrink-0">
 		<div class="flex items-center gap-3">
 			<div
 				class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
@@ -204,7 +204,7 @@
 
 	<!-- Main Filter & Search Container -->
 	<div
-		class="space-y-3 rounded-xl border p-4 {isDark
+		class="space-y-3 rounded-xl border p-4 shrink-0 {isDark
 			? 'border-[#1a253c] bg-[#0d1525]'
 			: 'border-slate-200 bg-white'}"
 	>
@@ -283,7 +283,7 @@
 
 	<!-- Emoji Grid Area -->
 	<div
-		class="min-h-[380px] max-h-[520px] overflow-y-auto rounded-xl border p-4 {isDark
+		class="flex-1 min-h-[300px] overflow-y-auto rounded-xl border p-4 {isDark
 			? 'border-[#1a253c] bg-[#0d1525]'
 			: 'border-slate-200 bg-white'}"
 	>
@@ -329,7 +329,7 @@
 
 	<!-- Selected Emojis Tray -->
 	<div
-		class="flex items-center gap-3 rounded-xl border p-3.5 {isDark
+		class="flex items-center gap-3 rounded-xl border p-3.5 shrink-0 {isDark
 			? 'border-[#1a253c] bg-[#0d1525]'
 			: 'border-slate-200 bg-white'}"
 	>

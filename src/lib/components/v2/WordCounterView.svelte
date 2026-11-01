@@ -124,9 +124,9 @@ Cobalah menempelkan teks Anda sendiri untuk melihat statistik kata, karakter, da
 	}
 </script>
 
-<div class="space-y-4 animate-fade-in w-full">
+<div class="space-y-4 animate-fade-in w-full flex flex-col flex-1">
 	<!-- COMPACT SLIM HEADER -->
-	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b {isDark ? 'border-[#1a253c]' : 'border-slate-200'}">
+	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b shrink-0 {isDark ? 'border-[#1a253c]' : 'border-slate-200'}">
 		<div class="flex items-center gap-3">
 			<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-violet-600 to-indigo-500 text-white shadow-md shadow-violet-500/20 shrink-0">
 				<ChartBar class="h-5 w-5" />
@@ -163,7 +163,7 @@ Cobalah menempelkan teks Anda sendiri untuk melihat statistik kata, karakter, da
 	</div>
 
 	<!-- 4-METRIC COMPACT STATS ROW -->
-	<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+	<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 shrink-0">
 		<!-- Metric 1: Kata -->
 		<div class="rounded-xl border p-3.5 transition-colors {isDark ? 'border-[#1a253c] bg-[#10182b]' : 'border-slate-200 bg-white shadow-xs'}">
 			<div class="flex items-center gap-1.5 mb-1.5 text-indigo-400">
@@ -225,11 +225,11 @@ Cobalah menempelkan teks Anda sendiri untuk melihat statistik kata, karakter, da
 	</div>
 
 	<!-- WORKSPACE CONTAINER (EDITOR + KEYWORDS DENSITY) -->
-	<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+	<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch flex-1 min-h-0">
 		<!-- Left: Text Editor Area (Col 8) -->
-		<div class="lg:col-span-8 rounded-2xl border transition-colors overflow-hidden flex flex-col {isDark ? 'border-[#1a253c] bg-[#10182b] shadow-xl' : 'border-slate-200 bg-white shadow-sm'}">
+		<div class="lg:col-span-8 rounded-xl border transition-colors overflow-hidden flex flex-col flex-1 min-h-[320px] lg:min-h-0 {isDark ? 'border-[#1a253c] bg-[#10182b] shadow-xl' : 'border-slate-200 bg-white shadow-sm'}">
 			<!-- Editor Toolbar -->
-			<div class="flex flex-wrap items-center justify-between gap-2 p-2.5 sm:px-4 border-b {isDark ? 'border-[#1a253c] bg-[#0c1424]' : 'border-slate-200 bg-slate-50'}">
+			<div class="flex flex-wrap items-center justify-between gap-2 px-4 h-11 border-b shrink-0 {isDark ? 'border-[#1a253c] bg-[#0c1424]' : 'border-slate-200 bg-slate-50'}">
 				<!-- Upload & Selection -->
 				<div class="flex items-center gap-2">
 					<input
@@ -293,29 +293,26 @@ Cobalah menempelkan teks Anda sendiri untuk melihat statistik kata, karakter, da
 			</div>
 
 			<!-- Editor Textarea -->
-			<div class="flex-1 p-3.5 sm:p-4 min-h-[300px]">
-				<textarea
-					bind:this={textareaEl}
-					bind:value={input}
-					placeholder="Mulai ketik atau paste teks Anda di sini..."
-					rows="12"
-					class="w-full h-full min-h-[280px] p-2 font-mono text-xs sm:text-sm resize-y outline-none leading-relaxed transition-colors {isDark
-						? 'bg-transparent text-slate-100 placeholder-slate-500'
-						: 'bg-transparent text-slate-900 placeholder-slate-400'}"
-				></textarea>
-			</div>
+			<textarea
+				bind:this={textareaEl}
+				bind:value={input}
+				placeholder="Mulai ketik atau paste teks Anda di sini..."
+				class="w-full flex-1 min-h-[240px] lg:min-h-0 resize-none p-4 font-mono text-xs sm:text-sm outline-none leading-relaxed transition-colors {isDark
+					? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
+					: 'bg-white text-slate-800 placeholder-slate-400'}"
+			></textarea>
 		</div>
 
 		<!-- Right: Keyword Density (Col 4) -->
-		<div class="lg:col-span-4 rounded-2xl border transition-colors overflow-hidden flex flex-col {isDark ? 'border-[#1a253c] bg-[#10182b] shadow-xl' : 'border-slate-200 bg-white shadow-sm'}">
-			<div class="flex items-center gap-2 p-3 sm:px-4 border-b {isDark ? 'border-[#1a253c] bg-[#0c1424]' : 'border-slate-200 bg-slate-50'}">
+		<div class="lg:col-span-4 rounded-xl border transition-colors overflow-hidden flex flex-col min-h-[220px] lg:min-h-0 {isDark ? 'border-[#1a253c] bg-[#10182b] shadow-xl' : 'border-slate-200 bg-white shadow-sm'}">
+			<div class="flex items-center gap-2 px-4 h-11 border-b shrink-0 {isDark ? 'border-[#1a253c] bg-[#0c1424]' : 'border-slate-200 bg-slate-50'}">
 				<Search size={14} class="text-amber-400" />
 				<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-700'}">
 					Keyword Density
 				</span>
 			</div>
 
-			<div class="p-4 flex-1 overflow-y-auto">
+			<div class="p-4 flex-1 min-h-0 overflow-y-auto">
 				{#if topKeywords().length > 0}
 					{@const maxCount = topKeywords()[0][1]}
 					<div class="space-y-3">
@@ -349,7 +346,7 @@ Cobalah menempelkan teks Anda sendiri untuk melihat statistik kata, karakter, da
 	</div>
 
 	<!-- COLLAPSIBLE ACCORDION FOR GUIDE & FAQ -->
-	<div class="rounded-xl border overflow-hidden transition-colors {isDark ? 'border-[#1a253c] bg-[#10182b]' : 'border-slate-200 bg-white'}">
+	<div class="rounded-xl border overflow-hidden transition-colors shrink-0 {isDark ? 'border-[#1a253c] bg-[#10182b]' : 'border-slate-200 bg-white'}">
 		<button
 			type="button"
 			class="w-full flex items-center justify-between px-4 py-2.5 text-xs font-semibold transition-colors {isDark ? 'hover:bg-[#142038] text-slate-300' : 'hover:bg-slate-50 text-slate-700'}"

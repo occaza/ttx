@@ -187,7 +187,7 @@ END:VCARD`;
 	});
 </script>
 
-<div class="flex flex-col gap-5 w-full">
+<div class="flex flex-col gap-5 w-full flex-1">
 	<input
 		type="file"
 		accept=".vcf,.vcard,.csv,.txt,text/plain"
@@ -197,7 +197,7 @@ END:VCARD`;
 	/>
 
 	<!-- Header -->
-	<div class="flex flex-wrap items-center justify-between gap-3">
+	<div class="flex flex-wrap items-center justify-between gap-3 shrink-0">
 		<div class="flex items-center gap-3">
 			<div
 				class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
@@ -252,7 +252,7 @@ END:VCARD`;
 
 	<!-- Options & Stats Toolbar -->
 	<div
-		class="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3.5 {isDark
+		class="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3.5 shrink-0 {isDark
 			? 'border-[#1a253c] bg-[#0d1525]'
 			: 'border-slate-200 bg-white'}"
 	>
@@ -318,7 +318,7 @@ END:VCARD`;
 	</div>
 
 	<!-- Statistics Badges -->
-	<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+	<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 shrink-0">
 		<div
 			class="flex items-center gap-3 rounded-xl border p-3.5 {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
@@ -368,68 +368,62 @@ END:VCARD`;
 		</div>
 	</div>
 
-	<!-- Dual Pane Editor -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+	<!-- Editor panel: input | output -->
+	<div
+		class="flex-1 min-w-0 flex flex-col lg:flex-row rounded-xl border overflow-hidden {isDark
+			? 'border-[#1a253c]'
+			: 'border-slate-200'}"
+	>
 		<!-- Left Pane: Input -->
 		<div
-			class="flex flex-col rounded-xl border overflow-hidden {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
+			class="flex-1 flex flex-col min-h-[220px] lg:min-h-0 {isDark
+				? 'border-b lg:border-b-0 lg:border-r border-[#1a253c]'
+				: 'border-b lg:border-b-0 lg:border-r border-slate-200'}"
 		>
 			<div
-				class="flex items-center justify-between border-b px-4 py-3 {isDark
-					? 'border-[#1a253c] bg-[#11192c]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="flex items-center justify-between px-4 h-11 border-b shrink-0 {isDark
+					? 'bg-[#0d1525] border-[#1a253c]'
+					: 'bg-slate-50 border-slate-200'}"
 			>
-				<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
+				<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">
 					Input Data (vCard / CSV / Teks)
 				</span>
 				<span class="text-[11px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">
 					{input ? input.split(/\r?\n/).length : 0} baris
 				</span>
 			</div>
-			<div class="p-3">
-				<textarea
-					bind:value={input}
-					oninput={parseVCard}
-					placeholder="Tempel file .vcf vCard atau teks kontak di sini..."
-					rows={16}
-					class="w-full resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
-						? 'border border-[#1a253c] bg-[#080d1a] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-						: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
-				></textarea>
-			</div>
+			<textarea
+				bind:value={input}
+				oninput={parseVCard}
+				placeholder="Tempel file .vcf vCard atau teks kontak di sini..."
+				class="flex-1 resize-none p-4 text-xs sm:text-sm font-mono outline-none w-full {isDark
+					? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
+					: 'bg-white text-slate-800 placeholder-slate-400'}"
+			></textarea>
 		</div>
 
 		<!-- Right Pane: Output -->
-		<div
-			class="flex flex-col rounded-xl border overflow-hidden {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
+		<div class="flex-1 flex flex-col min-h-[220px] lg:min-h-0">
 			<div
-				class="flex items-center justify-between border-b px-4 py-3 {isDark
-					? 'border-[#1a253c] bg-[#11192c]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="flex items-center justify-between px-4 h-11 border-b shrink-0 {isDark
+					? 'bg-[#0d1525] border-[#1a253c]'
+					: 'bg-slate-50 border-slate-200'}"
 			>
-				<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
+				<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">
 					Hasil Ekstraksi Kontak
 				</span>
 				<span class="text-[11px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">
 					{output ? output.split(/\r?\n/).length : 0} baris
 				</span>
 			</div>
-			<div class="p-3">
-				<textarea
-					value={output}
-					readonly
-					placeholder="Hasil ekstraksi kontak akan muncul di sini..."
-					rows={16}
-					class="w-full resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
-						? 'border border-[#1a253c] bg-[#080d1a] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-						: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
-				></textarea>
-			</div>
+			<textarea
+				value={output}
+				readonly
+				placeholder="Hasil ekstraksi kontak akan muncul di sini..."
+				class="flex-1 resize-none p-4 text-xs sm:text-sm font-mono outline-none w-full {isDark
+					? 'bg-[#08101e] text-slate-300'
+					: 'bg-slate-50 text-slate-700'}"
+			></textarea>
 		</div>
 	</div>
 </div>

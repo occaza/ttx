@@ -401,16 +401,20 @@ lemon`;
 		</div>
 	</div>
 
-	<!-- Dual Pane Editor & Diff View -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+	<!-- Unified Dual Pane Editor & Diff View -->
+	<div
+		class="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border lg:flex-row {isDark
+			? 'border-[#1a253c]'
+			: 'border-slate-200'}"
+	>
 		<!-- Left Pane: File / Text A -->
 		<div
-			class="flex flex-col flex-1 rounded-xl border overflow-hidden {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
+			class="flex flex-col flex-1 min-h-[260px] lg:min-h-0 {isDark
+				? 'border-b lg:border-b-0 lg:border-r border-[#1a253c]'
+				: 'border-b lg:border-b-0 lg:border-r border-slate-200'}"
 		>
 			<div
-				class="flex items-center justify-between border-b px-4 py-3 {isDark
+				class="flex items-center justify-between border-b px-4 h-11 shrink-0 {isDark
 					? 'border-[#1a253c] bg-[#11192c]'
 					: 'border-slate-200 bg-slate-50'}"
 			>
@@ -437,46 +441,40 @@ lemon`;
 				</div>
 			</div>
 
-			<div class="p-3 flex flex-col flex-1">
-				{#if hasCompared && outA.length > 0}
-					<div
-						class="flex-1 min-h-[380px] overflow-y-auto rounded-lg border p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
-							? 'border-[#1a253c] bg-[#080d1a] text-slate-300'
-							: 'border-slate-200 bg-slate-50 text-slate-800'}"
-					>
-						{#each outA as line, idx}
-							<div
-								class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
-									? isDark ? 'bg-rose-950/40 text-rose-300 border-l-2 border-rose-500' : 'bg-rose-50 text-rose-800 border-l-2 border-rose-500'
-									: line.includes('(cocok di')
-										? isDark ? 'bg-emerald-950/20 text-emerald-300' : 'bg-emerald-50 text-emerald-800'
-										: isDark ? 'text-slate-500' : 'text-slate-400'}"
-							>
-								<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
-								<span class="flex-1 break-all">{line || '—'}</span>
-							</div>
-						{/each}
-					</div>
-				{:else}
-					<textarea
-						bind:value={textA}
-						placeholder="Ketik teks A di sini atau klik Unggah File..."
-						class="w-full flex-1 min-h-[360px] resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
-							? 'border border-[#1a253c] bg-[#080d1a] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
-					></textarea>
-				{/if}
-			</div>
+			{#if hasCompared && outA.length > 0}
+				<div
+					class="flex-1 min-h-[360px] overflow-y-auto p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
+						? 'bg-[#080d1a] text-slate-300'
+						: 'bg-slate-50 text-slate-800'}"
+				>
+					{#each outA as line, idx}
+						<div
+							class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
+								? isDark ? 'bg-rose-950/40 text-rose-300 border-l-2 border-rose-500' : 'bg-rose-50 text-rose-800 border-l-2 border-rose-500'
+								: line.includes('(cocok di')
+									? isDark ? 'bg-emerald-950/20 text-emerald-300' : 'bg-emerald-50 text-emerald-800'
+									: isDark ? 'text-slate-500' : 'text-slate-400'}"
+						>
+							<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
+							<span class="flex-1 break-all">{line || '—'}</span>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<textarea
+					bind:value={textA}
+					placeholder="Ketik teks A di sini atau klik Unggah File..."
+					class="w-full flex-1 min-h-[360px] resize-none p-4 font-mono text-xs sm:text-sm outline-none transition-colors {isDark
+						? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
+						: 'bg-white text-slate-800 placeholder-slate-400'}"
+				></textarea>
+			{/if}
 		</div>
 
 		<!-- Right Pane: File / Text B -->
-		<div
-			class="flex flex-col flex-1 rounded-xl border overflow-hidden {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
+		<div class="flex flex-col flex-1 min-h-[260px] lg:min-h-0">
 			<div
-				class="flex items-center justify-between border-b px-4 py-3 {isDark
+				class="flex items-center justify-between border-b px-4 h-11 shrink-0 {isDark
 					? 'border-[#1a253c] bg-[#11192c]'
 					: 'border-slate-200 bg-slate-50'}"
 			>
@@ -503,36 +501,34 @@ lemon`;
 				</div>
 			</div>
 
-			<div class="p-3 flex flex-col flex-1">
-				{#if hasCompared && outB.length > 0}
-					<div
-						class="flex-1 min-h-[380px] overflow-y-auto rounded-lg border p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
-							? 'border-[#1a253c] bg-[#080d1a] text-slate-300'
-							: 'border-slate-200 bg-slate-50 text-slate-800'}"
-					>
-						{#each outB as line, idx}
-							<div
-								class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
-									? isDark ? 'bg-purple-950/40 text-purple-300 border-l-2 border-purple-500' : 'bg-purple-50 text-purple-800 border-l-2 border-purple-500'
-									: line
-										? isDark ? 'bg-emerald-950/20 text-emerald-300' : 'bg-emerald-50 text-emerald-800'
-										: isDark ? 'text-slate-500' : 'text-slate-400'}"
-							>
-								<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
-								<span class="flex-1 break-all">{line || '—'}</span>
-							</div>
-						{/each}
-					</div>
-				{:else}
-					<textarea
-						bind:value={textB}
-						placeholder="Ketik teks B di sini atau klik Unggah File..."
-						class="w-full flex-1 min-h-[360px] resize-none rounded-lg p-3 font-mono text-xs outline-none transition-all {isDark
-							? 'border border-[#1a253c] bg-[#080d1a] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
-					></textarea>
-				{/if}
-			</div>
+			{#if hasCompared && outB.length > 0}
+				<div
+					class="flex-1 min-h-[380px] overflow-y-auto p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
+						? 'bg-[#080d1a] text-slate-300'
+						: 'bg-slate-50 text-slate-800'}"
+				>
+					{#each outB as line, idx}
+						<div
+							class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
+								? isDark ? 'bg-purple-950/40 text-purple-300 border-l-2 border-purple-500' : 'bg-purple-50 text-purple-800 border-l-2 border-purple-500'
+								: line
+									? isDark ? 'bg-emerald-950/20 text-emerald-300' : 'bg-emerald-50 text-emerald-800'
+									: isDark ? 'text-slate-500' : 'text-slate-400'}"
+						>
+							<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
+							<span class="flex-1 break-all">{line || '—'}</span>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<textarea
+					bind:value={textB}
+					placeholder="Ketik teks B di sini atau klik Unggah File..."
+					class="w-full flex-1 min-h-[360px] resize-none p-4 font-mono text-xs sm:text-sm outline-none transition-colors {isDark
+						? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
+						: 'bg-white text-slate-800 placeholder-slate-400'}"
+				></textarea>
+			{/if}
 		</div>
 	</div>
 </div>
