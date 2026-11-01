@@ -89,7 +89,7 @@
 		aria-hidden="true"
 	></div>
 
-	<div class="relative mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+	<div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 		<!-- HEADER -->
 		<div
 			class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs mb-8 transition-colors"
@@ -101,7 +101,7 @@
 					{initials}
 				</div>
 				<div>
-					<div class="flex items-center gap-2 flex-wrap">
+					<div class="flex items-center gap-2.5 flex-wrap">
 						<h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--ttx-text-main)]">
 							{displayName}
 						</h1>
