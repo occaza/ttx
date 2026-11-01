@@ -108,7 +108,7 @@ Line 10: Juliet`);
 	<div class="flex flex-col gap-4 lg:flex-row flex-1 min-h-[520px] lg:min-h-[calc(100dvh-13.5rem)]">
 		<!-- Left Settings Panel -->
 		<div
-			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-64 lg:shrink-0 lg:h-full {isDark
+			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 lg:h-full {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white'}"
 		>

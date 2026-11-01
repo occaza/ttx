@@ -58,7 +58,7 @@
 	const lineCount = $derived(input ? input.split(/\r?\n/).length : 0);
 </script>
 
-<div class="flex flex-col gap-5 flex-1">
+<div class="flex flex-1 flex-col gap-5">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
@@ -77,17 +77,17 @@
 	</div>
 
 	<!-- Main layout -->
-	<div class="flex flex-col gap-4 lg:flex-row flex-1">
+	<div class="flex flex-1 flex-col gap-4 lg:flex-row">
 		<!-- Options panel -->
 		<div
-			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-52 lg:shrink-0 {isDark
+			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white'}"
 		>
 			<!-- Sort Order -->
 			<div>
 				<p
-					class="mb-2 text-[10px] font-bold uppercase tracking-wider {isDark
+					class="mb-2 text-[10px] font-bold tracking-wider uppercase {isDark
 						? 'text-slate-500'
 						: 'text-slate-400'}"
 				>
@@ -130,7 +130,7 @@
 			<!-- Options -->
 			<div class="space-y-3">
 				<p
-					class="text-[10px] font-bold uppercase tracking-wider {isDark
+					class="text-[10px] font-bold tracking-wider uppercase {isDark
 						? 'text-slate-500'
 						: 'text-slate-400'}"
 				>
@@ -148,9 +148,7 @@
 						<span class="text-xs font-medium {isDark ? 'text-slate-300' : 'text-slate-700'}"
 							>Case Sensitive</span
 						>
-						<p class="text-[10px] {isDark ? 'text-slate-600' : 'text-slate-400'}">
-							A ≠ a
-						</p>
+						<p class="text-[10px] {isDark ? 'text-slate-600' : 'text-slate-400'}">A ≠ a</p>
 					</div>
 				</label>
 				<label class="flex cursor-pointer items-center gap-2">
@@ -177,7 +175,7 @@
 			<!-- Upload -->
 			<div>
 				<p
-					class="mb-2 text-[10px] font-bold uppercase tracking-wider {isDark
+					class="mb-2 text-[10px] font-bold tracking-wider uppercase {isDark
 						? 'text-slate-500'
 						: 'text-slate-400'}"
 				>
@@ -232,7 +230,7 @@
 						: 'border-slate-200 bg-slate-50'}"
 				>
 					<span
-						class="text-[10px] font-bold uppercase tracking-wider {isDark
+						class="text-[10px] font-bold tracking-wider uppercase {isDark
 							? 'text-slate-500'
 							: 'text-slate-400'}"
 					>
@@ -267,14 +265,14 @@
 			</div>
 
 			<!-- Output -->
-			<div class="flex flex-1 flex-col min-h-[180px] sm:min-h-0">
+			<div class="flex min-h-[180px] flex-1 flex-col sm:min-h-0">
 				<div
 					class="flex h-11 shrink-0 items-center justify-between border-b px-4 {isDark
 						? 'border-[#1a253c] bg-[#0d1525]'
 						: 'border-slate-200 bg-slate-50'}"
 				>
 					<span
-						class="text-[10px] font-bold uppercase tracking-wider {isDark
+						class="text-[10px] font-bold tracking-wider uppercase {isDark
 							? 'text-slate-500'
 							: 'text-slate-400'}"
 					>
@@ -323,4 +321,3 @@
 		</div>
 	</div>
 </div>
-

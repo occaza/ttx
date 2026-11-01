@@ -133,7 +133,7 @@
 	<div class="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
 		<!-- Case selector panel -->
 		<div
-			class="w-full lg:w-52 shrink-0 flex flex-col gap-4 rounded-xl border p-4 {isDark
+			class="w-full lg:w-72 shrink-0 flex flex-col gap-4 rounded-xl border p-4 {isDark
 				? 'bg-[#0d1525] border-[#1a253c]'
 				: 'bg-white border-slate-200'}"
 		>

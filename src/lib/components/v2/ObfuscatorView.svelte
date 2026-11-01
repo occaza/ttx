@@ -186,7 +186,7 @@ hitungTotal(150000, 3);`);
 	<div class="flex flex-col gap-4 lg:flex-row flex-1">
 		<!-- Left Settings Panel -->
 		<div
-			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-64 lg:shrink-0 {isDark
+			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 {isDark
 				? 'border-[#1a253c] bg-[#0d1525]'
 				: 'border-slate-200 bg-white'}"
 		>
