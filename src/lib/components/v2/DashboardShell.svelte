@@ -116,7 +116,28 @@
 		'SECURITY & MISC': tools.filter((t) => t.category === 'Security & Misc')
 	};
 
-	let selectedCategory = $state('ALL TOOLS');
+	function getInitialCategory(): { selected: string; open: string | null } {
+		if (initialTool) {
+			const current = tools.find(
+				(t) =>
+					EMBEDDED_TOOLS[t.href] === initialTool ||
+					EMBEDDED_TOOLS[t.href.split('?')[0]] === initialTool ||
+					t.href.replace('/', '') === initialTool ||
+					((initialTool === 'shared-notepad' || initialTool === 'notepad') &&
+						(t.href === '/notepad' || t.href === '/shared-notepad'))
+			);
+			if (current) {
+				const catKey = current.category.toUpperCase();
+				if (categories.includes(catKey)) {
+					return { selected: catKey, open: catKey };
+				}
+			}
+		}
+		return { selected: 'ALL TOOLS', open: null };
+	}
+
+	const initCat = getInitialCategory();
+	let selectedCategory = $state(initCat.selected);
 	let searchQuery = $state('');
 	let searchInputEl: HTMLInputElement | null = $state(null);
 	let mainScrollContainer: HTMLElement | null = $state(null);
@@ -139,7 +160,7 @@
 	let user = $derived($page.data.user);
 
 	// Active open dropdown category (only one category open at a time)
-	let openCategory: string | null = $state(null);
+	let openCategory: string | null = $state(initCat.open);
 
 	function toggleDropdown(cat: string) {
 		selectedCategory = cat;
@@ -191,12 +212,16 @@
 				(t) =>
 					EMBEDDED_TOOLS[t.href] === activeTool ||
 					EMBEDDED_TOOLS[t.href.split('?')[0]] === activeTool ||
-					t.href.replace('/', '') === activeTool
+					t.href.replace('/', '') === activeTool ||
+					((activeTool === 'shared-notepad' || activeTool === 'notepad') &&
+						(t.href === '/notepad' || t.href === '/shared-notepad'))
 			);
 			if (current) {
 				const catKey = current.category.toUpperCase();
-				if (categories.includes(catKey) && openCategory === null) {
-					openCategory = catKey;
+				if (categories.includes(catKey)) {
+					if (openCategory === null) {
+						openCategory = catKey;
+					}
 					selectedCategory = catKey;
 				}
 			}
@@ -329,6 +354,16 @@
 		} else {
 			goto(href);
 		}
+	}
+
+	function isToolActive(href: string): boolean {
+		if (!activeTool) return false;
+		const cleanHref = href.split('?')[0].replace('/', '');
+		const embeddedKey = EMBEDDED_TOOLS[href] || EMBEDDED_TOOLS[href.split('?')[0]];
+		if (activeTool === 'shared-notepad' || activeTool === 'notepad') {
+			return cleanHref === 'notepad' || cleanHref === 'shared-notepad' || href === '/notepad';
+		}
+		return cleanHref === activeTool || embeddedKey === activeTool;
 	}
 </script>
 
@@ -594,10 +629,11 @@
 					{:else}
 						{@const isOpen = openCategory === category}
 						{@const items = categoryItems[category] || []}
+						{@const isCategoryActive = selectedCategory === category || (Boolean(activeTool) && items.some((it) => isToolActive(it.href)))}
 						<div class="space-y-1">
 							<button
 								type="button"
-								class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all group {selectedCategory === category
+								class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-all group {isCategoryActive
 									? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] border border-[var(--ttx-accent)]/30'
 									: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
 								onclick={() => toggleDropdown(category)}
@@ -613,8 +649,7 @@
 							{#if isOpen}
 								<div class="ml-3 pl-3 border-l py-1 space-y-0.5 border-[var(--ttx-border-base)]">
 									{#each items as item}
-										{@const cleanItemHref = item.href.split('?')[0].replace('/', '')}
-										{@const isItemActive = Boolean(activeTool && cleanItemHref === activeTool)}
+										{@const isItemActive = isToolActive(item.href)}
 										<button
 											type="button"
 											class="w-full flex items-center justify-between py-1.5 px-2 rounded-md text-xs transition-colors text-left {isItemActive
