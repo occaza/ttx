@@ -81,19 +81,21 @@
 	<title>Masuk - TEXY</title>
 </svelte:head>
 
-<div class="min-h-[100dvh] w-full flex flex-col justify-between bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)] transition-colors">
+<div
+	class="flex min-h-[100dvh] w-full flex-col justify-between bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)] transition-colors"
+>
 	<!-- Top Bar -->
-	<header class="w-full max-w-4xl mx-auto px-4 py-4 flex items-center justify-between text-xs">
+	<header class="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4 text-xs">
 		<a
 			href="/"
-			class="text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] transition-colors"
+			class="text-[var(--ttx-text-muted)] transition-colors hover:text-[var(--ttx-text-main)]"
 		>
 			← Beranda
 		</a>
 
 		<button
 			type="button"
-			class="px-2 py-1 rounded border border-[var(--ttx-border-base)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] transition-colors"
+			class="rounded border border-[var(--ttx-border-base)] px-2 py-1 text-[var(--ttx-text-muted)] transition-colors hover:text-[var(--ttx-text-main)]"
 			onclick={toggleTheme}
 		>
 			{isDark ? 'Mode Terang' : 'Mode Gelap'}
@@ -101,24 +103,28 @@
 	</header>
 
 	<!-- Main Container -->
-	<main class="flex-1 flex items-center justify-center px-4 py-8">
+	<main class="flex flex-1 items-center justify-center px-4 py-8">
 		<div class="w-full max-w-sm">
-			<div class="rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-6 sm:p-7">
+			<div
+				class="rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-6 sm:p-7"
+			>
 				<h1 class="text-lg font-semibold text-[var(--ttx-text-main)]">Masuk</h1>
-				<p class="text-xs text-[var(--ttx-text-muted)] mt-1">
+				<p class="mt-1 text-xs text-[var(--ttx-text-muted)]">
 					Belum punya akun?
 					<a href="/register" class="text-blue-500 hover:underline">Daftar sekarang</a>
 				</p>
 
 				{#if errorMsg}
-					<div class="mt-4 p-3 rounded-lg border border-red-500/20 bg-red-500/10 text-red-400 text-xs">
+					<div
+						class="mt-4 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400"
+					>
 						{errorMsg}
 					</div>
 				{/if}
 
 				<form onsubmit={handleLogin} class="mt-5 space-y-4">
 					<div>
-						<label for="email" class="block text-xs font-medium text-[var(--ttx-text-main)] mb-1.5">
+						<label for="email" class="mb-1.5 block text-xs font-medium text-[var(--ttx-text-main)]">
 							Email
 						</label>
 						<input
@@ -126,17 +132,20 @@
 							type="email"
 							bind:value={email}
 							placeholder="nama@email.com"
-							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+							class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-colors focus:border-blue-500 focus:outline-none"
 							required
 						/>
 					</div>
 
 					<div>
-						<div class="flex items-center justify-between mb-1.5">
+						<div class="mb-1.5 flex items-center justify-between">
 							<label for="password" class="block text-xs font-medium text-[var(--ttx-text-main)]">
 								Password
 							</label>
-							<a href="/forgot-password" class="text-xs text-[var(--ttx-text-muted)] hover:text-blue-500 hover:underline">
+							<a
+								href="/forgot-password"
+								class="text-xs text-[var(--ttx-text-muted)] hover:text-blue-500 hover:underline"
+							>
 								Lupa password?
 							</a>
 						</div>
@@ -146,12 +155,12 @@
 								type={showPassword ? 'text' : 'password'}
 								bind:value={password}
 								placeholder="••••••••"
-								class="w-full h-10 pl-3 pr-16 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+								class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] pr-16 pl-3 text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-colors focus:border-blue-500 focus:outline-none"
 								required
 							/>
 							<button
 								type="button"
-								class="absolute inset-y-0 right-0 px-2.5 flex items-center text-xs text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)]"
+								class="absolute inset-y-0 right-0 flex items-center px-2.5 text-xs text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)]"
 								onclick={() => (showPassword = !showPassword)}
 							>
 								{showPassword ? 'Sembunyikan' : 'Lihat'}
@@ -161,7 +170,7 @@
 
 					<button
 						type="submit"
-						class="w-full h-10 rounded-lg text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer"
+						class="h-10 w-full cursor-pointer rounded-lg bg-blue-600 text-xs font-medium text-white transition-colors hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50"
 						disabled={loading || googleLoading}
 					>
 						{loading ? 'Memproses...' : 'Masuk'}
@@ -179,7 +188,7 @@
 
 				<button
 					type="button"
-					class="w-full h-10 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] hover:bg-[var(--ttx-bg-hover)] text-xs font-medium text-[var(--ttx-text-main)] transition-colors disabled:opacity-50 cursor-pointer"
+					class="h-10 w-full cursor-pointer rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-medium text-[var(--ttx-text-main)] transition-colors hover:bg-[var(--ttx-bg-hover)] disabled:opacity-50"
 					onclick={() => handleOAuthLogin('google')}
 					disabled={googleLoading || loading}
 				>
@@ -189,7 +198,7 @@
 		</div>
 	</main>
 
-	<footer class="w-full text-center py-4 text-xs text-[var(--ttx-text-dim)]">
+	<footer class="w-full py-4 text-center text-xs text-[var(--ttx-text-dim)]">
 		&copy; {new Date().getFullYear()} TEXY
 	</footer>
 </div>
