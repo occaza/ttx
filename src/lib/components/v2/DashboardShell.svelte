@@ -583,7 +583,8 @@
 							{#if isOpen}
 								<div class="ml-3 pl-3 border-l py-1 space-y-0.5 border-[var(--ttx-border-base)]">
 									{#each items as item}
-										{@const isItemActive = Boolean(activeTool && (EMBEDDED_TOOLS[item.href] === activeTool || EMBEDDED_TOOLS[item.href.split('?')[0]] === activeTool || item.href.replace('/', '') === activeTool))}
+										{@const cleanItemHref = item.href.split('?')[0].replace('/', '')}
+										{@const isItemActive = Boolean(activeTool && cleanItemHref === activeTool)}
 										<button
 											type="button"
 											class="w-full flex items-center justify-between py-1.5 px-2 rounded-md text-xs transition-colors text-left {isItemActive
