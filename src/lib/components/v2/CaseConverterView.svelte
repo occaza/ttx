@@ -109,7 +109,7 @@
 	];
 </script>
 
-<div class="flex flex-col gap-5 h-full">
+<div class="flex flex-col gap-5 flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
