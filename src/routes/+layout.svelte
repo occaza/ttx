@@ -16,15 +16,14 @@
 	let isLoading: boolean = $state(false); // Tidak perlu loading lama karena data user dari SSR
 
 	const standaloneToolPaths = new Set(
-		tools
-			.filter((t) => t.href !== '/notepad')
-			.map((t) => t.href.split('?')[0])
+		tools.map((t) => t.href.split('?')[0])
 	);
 
 	let hideGlobalNav = $derived(
 		Boolean($page.error) ||
 		$page.url.pathname === '/' ||
 		$page.url.pathname.startsWith('/v2') ||
+		$page.url.pathname.startsWith('/notepad') ||
 		$page.url.pathname.startsWith('/notepad2') ||
 		$page.url.pathname.startsWith('/login') ||
 		$page.url.pathname.startsWith('/register') ||
@@ -35,18 +34,22 @@
 		$page.url.pathname.startsWith('/data-deletion') ||
 		standaloneToolPaths.has($page.url.pathname)
 	);
-	let supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
-
 	$effect(() => {
 		// Sinkronisasi data user dari SSR ketika terjadi navigasi
 		authenticatedUser = data.user ?? null;
 	});
 
 	onMount(() => {
+		const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 		const {
 			data: { subscription }
 		} = supabase.auth.onAuthStateChange((event, _session) => {
-			if (event === 'SIGNED_OUT' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+			if (
+				event === 'SIGNED_OUT' ||
+				event === 'SIGNED_IN' ||
+				event === 'TOKEN_REFRESHED' ||
+				event === 'INITIAL_SESSION'
+			) {
 				invalidate('supabase:auth');
 			}
 		});

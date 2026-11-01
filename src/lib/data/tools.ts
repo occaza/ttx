@@ -2,7 +2,7 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode, NotebookPen
 } from '@lucide/svelte';
 
 export const tools = [
@@ -23,6 +23,7 @@ export const tools = [
     { title: 'File Comparation', desc: 'Bandingkan dua file dan temukan perbedaannya.', href: '/files-comparation', icon: FileCode, category: 'Data & Parsing' },
     { title: 'CSV/VCard Parser', desc: 'Ekstrak data dari file VCard atau CSV.', href: '/csv-parser', icon: Table, category: 'Data & Parsing' },
 
+    { title: 'Shared Notepad', desc: 'Catatan online bersama dengan tautan unik dan enkripsi.', href: '/notepad', icon: NotebookPen, category: 'General Utilities' },
     { title: 'QR Code Generator', desc: 'Buat kode QR kustom untuk URL, teks, dan Wi-Fi.', href: '/qr-generator', icon: QrCode, category: 'General Utilities' },
     { title: 'Emoji Browser', desc: 'Cari dan salin emoji dengan mudah.', href: '/emoji-picker', icon: Smile, category: 'General Utilities' },
     { title: 'Page Identifier', desc: 'Identifikasi halaman dan query parameter.', href: '/pageid?id=Demo', icon: Map, category: 'General Utilities' },

@@ -40,8 +40,15 @@
 	import PrivacyPolicyView from '$lib/components/v2/PrivacyPolicyView.svelte';
 	import DisclaimerView from '$lib/components/v2/DisclaimerView.svelte';
 	import DataDeletionView from '$lib/components/v2/DataDeletionView.svelte';
+	import SharedNotepadView from '$lib/components/v2/SharedNotepadView.svelte';
 
-	let { initialTool = null }: { initialTool?: string | null } = $props();
+	let {
+		initialTool = null,
+		notepadData = null
+	}: {
+		initialTool?: string | null;
+		notepadData?: any;
+	} = $props();
 
 	// Map of tool hrefs that have an embedded in-page panel
 	const EMBEDDED_TOOLS: Record<string, string> = {
@@ -69,7 +76,9 @@
 		'/markdown-preview': 'markdown-editor',
 		'/privacy-policy': 'privacy-policy',
 		'/disclaimer': 'disclaimer',
-		'/data-deletion': 'data-deletion'
+		'/data-deletion': 'data-deletion',
+		'/shared-notepad': 'shared-notepad',
+		'/notepad': 'shared-notepad'
 	};
 
 	let internalTool = $state<string | null>(initialTool);
@@ -277,6 +286,7 @@
 		if (activeTool === 'privacy-policy') return 'Kebijakan Privasi - TEXY Workspace';
 		if (activeTool === 'disclaimer') return 'Disclaimer - TEXY Workspace';
 		if (activeTool === 'data-deletion') return 'Penghapusan Data - TEXY Workspace';
+		if (activeTool === 'shared-notepad' || activeTool === 'notepad') return 'Shared Notepad - TEXY Workspace';
 		const current = tools.find((t) => t.href.split('?')[0].replace('/', '') === activeTool);
 		if (current) {
 			return `${current.title} - TEXY Workspace`;
@@ -284,9 +294,29 @@
 		return 'TEXY Workspace - Kumpulan Tools Teks & Utilitas';
 	});
 
+	const isDocumentPage = $derived(
+		activeTool === 'privacy-policy' ||
+		activeTool === 'disclaimer' ||
+		activeTool === 'data-deletion'
+	);
+
 	function openTool(href: string) {
 		const cleanHref = href.split('?')[0];
 		const queryString = href.includes('?') ? '?' + href.split('?')[1] : '';
+
+		if (cleanHref === '/notepad' || cleanHref === '/shared-notepad') {
+			if (notepadData && internalTool !== 'shared-notepad') {
+				internalTool = 'shared-notepad';
+				if (browser && window.location.pathname !== `/notepad/${notepadData.slug}`) {
+					window.history.pushState({ tool: 'shared-notepad' }, '', `/notepad/${notepadData.slug}`);
+				}
+				mainScrollContainer?.scrollTo({ top: 0, behavior: 'instant' });
+				return;
+			}
+			goto('/notepad');
+			return;
+		}
+
 		const embeddedKey = EMBEDDED_TOOLS[href] || EMBEDDED_TOOLS[cleanHref];
 		if (embeddedKey) {
 			internalTool = embeddedKey;
@@ -611,13 +641,20 @@
 					<p class="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 						Quick Links
 					</p>
-					<a
-						href="/notepad"
-						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
+					<button
+						type="button"
+						onclick={() => { isSidebarOpen = false; openTool('/notepad'); }}
+						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors text-left {activeTool === 'shared-notepad' || activeTool === 'notepad'
+							? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] font-semibold'
+							: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
 					>
 						<span>Shared Notepad</span>
-						<ExternalLink size={13} class="opacity-40" />
-					</a>
+						{#if activeTool === 'shared-notepad' || activeTool === 'notepad'}
+							<span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+						{:else}
+							<ExternalLink size={13} class="opacity-40" />
+						{/if}
+					</button>
 					<a
 						href="/notepad2"
 						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
@@ -683,7 +720,9 @@
 		<!-- MAIN SCROLL CONTAINER: spans from sidebar to screen edge with scrollbar on the far right -->
 		<div
 			bind:this={mainScrollContainer}
-			class="flex-1 flex items-start min-w-0 h-full overflow-y-auto overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
+			class="flex-1 flex items-start min-w-0 h-full {activeTool && !isDocumentPage
+				? 'overflow-hidden'
+				: 'overflow-y-auto'} overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
 			style="--scrollbar-thumb: var(--ttx-scrollbar); --scrollbar-thumb-hover: var(--ttx-scrollbar-hover);"
 		>
 			<!-- LEFT DIAGONAL STRIPED GUTTER (Sticky, stays locked full height while scrolling) -->
@@ -694,7 +733,11 @@
 			></div>
 
 			<!-- MAIN CONTENT CARDS -->
-			<div class="flex-1 min-w-0 min-h-full flex flex-col px-3.5 py-5 sm:px-8 sm:py-8 lg:px-10">
+			<div
+				class="flex-1 min-w-0 {activeTool && !isDocumentPage
+					? 'h-full max-h-full overflow-hidden'
+					: 'min-h-full'} flex flex-col px-3.5 py-4 sm:px-8 sm:py-6 lg:px-10"
+			>
 			{#if activeTool}
 				<!-- IN-PAGE TOOL PANEL -->
 				{#if activeTool === 'qr-generator'}
@@ -739,6 +782,8 @@
 					<EmojiPickerView {isDark} />
 				{:else if activeTool === 'pageid'}
 					<PageIdView {isDark} />
+				{:else if activeTool === 'shared-notepad' || activeTool === 'notepad'}
+					<SharedNotepadView {isDark} data={notepadData} />
 				{:else if activeTool === 'privacy-policy'}
 					<PrivacyPolicyView {isDark} onBack={goHome} />
 				{:else if activeTool === 'disclaimer'}
