@@ -553,41 +553,13 @@
 				</p>
 			</div>
 		</div>
-
-		<!-- Action bar atas -->
-		<div class="flex items-center gap-2 self-start sm:self-auto">
-			<button
-				type="button"
-				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
-				onclick={() => scrollToTab('settings')}
-				title="Buka Pengaturan"
-			>
-				<Sliders size={14} class="text-[var(--ttx-accent-text)]" />
-				<span>Pengaturan</span>
-			</button>
-
-			<button
-				type="button"
-				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-xs font-semibold text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all"
-				onclick={() => (soundEnabled = !soundEnabled)}
-				title={soundEnabled ? 'Matikan Suara' : 'Aktifkan Suara'}
-			>
-				{#if soundEnabled}
-					<Volume2 size={14} class="text-emerald-400" />
-					<span>Suara On</span>
-				{:else}
-					<VolumeX size={14} class="text-rose-400" />
-					<span>Suara Off</span>
-				{/if}
-			</button>
-		</div>
 	</div>
 
 	<!-- MAIN WORKSPACE -->
-	<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+	<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:items-stretch flex-1">
 		<!-- KIRI / TENGAH: WHEEL CANVAS (7 COLS) -->
 		<div
-			class="lg:col-span-7 flex flex-col items-center justify-center p-5 sm:p-8 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden"
+			class="lg:col-span-7 flex flex-col items-center justify-between p-6 sm:p-8 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden h-full"
 		>
 			<!-- Confetti canvas overlay -->
 			<canvas
@@ -716,12 +688,12 @@
 			</div>
 
 			<!-- TAB CONTENT -->
-			<div class="p-4 sm:p-5 flex-1 flex flex-col min-h-[340px]">
+			<div class="p-4 sm:p-5 flex-1 flex flex-col min-h-0">
 				<!-- TAB 1: DAFTAR OPSI -->
 				{#if activeTab === 'options'}
-					<div class="flex flex-col gap-4">
+					<div class="flex flex-col gap-4 flex-1 h-full min-h-0 justify-between">
 						<!-- Preset Cepat -->
-						<div class="flex flex-col gap-2">
+						<div class="flex flex-col gap-2 shrink-0">
 							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
 								Preset Siap Pakai:
 							</span>
@@ -739,11 +711,11 @@
 							</div>
 						</div>
 
-						<div class="h-px bg-[var(--ttx-border-subtle)]"></div>
+						<div class="h-px bg-[var(--ttx-border-subtle)] shrink-0"></div>
 
 						<!-- Input Textarea & Toolbar -->
-						<div class="flex flex-col gap-2.5">
-							<div class="flex items-center justify-between">
+						<div class="flex flex-col gap-2.5 flex-1 min-h-0">
+							<div class="flex items-center justify-between shrink-0">
 								<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
 									Ketik / Tempel Opsi:
 								</span>
@@ -775,10 +747,9 @@
 								bind:value={rawInput}
 								disabled={isSpinning}
 								placeholder="Tulis opsi di sini, satu baris untuk satu opsi...&#10;&#10;Contoh:&#10;Pilihan A&#10;Pilihan B&#10;Pilihan C"
-								rows={8}
-								class="w-full p-3.5 text-sm sm:text-base font-sans rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] resize-y leading-relaxed transition-all min-h-[160px]"
+								class="w-full flex-1 min-h-[220px] p-3.5 text-sm sm:text-base font-sans rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] resize-none leading-relaxed transition-all"
 							></textarea>
-							<p class="text-xs text-[var(--ttx-text-muted)]">
+							<p class="text-xs text-[var(--ttx-text-muted)] shrink-0">
 								Total: <strong class="text-[var(--ttx-text-main)] font-mono">{items.length} opsi</strong> aktif di roda putar.
 							</p>
 						</div>
@@ -786,7 +757,7 @@
 
 				<!-- TAB 2: PENGATURAN (SETTINGS) - Didesain khusus terbaca jelas di HP -->
 				{:else if activeTab === 'settings'}
-					<div class="flex flex-col gap-4">
+					<div class="flex flex-col gap-4 flex-1 h-full min-h-0 justify-start">
 						<!-- Card 1: Durasi Putaran -->
 						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] p-4 flex flex-col gap-3 shadow-xs">
 							<div class="flex items-center justify-between">
@@ -907,8 +878,8 @@
 
 				<!-- TAB 3: RIWAYAT PEMENANG -->
 				{:else if activeTab === 'history'}
-					<div class="flex flex-col gap-3">
-						<div class="flex items-center justify-between">
+					<div class="flex flex-col gap-3 flex-1 h-full min-h-0">
+						<div class="flex items-center justify-between shrink-0">
 							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
 								Riwayat Putaran ({history.length})
 							</span>
@@ -942,13 +913,13 @@
 						</div>
 
 						{#if history.length === 0}
-							<div class="flex flex-col items-center justify-center py-12 text-center text-[var(--ttx-text-muted)]">
+							<div class="flex flex-col items-center justify-center flex-1 py-12 text-center text-[var(--ttx-text-muted)]">
 								<History size={32} class="opacity-30 mb-2" />
 								<p class="text-sm font-medium">Belum ada riwayat putaran.</p>
 								<p class="text-xs text-[var(--ttx-text-dim)] mt-0.5">Hasil pemenang akan dicatat otomatis di sini.</p>
 							</div>
 						{:else}
-							<div class="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+							<div class="flex flex-col gap-2 flex-1 min-h-[220px] overflow-y-auto pr-1">
 								{#each history as item, index}
 									<div
 										class="flex items-center justify-between p-3 rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] shadow-xs"
