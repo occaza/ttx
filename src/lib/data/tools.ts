@@ -2,7 +2,7 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode, NotebookPen
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode, NotebookPen, FerrisWheel
 } from '@lucide/svelte';
 
 export const tools = [
@@ -20,6 +20,7 @@ export const tools = [
 
     { title: 'Word Counter & Stats', desc: 'Hitung kata, karakter, dan statistik teks.', href: '/word-counter', icon: ChartBar, category: 'Data & Parsing' },
     { title: 'Line Counter', desc: 'Hitung jumlah baris dalam dokumen.', href: '/lines-counter', icon: List, category: 'Data & Parsing' },
+    { title: 'Multi Counter & Tally', desc: 'Penghitung traffic, item, atau pengunjung dengan multi-kategori.', href: '/multi-counter', icon: List, category: 'Data & Parsing' },
     { title: 'File Comparation', desc: 'Bandingkan dua file dan temukan perbedaannya.', href: '/files-comparation', icon: FileCode, category: 'Data & Parsing' },
     { title: 'CSV/VCard Parser', desc: 'Ekstrak data dari file VCard atau CSV.', href: '/csv-parser', icon: Table, category: 'Data & Parsing' },
 
@@ -28,7 +29,8 @@ export const tools = [
     { title: 'Emoji Browser', desc: 'Cari dan salin emoji dengan mudah.', href: '/emoji-picker', icon: Smile, category: 'General Utilities' },
     { title: 'Page Identifier', desc: 'Identifikasi halaman dan query parameter.', href: '/pageid?id=Demo', icon: Map, category: 'General Utilities' },
     { title: 'Percentage Calculator', desc: 'Perhitungan persentase praktis dan cepat.', href: '/percentage-calculator', icon: Percent, category: 'General Utilities' },
-    { title: 'Multi Counter & Tally', desc: 'Penghitung traffic, item, atau pengunjung dengan multi-kategori.', href: '/multi-counter', icon: List, category: 'General Utilities' },
+
+    { title: 'Lucky Spin Wheel', desc: 'Roda putar keberuntungan untuk undian, arisan, dan pilihan acak.', href: '/lucky-spin', icon: FerrisWheel, category: 'Mini Games' },
 
     { title: 'JS Obfuscator', desc: 'Lindungi JavaScript Anda dari reverse engineering.', href: '/obfuscate', icon: Lock, category: 'Security & Misc' },
     { title: 'Random Number', desc: 'Buat angka acak sesuai kebutuhan.', href: '/random-number-generator', icon: Shuffle, category: 'Security & Misc' }

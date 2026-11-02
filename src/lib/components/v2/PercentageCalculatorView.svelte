@@ -122,17 +122,15 @@
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
-			class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-				: 'border-blue-200 bg-blue-50 text-blue-600'}"
+			class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]"
 		>
 			<Percent size={18} />
 		</div>
 		<div>
-			<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
+			<h1 class="text-base font-bold text-[var(--ttx-text-main)]">
 				Percentage Calculator
 			</h1>
-			<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
+			<p class="text-xs text-[var(--ttx-text-muted)]">
 				Kalkulator berbagai perhitungan persentase, diskon belanja, pajak, dan perubahan nilai
 			</p>
 		</div>
@@ -142,12 +140,10 @@
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 		<!-- Card 5: Diskon Harga (Single) -->
 		<div
-			class="rounded-xl border p-4 sm:p-5 transition-colors {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white shadow-xs'}"
+			class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 transition-colors shadow-xs"
 		>
 			<div class="mb-3 flex items-center justify-between">
-				<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+				<h3 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 					Hitung Diskon Harga
 				</h3>
 				<button
@@ -156,9 +152,7 @@
 						c5_x_str = '';
 						c5_y = null;
 					}}
-					class="flex items-center gap-1 text-[11px] font-medium {isDark
-						? 'text-slate-500 hover:text-rose-400'
-						: 'text-slate-400 hover:text-rose-600'}"
+					class="flex items-center gap-1 text-[11px] font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 transition-colors"
 				>
 					<RotateCcw size={12} /> Reset
 				</button>
@@ -168,7 +162,7 @@
 				<div class="sm:col-span-7">
 					<label
 						for="discount-original-price"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Harga Awal (Rp)</label
 					>
 					<input
@@ -177,16 +171,14 @@
 						value={c5_x_str}
 						oninput={(e) => (c5_x_str = formatInputCurrency(e.currentTarget.value))}
 						placeholder="contoh: 250.000"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 
 				<div class="sm:col-span-5">
 					<label
 						for="discount-percentage"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Diskon (%)</label
 					>
 					<div class="relative">
@@ -195,14 +187,10 @@
 							type="number"
 							bind:value={c5_y}
 							placeholder="contoh: 20"
-							class="h-9 w-full rounded-lg px-3 pr-7 font-mono text-xs outline-none {isDark
-								? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-								: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+							class="h-9 w-full rounded-lg px-3 pr-7 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 						/>
 						<span
-							class="pointer-events-none absolute right-2.5 top-2.5 text-xs font-mono {isDark
-								? 'text-slate-500'
-								: 'text-slate-400'}">%</span
+							class="pointer-events-none absolute right-2.5 top-2.5 text-xs font-mono text-[var(--ttx-text-dim)]">%</span
 						>
 					</div>
 				</div>
@@ -210,28 +198,22 @@
 
 			<!-- Result Box -->
 			<div
-				class="mt-3 grid grid-cols-2 gap-3 rounded-lg border p-3 {isDark
-					? 'border-[#1b2742] bg-[#10192e]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="mt-3 grid grid-cols-2 gap-3 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-3"
 			>
 				<div>
-					<span class="block text-[10px] font-bold uppercase tracking-wider text-rose-400"
+					<span class="block text-[10px] font-bold uppercase tracking-wider text-rose-500"
 						>Hemat (Potongan)</span
 					>
-					<span class="font-mono text-base font-bold text-rose-400"
+					<span class="font-mono text-base font-bold text-rose-500"
 						>-Rp {formatCurrency(c5_cut)}</span
 					>
 				</div>
 				<div class="text-right">
 					<span
-						class="block text-[10px] font-bold uppercase tracking-wider {isDark
-							? 'text-blue-400'
-							: 'text-blue-600'}">Harga Akhir</span
+						class="block text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-accent-text)]">Harga Akhir</span
 					>
 					<span
-						class="font-mono text-lg font-black {isDark
-							? 'text-emerald-400'
-							: 'text-emerald-600'}">Rp {formatCurrency(c5_result)}</span
+						class="font-mono text-lg font-black text-emerald-500">Rp {formatCurrency(c5_result)}</span
 					>
 				</div>
 			</div>
@@ -239,35 +221,31 @@
 
 		<!-- Card 6: Diskon Multi Harga (Kasir) -->
 		<div
-			class="rounded-xl border p-4 sm:p-5 transition-colors {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white shadow-xs'}"
+			class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 transition-colors shadow-xs"
 		>
 			<div class="mb-3 flex items-center justify-between">
 				<div>
-					<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+					<h3 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 						Diskon Multi Harga
 					</h3>
-					<p class="text-[10px] mt-0.5 {isDark ? 'text-slate-500' : 'text-slate-400'}">
+					<p class="text-[10px] mt-0.5 text-[var(--ttx-text-muted)]">
 						Hitung diskon berbeda untuk beberapa produk sekaligus
 					</p>
 				</div>
 				<button
 					type="button"
 					onclick={resetMultiItems}
-					class="flex items-center gap-1 text-[11px] font-medium {isDark
-						? 'text-slate-500 hover:text-rose-400'
-						: 'text-slate-400 hover:text-rose-600'}"
+					class="flex items-center gap-1 text-[11px] font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 transition-colors"
 				>
 					<RotateCcw size={12} /> Reset
 				</button>
 			</div>
 
 			<!-- POS / Cashier Style Table -->
-			<div class="overflow-x-auto rounded-lg border {isDark ? 'border-[#1b2742] bg-[#10192e]' : 'border-slate-200 bg-white'}">
+			<div class="overflow-x-auto rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)]">
 				<table class="w-full text-left border-collapse text-xs">
 					<thead>
-						<tr class="border-b {isDark ? 'border-[#1e2e50] bg-[#111a2f]/70 text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-600'}">
+						<tr class="border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)]">
 							<th class="py-2 px-2 w-8 text-center font-semibold text-[10px] uppercase tracking-wider">#</th>
 							<th class="py-2 px-2 min-w-[110px] font-semibold text-[10px] uppercase tracking-wider">Harga (Rp)</th>
 							<th class="py-2 px-2 w-20 font-semibold text-[10px] uppercase tracking-wider">Diskon</th>
@@ -276,13 +254,13 @@
 							<th class="py-2 px-1 w-8 text-center"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y {isDark ? 'divide-[#1b2742]' : 'divide-slate-100'}">
+					<tbody class="divide-y divide-[var(--ttx-border-base)]">
 						{#each multiItems as item, i (item.id)}
 							{@const price = parsePrice(item.price_str)}
 							{@const cut = price != null && item.discount != null ? price * (item.discount / 100) : null}
 							{@const final_price = price != null && cut != null ? price - cut : null}
-							<tr class="hover:bg-blue-500/5 transition-colors">
-								<td class="py-1.5 px-2 text-center font-mono text-[11px] {isDark ? 'text-slate-500' : 'text-slate-400'}">
+							<tr class="hover:bg-[var(--ttx-accent-light)] transition-colors">
+								<td class="py-1.5 px-2 text-center font-mono text-[11px] text-[var(--ttx-text-dim)]">
 									{i + 1}
 								</td>
 								<td class="py-1.5 px-2">
@@ -291,9 +269,7 @@
 										value={item.price_str}
 										oninput={(e) => (item.price_str = formatInputCurrency(e.currentTarget.value))}
 										placeholder="50.000"
-										class="h-7 w-full rounded px-2 font-mono text-xs outline-none {isDark
-											? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-											: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+										class="h-7 w-full rounded px-2 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 									/>
 								</td>
 								<td class="py-1.5 px-2">
@@ -304,25 +280,23 @@
 											placeholder="0"
 											min="0"
 											max="100"
-											class="h-7 w-full rounded px-2 pr-5 font-mono text-xs outline-none {isDark
-												? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-												: 'border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+											class="h-7 w-full rounded px-2 pr-5 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 										/>
-										<span class="pointer-events-none absolute right-1.5 top-1.5 text-[10px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">%</span>
+										<span class="pointer-events-none absolute right-1.5 top-1.5 text-[10px] font-mono text-[var(--ttx-text-dim)]">%</span>
 									</div>
 								</td>
 								<td class="py-1.5 px-2 text-right font-mono">
 									{#if cut != null}
-										<span class="text-rose-400 text-xs font-medium">-Rp {formatCurrency(cut)}</span>
+										<span class="text-rose-500 text-xs font-medium">-Rp {formatCurrency(cut)}</span>
 									{:else}
-										<span class="{isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
+										<span class="text-[var(--ttx-text-dim)]">-</span>
 									{/if}
 								</td>
 								<td class="py-1.5 px-2 text-right font-mono">
 									{#if final_price != null}
-										<span class="font-bold text-xs {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(final_price)}</span>
+										<span class="font-bold text-xs text-emerald-500">Rp {formatCurrency(final_price)}</span>
 									{:else}
-										<span class="{isDark ? 'text-slate-600' : 'text-slate-300'}">-</span>
+										<span class="text-[var(--ttx-text-dim)]">-</span>
 									{/if}
 								</td>
 								<td class="py-1.5 px-1 text-center">
@@ -330,9 +304,7 @@
 										type="button"
 										onclick={() => removeMultiItem(item.id)}
 										disabled={multiItems.length <= 1}
-										class="inline-flex h-6 w-6 items-center justify-center rounded transition-colors {isDark
-											? 'text-slate-600 hover:text-rose-400 hover:bg-rose-400/10 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-600'
-											: 'text-slate-300 hover:text-rose-500 hover:bg-rose-50 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-300'}"
+										class="inline-flex h-6 w-6 items-center justify-center rounded transition-colors text-[var(--ttx-text-dim)] hover:text-rose-500 hover:bg-rose-500/10 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[var(--ttx-text-dim)]"
 									>
 										<Trash2 size={12} />
 									</button>
@@ -347,34 +319,30 @@
 			<button
 				type="button"
 				onclick={addMultiItem}
-				class="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed py-2 text-xs font-medium transition-colors {isDark
-					? 'border-[#1e2e50] text-slate-500 hover:border-blue-500/50 hover:text-blue-400'
-					: 'border-slate-300 text-slate-400 hover:border-blue-400 hover:text-blue-600'}"
+				class="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-[var(--ttx-border-subtle)] py-2 text-xs font-medium transition-colors text-[var(--ttx-text-muted)] hover:border-[var(--ttx-accent)] hover:text-[var(--ttx-accent-text)]"
 			>
 				<Plus size={14} /> Tambah Item
 			</button>
 
-			<!-- Summary (Receipt Style on the right) -->
+			<!-- Summary -->
 			{#if multiSummary.validCount > 0}
 				<div class="mt-3 flex justify-end">
 					<div
-						class="w-full sm:max-w-xs rounded-lg border p-3 {isDark
-							? 'border-[#1b2742] bg-[#10192e]'
-							: 'border-slate-200 bg-slate-50'}"
+						class="w-full sm:max-w-xs rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-3"
 					>
 						<div class="flex flex-col gap-1.5">
 							<div class="flex items-center justify-between text-xs">
-								<span class="{isDark ? 'text-slate-400' : 'text-slate-500'}">Total Awal</span>
-								<span class="font-mono font-medium {isDark ? 'text-slate-200' : 'text-slate-700'}">Rp {formatCurrency(multiSummary.totalOriginal)}</span>
+								<span class="text-[var(--ttx-text-muted)]">Total Awal</span>
+								<span class="font-mono font-medium text-[var(--ttx-text-main)]">Rp {formatCurrency(multiSummary.totalOriginal)}</span>
 							</div>
 							<div class="flex items-center justify-between text-xs">
-								<span class="text-rose-400 font-medium">Total Hemat</span>
-								<span class="font-mono font-medium text-rose-400">-Rp {formatCurrency(multiSummary.totalSaved)}</span>
+								<span class="text-rose-500 font-medium">Total Hemat</span>
+								<span class="font-mono font-medium text-rose-500">-Rp {formatCurrency(multiSummary.totalSaved)}</span>
 							</div>
-							<div class="my-1 border-t border-dashed {isDark ? 'border-[#1e2e50]' : 'border-slate-200'}"></div>
+							<div class="my-1 border-t border-dashed border-[var(--ttx-border-base)]"></div>
 							<div class="flex items-baseline justify-between">
-								<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-blue-400' : 'text-blue-600'}">Total Bayar</span>
-								<span class="font-mono text-base font-black {isDark ? 'text-emerald-400' : 'text-emerald-600'}">Rp {formatCurrency(multiSummary.totalFinal)}</span>
+								<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-accent-text)]">Total Bayar</span>
+								<span class="font-mono text-base font-black text-emerald-500">Rp {formatCurrency(multiSummary.totalFinal)}</span>
 							</div>
 						</div>
 					</div>
@@ -384,12 +352,10 @@
 
 		<!-- Card 1: Berapa X% dari Y? -->
 		<div
-			class="rounded-xl border p-4 transition-colors {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white shadow-xs'}"
+			class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 transition-colors shadow-xs"
 		>
 			<div class="mb-3 flex items-center justify-between">
-				<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+				<h3 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 					Berapa X% dari Y?
 				</h3>
 				<button
@@ -398,9 +364,7 @@
 						c1_x = null;
 						c1_y = null;
 					}}
-					class="flex items-center gap-1 text-[11px] font-medium {isDark
-						? 'text-slate-500 hover:text-rose-400'
-						: 'text-slate-400 hover:text-rose-600'}"
+					class="flex items-center gap-1 text-[11px] font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 transition-colors"
 				>
 					<RotateCcw size={12} /> Reset
 				</button>
@@ -410,7 +374,7 @@
 				<div>
 					<label
 						for="calc1-x"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Persen (X)</label
 					>
 					<div class="relative">
@@ -419,14 +383,10 @@
 							type="number"
 							bind:value={c1_x}
 							placeholder="25"
-							class="h-9 w-full rounded-lg px-3 pr-7 font-mono text-xs outline-none {isDark
-								? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-								: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+							class="h-9 w-full rounded-lg px-3 pr-7 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 						/>
 						<span
-							class="pointer-events-none absolute right-2.5 top-2.5 text-xs font-mono {isDark
-								? 'text-slate-500'
-								: 'text-slate-400'}">%</span
+							class="pointer-events-none absolute right-2.5 top-2.5 text-xs font-mono text-[var(--ttx-text-dim)]">%</span
 						>
 					</div>
 				</div>
@@ -434,7 +394,7 @@
 				<div>
 					<label
 						for="calc1-y"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Dari Nilai (Y)</label
 					>
 					<input
@@ -442,31 +402,25 @@
 						type="number"
 						bind:value={c1_y}
 						placeholder="500000"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 			</div>
 
 			<div
-				class="mt-3 flex items-center justify-between rounded-lg border p-3 {isDark
-					? 'border-[#1b2742] bg-[#10192e]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="mt-3 flex items-center justify-between rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-3"
 			>
-				<span class="text-xs font-medium {isDark ? 'text-slate-400' : 'text-slate-500'}">Hasil</span>
-				<span class="font-mono text-lg font-black text-blue-500">{format(c1_result)}</span>
+				<span class="text-xs font-medium text-[var(--ttx-text-muted)]">Hasil</span>
+				<span class="font-mono text-lg font-black text-[var(--ttx-accent-text)]">{format(c1_result)}</span>
 			</div>
 		</div>
 
 		<!-- Card 2: X adalah berapa % dari Y? -->
 		<div
-			class="rounded-xl border p-4 transition-colors {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white shadow-xs'}"
+			class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 transition-colors shadow-xs"
 		>
 			<div class="mb-3 flex items-center justify-between">
-				<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+				<h3 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 					X adalah berapa % dari Y?
 				</h3>
 				<button
@@ -475,9 +429,7 @@
 						c2_x = null;
 						c2_y = null;
 					}}
-					class="flex items-center gap-1 text-[11px] font-medium {isDark
-						? 'text-slate-500 hover:text-rose-400'
-						: 'text-slate-400 hover:text-rose-600'}"
+					class="flex items-center gap-1 text-[11px] font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 transition-colors"
 				>
 					<RotateCcw size={12} /> Reset
 				</button>
@@ -487,7 +439,7 @@
 				<div>
 					<label
 						for="calc2-x"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Nilai (X)</label
 					>
 					<input
@@ -495,16 +447,14 @@
 						type="number"
 						bind:value={c2_x}
 						placeholder="45"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 
 				<div>
 					<label
 						for="calc2-y"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Total (Y)</label
 					>
 					<input
@@ -512,20 +462,16 @@
 						type="number"
 						bind:value={c2_y}
 						placeholder="200"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 			</div>
 
 			<div
-				class="mt-3 flex items-center justify-between rounded-lg border p-3 {isDark
-					? 'border-[#1b2742] bg-[#10192e]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="mt-3 flex items-center justify-between rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-3"
 			>
-				<span class="text-xs font-medium {isDark ? 'text-slate-400' : 'text-slate-500'}">Hasil</span>
-				<span class="font-mono text-lg font-black text-blue-500"
+				<span class="text-xs font-medium text-[var(--ttx-text-muted)]">Hasil</span>
+				<span class="font-mono text-lg font-black text-[var(--ttx-accent-text)]"
 					>{format(c2_result)}{c2_result != null ? '%' : ''}</span
 				>
 			</div>
@@ -533,12 +479,10 @@
 
 		<!-- Card 3: Perubahan (Naik/Turun %) -->
 		<div
-			class="rounded-xl border p-4 transition-colors {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white shadow-xs'}"
+			class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 transition-colors shadow-xs"
 		>
 			<div class="mb-3 flex items-center justify-between">
-				<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+				<h3 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 					Perubahan Nilai (Naik / Turun)
 				</h3>
 				<button
@@ -547,9 +491,7 @@
 						c3_x = null;
 						c3_y = null;
 					}}
-					class="flex items-center gap-1 text-[11px] font-medium {isDark
-						? 'text-slate-500 hover:text-rose-400'
-						: 'text-slate-400 hover:text-rose-600'}"
+					class="flex items-center gap-1 text-[11px] font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 transition-colors"
 				>
 					<RotateCcw size={12} /> Reset
 				</button>
@@ -559,7 +501,7 @@
 				<div>
 					<label
 						for="calc3-x"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Nilai Awal (X)</label
 					>
 					<input
@@ -567,16 +509,14 @@
 						type="number"
 						bind:value={c3_x}
 						placeholder="1000"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 
 				<div>
 					<label
 						for="calc3-y"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Nilai Akhir (Y)</label
 					>
 					<input
@@ -584,29 +524,23 @@
 						type="number"
 						bind:value={c3_y}
 						placeholder="1250"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 			</div>
 
 			<div
-				class="mt-3 flex items-center justify-between rounded-lg border p-3 {isDark
-					? 'border-[#1b2742] bg-[#10192e]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="mt-3 flex items-center justify-between rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-3"
 			>
-				<span class="text-xs font-medium {isDark ? 'text-slate-400' : 'text-slate-500'}">Persentase</span>
+				<span class="text-xs font-medium text-[var(--ttx-text-muted)]">Persentase</span>
 				<span
 					class="font-mono text-lg font-black {c3_result != null
 						? c3_result > 0
-							? 'text-emerald-400'
+							? 'text-emerald-500'
 							: c3_result < 0
-								? 'text-rose-400'
-								: isDark
-									? 'text-slate-200'
-									: 'text-slate-800'
-						: 'text-blue-500'}"
+								? 'text-rose-500'
+								: 'text-[var(--ttx-text-main)]'
+						: 'text-[var(--ttx-accent-text)]'}"
 				>
 					{c3_result != null && c3_result > 0 ? '+' : ''}{format(c3_result)}{c3_result != null
 						? '%'
@@ -617,12 +551,10 @@
 
 		<!-- Card 4: Tambah Pajak / Margin -->
 		<div
-			class="rounded-xl border p-4 transition-colors {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white shadow-xs'}"
+			class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 transition-colors shadow-xs"
 		>
 			<div class="mb-3 flex items-center justify-between">
-				<h3 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-800'}">
+				<h3 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 					Tambah Pajak / Margin
 				</h3>
 				<button
@@ -631,9 +563,7 @@
 						c4_x_str = '';
 						c4_y = null;
 					}}
-					class="flex items-center gap-1 text-[11px] font-medium {isDark
-						? 'text-slate-500 hover:text-rose-400'
-						: 'text-slate-400 hover:text-rose-600'}"
+					class="flex items-center gap-1 text-[11px] font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 transition-colors"
 				>
 					<RotateCcw size={12} /> Reset
 				</button>
@@ -643,7 +573,7 @@
 				<div>
 					<label
 						for="tax-original-value"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Nilai Awal (Rp)</label
 					>
 					<input
@@ -652,16 +582,14 @@
 						value={c4_x_str}
 						oninput={(e) => (c4_x_str = formatInputCurrency(e.currentTarget.value))}
 						placeholder="100.000"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 					/>
 				</div>
 
 				<div>
 					<label
 						for="tax-percentage"
-						class="mb-1 block text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}"
+						class="mb-1 block text-xs text-[var(--ttx-text-muted)]"
 						>Tambah (%)</label
 					>
 					<div class="relative">
@@ -670,42 +598,32 @@
 							type="number"
 							bind:value={c4_y}
 							placeholder="11"
-							class="h-9 w-full rounded-lg px-3 pr-7 font-mono text-xs outline-none {isDark
-								? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-600 focus:border-blue-500'
-								: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+							class="h-9 w-full rounded-lg px-3 pr-7 font-mono text-xs outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 						/>
 						<span
-							class="pointer-events-none absolute right-2.5 top-2.5 text-xs font-mono {isDark
-								? 'text-slate-500'
-								: 'text-slate-400'}">%</span
+							class="pointer-events-none absolute right-2.5 top-2.5 text-xs font-mono text-[var(--ttx-text-dim)]">%</span
 						>
 					</div>
 				</div>
 			</div>
 
 			<div
-				class="mt-3 flex items-center justify-between rounded-lg border p-3 {isDark
-					? 'border-[#1b2742] bg-[#10192e]'
-					: 'border-slate-200 bg-slate-50'}"
+				class="mt-3 flex items-center justify-between rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-3"
 			>
 				<div>
-					<span class="block text-[10px] font-bold uppercase tracking-wider text-emerald-400"
+					<span class="block text-[10px] font-bold uppercase tracking-wider text-emerald-500"
 						>Tambahan</span
 					>
-					<span class="font-mono text-xs font-bold text-emerald-400"
+					<span class="font-mono text-xs font-bold text-emerald-500"
 						>+Rp {formatCurrency(c4_cut)}</span
 					>
 				</div>
 				<div class="text-right">
 					<span
-						class="block text-[10px] font-bold uppercase tracking-wider {isDark
-							? 'text-blue-400'
-							: 'text-blue-600'}">Total Akhir</span
+						class="block text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-accent-text)]">Total Akhir</span
 					>
 					<span
-						class="font-mono text-base font-black {isDark
-							? 'text-white'
-							: 'text-slate-900'}">Rp {formatCurrency(c4_result)}</span
+						class="font-mono text-base font-black text-[var(--ttx-text-main)]">Rp {formatCurrency(c4_result)}</span
 					>
 				</div>
 			</div>

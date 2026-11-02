@@ -166,18 +166,16 @@ hitungTotal(150000, 3);`);
 	<!-- Header -->
 	<div class="flex items-center gap-3">
 		<div
-			class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-				: 'border-blue-200 bg-blue-50 text-blue-600'}"
+			class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]"
 		>
 			<Lock size={18} />
 		</div>
 		<div>
-			<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
+			<h1 class="text-base font-bold text-[var(--ttx-text-main)]">
 				JavaScript Obfuscator
 			</h1>
-			<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
-				Lindungi kode JavaScript dari rekayasa balik dengan obfuscation & enkripsi
+			<p class="text-xs text-[var(--ttx-text-muted)]">
+				Lindungi kode JavaScript dari rekayasa balik dengan obfuscation &amp; enkripsi
 			</p>
 		</div>
 	</div>
@@ -186,17 +184,11 @@ hitungTotal(150000, 3);`);
 	<div class="flex flex-col gap-4 lg:flex-row flex-1">
 		<!-- Left Settings Panel -->
 		<div
-			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
+			class="flex w-full flex-col gap-4 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-4 lg:w-72 lg:shrink-0"
 		>
 			<!-- Obfuscation Level -->
 			<div>
-				<p
-					class="mb-2 text-[10px] font-bold uppercase tracking-wider {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
-				>
+				<p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 					Tingkat Obfuscation
 				</p>
 				<div class="grid grid-cols-3 gap-1.5">
@@ -204,14 +196,9 @@ hitungTotal(150000, 3);`);
 						<button
 							type="button"
 							onclick={() => (level = lvl as any)}
-							class="h-8 rounded-lg border text-xs font-semibold capitalize transition-all {level ===
-							lvl
-								? isDark
-									? 'border-blue-500/40 bg-blue-600/20 text-blue-300'
-									: 'border-blue-300 bg-blue-50 text-blue-600'
-								: isDark
-									? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:border-slate-600 hover:text-slate-200'
-									: 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:text-slate-800'}"
+							class="h-8 rounded-lg border text-xs font-semibold capitalize transition-all {level === lvl
+								? 'border-[var(--ttx-accent)]/40 bg-[var(--ttx-accent)]/20 text-[var(--ttx-accent-text)]'
+								: 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]'}"
 						>
 							{lvl}
 						</button>
@@ -221,11 +208,7 @@ hitungTotal(150000, 3);`);
 
 			<!-- Target Environment -->
 			<div>
-				<p
-					class="mb-2 text-[10px] font-bold uppercase tracking-wider {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
-				>
+				<p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 					Target
 				</p>
 				<div class="space-y-1">
@@ -233,14 +216,9 @@ hitungTotal(150000, 3);`);
 						<button
 							type="button"
 							onclick={() => (target = val as any)}
-							class="flex h-8 w-full items-center px-3 rounded-lg border text-xs font-medium transition-all {target ===
-							val
-								? isDark
-									? 'border-blue-500/40 bg-blue-600/20 text-blue-300'
-									: 'border-blue-300 bg-blue-50 text-blue-600'
-								: isDark
-									? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:border-slate-600 hover:text-slate-200'
-									: 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:text-slate-800'}"
+							class="flex h-8 w-full items-center px-3 rounded-lg border text-xs font-medium transition-all {target === val
+								? 'border-[var(--ttx-accent)]/40 bg-[var(--ttx-accent)]/20 text-[var(--ttx-accent-text)]'
+								: 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]'}"
 						>
 							{label}
 						</button>
@@ -248,68 +226,56 @@ hitungTotal(150000, 3);`);
 				</div>
 			</div>
 
-			<div class="h-px {isDark ? 'bg-[#1a253c]' : 'bg-slate-200'}"></div>
+			<div class="h-px bg-[var(--ttx-border-base)]"></div>
 
 			<!-- Options Toggles -->
 			<div class="space-y-2">
-				<p
-					class="text-[10px] font-bold uppercase tracking-wider {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
-				>
+				<p class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 					Opsi Lanjutan
 				</p>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={compact}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}"
-						>Compact (Satu Baris)</span
-					>
+					<span class="text-xs text-[var(--ttx-text-muted)]">Compact (Satu Baris)</span>
 				</label>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={controlFlow}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}"
-						>Control-flow Flattening</span
-					>
+					<span class="text-xs text-[var(--ttx-text-muted)]">Control-flow Flattening</span>
 				</label>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={deadCode}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}"
-						>Dead-code Injection</span
-					>
+					<span class="text-xs text-[var(--ttx-text-muted)]">Dead-code Injection</span>
 				</label>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={selfDefending}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}">Self Defending</span>
+					<span class="text-xs text-[var(--ttx-text-muted)]">Self Defending</span>
 				</label>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={stringArray}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}"
-						>String Array Encoding</span
-					>
+					<span class="text-xs text-[var(--ttx-text-muted)]">String Array Encoding</span>
 				</label>
 			</div>
 
-			<div class="h-px {isDark ? 'bg-[#1a253c]' : 'bg-slate-200'}"></div>
+			<div class="h-px bg-[var(--ttx-border-base)]"></div>
 
 			<!-- Encryption Wrapper -->
 			<div class="space-y-2">
@@ -317,11 +283,9 @@ hitungTotal(150000, 3);`);
 					<input
 						type="checkbox"
 						bind:checked={enableEncryption}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs font-semibold {isDark ? 'text-slate-200' : 'text-slate-800'}"
-						>AES Encryption</span
-					>
+					<span class="text-xs font-semibold text-[var(--ttx-text-main)]">AES Encryption</span>
 				</label>
 				{#if enableEncryption}
 					<div class="space-y-1.5 pt-1">
@@ -329,17 +293,13 @@ hitungTotal(150000, 3);`);
 							type="text"
 							bind:value={encryptKey}
 							placeholder="Encryption Key"
-							class="h-8 w-full rounded-md px-2.5 font-mono text-[11px] outline-none {isDark
-								? 'border border-[#1e2e50] bg-[#111a2f] text-slate-200 placeholder-slate-600'
-								: 'border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400'}"
+							class="h-8 w-full rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 font-mono text-[11px] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none"
 						/>
 						<input
 							type="text"
 							bind:value={encryptSalt}
 							placeholder="Salt Key"
-							class="h-8 w-full rounded-md px-2.5 font-mono text-[11px] outline-none {isDark
-								? 'border border-[#1e2e50] bg-[#111a2f] text-slate-200 placeholder-slate-600'
-								: 'border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400'}"
+							class="h-8 w-full rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 font-mono text-[11px] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none"
 						/>
 						<button
 							type="button"
@@ -347,9 +307,7 @@ hitungTotal(150000, 3);`);
 								encryptKey = generateRandom(24);
 								encryptSalt = generateRandom(12);
 							}}
-							class="flex h-7 w-full items-center justify-center gap-1 rounded-md border text-[11px] font-medium transition-all {isDark
-								? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white'
-								: 'border-slate-200 bg-slate-50 text-slate-600 hover:text-slate-900'}"
+							class="flex h-7 w-full items-center justify-center gap-1 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[11px] font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
 						>
 							<RefreshCw size={11} /> Generate Kunci Acak
 						</button>
@@ -362,9 +320,7 @@ hitungTotal(150000, 3);`);
 				type="button"
 				onclick={obfuscate}
 				disabled={obfuscating || !isReady || !inputCode.trim()}
-				class="mt-auto flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40 {isDark
-					? 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'
-					: 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'}"
+				class="mt-auto flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40 bg-[var(--ttx-accent)] text-white hover:bg-[var(--ttx-accent-hover)] active:scale-95"
 			>
 				{#if obfuscating}
 					<RefreshCw size={13} class="animate-spin" /> Memproses...
@@ -379,37 +335,23 @@ hitungTotal(150000, 3);`);
 		<!-- Right: Editors Area -->
 		<div class="flex min-w-0 flex-1 flex-col gap-3">
 			<!-- Notice Banner -->
-			<div
-				class="flex items-center gap-2.5 rounded-lg border px-3.5 py-2 text-xs {isDark
-					? 'border-amber-900/40 bg-amber-950/20 text-amber-300'
-					: 'border-amber-200 bg-amber-50 text-amber-800'}"
-			>
+			<div class="flex items-center gap-2.5 rounded-lg border border-amber-900/40 bg-amber-950/20 px-3.5 py-2 text-xs text-amber-300">
 				<AlertTriangle size={14} class="shrink-0 text-amber-400" />
 				<span>Simpan selalu cadangan kode asli sebelum melakukan obfuscasi.</span>
 			</div>
 
-			<!-- Split Editor -->
+			<!-- Split Editor (unified card) -->
 			<div
-				class="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border sm:flex-row {isDark
-					? 'border-[#1a253c]'
-					: 'border-slate-200'}"
+				class="flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs sm:flex-row"
 			>
 				<!-- Input -->
 				<div
-					class="flex flex-1 flex-col min-h-[260px] sm:min-h-0 {isDark
-						? 'border-r border-[#1a253c]'
-						: 'border-r border-slate-200'}"
+					class="flex flex-1 flex-col min-h-[260px] sm:min-h-0 border-r border-[var(--ttx-border-base)]"
 				>
 					<div
-						class="flex h-11 shrink-0 items-center justify-between border-b px-4 {isDark
-							? 'border-[#1a253c] bg-[#0d1525]'
-							: 'border-slate-200 bg-slate-50'}"
+						class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4"
 					>
-						<span
-							class="text-[10px] font-bold uppercase tracking-wider {isDark
-								? 'text-slate-500'
-								: 'text-slate-400'}"
-						>
+						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 							Input JavaScript
 						</span>
 						<div class="flex items-center gap-2">
@@ -423,9 +365,7 @@ hitungTotal(150000, 3);`);
 							<button
 								type="button"
 								onclick={() => fileInputEl?.click()}
-								class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {isDark
-									? 'text-slate-400 hover:bg-[#16223b] hover:text-slate-200'
-									: 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'}"
+								class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors text-[var(--ttx-text-dim)] hover:bg-[var(--ttx-accent-light)] hover:text-[var(--ttx-accent-text)]"
 							>
 								<Upload size={11} /> Upload .js
 							</button>
@@ -433,9 +373,7 @@ hitungTotal(150000, 3);`);
 								<button
 									type="button"
 									onclick={clearAll}
-									class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {isDark
-										? 'text-slate-500 hover:bg-red-500/10 hover:text-red-400'
-										: 'text-slate-400 hover:bg-red-50 hover:text-red-500'}"
+									class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors text-[var(--ttx-text-dim)] hover:bg-rose-500/10 hover:text-rose-500"
 								>
 									<Trash2 size={11} /> Clear
 								</button>
@@ -445,24 +383,16 @@ hitungTotal(150000, 3);`);
 					<textarea
 						bind:value={inputCode}
 						placeholder="Ketik atau paste kode JavaScript di sini..."
-						class="w-full flex-1 resize-none p-4 font-mono text-xs outline-none leading-relaxed {isDark
-							? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-							: 'bg-white text-slate-800 placeholder-slate-400'}"
+						class="w-full flex-1 resize-none bg-[var(--ttx-bg-card)] p-4 font-mono text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none leading-relaxed"
 					></textarea>
 				</div>
 
 				<!-- Output -->
 				<div class="flex flex-1 flex-col min-h-[220px] sm:min-h-0">
 					<div
-						class="flex h-11 shrink-0 items-center justify-between border-b px-4 {isDark
-							? 'border-[#1a253c] bg-[#0d1525]'
-							: 'border-slate-200 bg-slate-50'}"
+						class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4"
 					>
-						<span
-							class="text-[10px] font-bold uppercase tracking-wider {isDark
-								? 'text-slate-500'
-								: 'text-slate-400'}"
-						>
+						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 							Hasil Terproteksi
 						</span>
 						<div class="flex items-center gap-2">
@@ -470,22 +400,14 @@ hitungTotal(150000, 3);`);
 								<button
 									type="button"
 									onclick={download}
-									class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {isDark
-										? 'text-slate-400 hover:bg-[#16223b] hover:text-slate-200'
-										: 'text-slate-600 hover:bg-slate-200 hover:text-slate-900'}"
+									class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors text-[var(--ttx-text-dim)] hover:bg-[var(--ttx-accent-light)] hover:text-[var(--ttx-accent-text)]"
 								>
 									<Download size={11} /> Download
 								</button>
 								<button
 									type="button"
 									onclick={copyOutput}
-									class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {copied
-										? isDark
-											? 'bg-green-500/10 text-green-400'
-											: 'bg-green-50 text-green-600'
-										: isDark
-											? 'text-slate-400 hover:bg-blue-500/10 hover:text-blue-300'
-											: 'text-slate-500 hover:bg-blue-50 hover:text-blue-600'}"
+									class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {copied ? 'bg-emerald-500/10 text-emerald-500' : 'text-[var(--ttx-text-dim)] hover:bg-[var(--ttx-accent-light)] hover:text-[var(--ttx-accent-text)]'}"
 								>
 									{#if copied}
 										<Check size={11} /> Copied!
@@ -499,9 +421,7 @@ hitungTotal(150000, 3);`);
 					<div class="relative flex-1">
 						{#if !outputCode}
 							<div
-								class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center {isDark
-									? 'text-slate-700'
-									: 'text-slate-300'}"
+								class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-[var(--ttx-text-dim)]"
 							>
 								<Lock size={32} strokeWidth={1} class="mb-2" />
 								<p class="text-xs">Kode hasil obfuscate akan muncul di sini</p>
@@ -510,9 +430,7 @@ hitungTotal(150000, 3);`);
 						<textarea
 							value={outputCode}
 							readonly
-							class="absolute inset-0 h-full w-full resize-none p-4 font-mono text-xs outline-none leading-relaxed {isDark
-								? 'bg-[#08101e] text-slate-300'
-								: 'bg-slate-50 text-slate-700'}"
+							class="absolute inset-0 h-full w-full resize-none bg-[var(--ttx-bg-card-subtle)] p-4 font-mono text-xs text-[var(--ttx-text-muted)] outline-none leading-relaxed"
 						></textarea>
 					</div>
 				</div>
@@ -520,4 +438,3 @@ hitungTotal(150000, 3);`);
 		</div>
 	</div>
 </div>
-

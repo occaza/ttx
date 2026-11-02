@@ -152,22 +152,20 @@
 	}
 </script>
 
-<div class="flex flex-col gap-5 w-full flex-1">
+<div class="flex flex-col gap-4 w-full flex-1 h-full min-h-0">
 	<!-- Header -->
 	<div class="flex flex-wrap items-center justify-between gap-3 shrink-0">
 		<div class="flex items-center gap-3">
 			<div
-				class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-					: 'border-blue-200 bg-blue-50 text-blue-600'}"
+				class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]"
 			>
 				<Smile size={18} />
 			</div>
 			<div>
-				<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
+				<h1 class="text-base font-bold text-[var(--ttx-text-main)]">
 					Emoji Browser & Picker
 				</h1>
-				<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
+				<p class="text-xs text-[var(--ttx-text-muted)]">
 					Jelajahi ribuan emoji berdasarkan kategori, pilih warna kulit, dan salin ke clipboard
 				</p>
 			</div>
@@ -178,7 +176,7 @@
 				<button
 					type="button"
 					onclick={copySelectedEmojis}
-					class="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-blue-500"
+					class="flex items-center gap-1.5 rounded-lg bg-[var(--ttx-accent)] px-3 py-1.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-[var(--ttx-accent-hover)]"
 				>
 					{#if copied}
 						<Check size={13} />
@@ -191,9 +189,7 @@
 				<button
 					type="button"
 					onclick={clearSelected}
-					class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:text-rose-400 hover:border-rose-500/40'
-						: 'border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200'}"
+					class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--ttx-text-muted)] transition-colors hover:text-rose-500 hover:border-rose-500/40"
 				>
 					<Trash2 size={13} />
 					Hapus
@@ -202,194 +198,168 @@
 		{/if}
 	</div>
 
-	<!-- Main Filter & Search Container -->
-	<div
-		class="space-y-3 rounded-xl border p-4 shrink-0 {isDark
-			? 'border-[#1a253c] bg-[#0d1525]'
-			: 'border-slate-200 bg-white'}"
-	>
-		<!-- Search Input & Skin Selector -->
-		<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+	<!-- Unified Card: toolbar + emoji grid + tray -->
+	<div class="flex flex-1 flex-col min-h-0 overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs">
+		<!-- Toolbar: Search + Skin + Categories -->
+		<div class="flex flex-col gap-3 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 py-3 shrink-0">
+			<!-- Search Input & Skin Selector -->
+			<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+				<div class="relative flex-1">
+					<Search
+						size={15}
+						class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--ttx-text-dim)]"
+					/>
+					<input
+						type="text"
+						bind:value={searchQuery}
+						oninput={onSearchInput}
+						placeholder="Cari emoji (mis: heart, fire, flag, coffee, rocket)..."
+						class="h-9 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] pl-9 pr-8 text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none transition-all focus:border-[var(--ttx-border-focus)]"
+					/>
+					{#if searchQuery}
+						<button
+							type="button"
+							onclick={clearSearch}
+							class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)]"
+						>
+							<X size={14} />
+						</button>
+					{/if}
+				</div>
+
+				<!-- Skin Tone Buttons -->
+				<div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+					<span class="text-[10px] font-bold uppercase tracking-wider mr-1 text-[var(--ttx-text-dim)]">
+						Warna Kulit:
+					</span>
+					{#each SKIN_TONES as tone, i}
+						<button
+							type="button"
+							onclick={() => (skinTone = i)}
+							title={SKIN_LABELS[i]}
+							class="flex h-7 w-7 items-center justify-center rounded-md border text-sm transition-all {skinTone === i
+								? 'border-[var(--ttx-accent)] bg-[var(--ttx-accent)]/20 shadow-xs'
+								: 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] hover:border-[var(--ttx-border-focus)]'}"
+						>
+							{i === 0 ? '✋' : tone}
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Category Tabs -->
+			{#if !searchQuery.trim() && !isLoading}
+				<div class="flex flex-wrap items-center gap-1.5">
+					{#each categories as cat}
+						<button
+							type="button"
+							onclick={() => selectCategory(cat)}
+							title={CATEGORY_LABELS[cat] ?? cat}
+							class="flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-all {selectedCategory === cat
+								? 'border-[var(--ttx-accent)] bg-[var(--ttx-accent)] text-white shadow-xs'
+								: 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]'}"
+						>
+							<span class="text-sm">{getCategoryIcon(cat)}</span>
+							<span>{CATEGORY_LABELS[cat] ?? cat}</span>
+						</button>
+					{/each}
+				</div>
+			{/if}
+		</div>
+
+		<!-- Emoji Grid Area -->
+		<div class="flex-1 min-h-0 overflow-y-auto p-4 bg-[var(--ttx-bg-card)] custom-scrollbar">
+			{#if isLoading}
+				<div class="flex h-64 flex-col items-center justify-center gap-3">
+					<div class="h-6 w-6 animate-spin rounded-full border-2 border-[var(--ttx-accent)] border-t-transparent"></div>
+					<p class="text-xs text-[var(--ttx-text-muted)]">Memuat database emoji...</p>
+				</div>
+			{:else if loadError}
+				<div class="flex h-64 flex-col items-center justify-center">
+					<p class="text-xs text-rose-400">Gagal memuat database emoji.</p>
+				</div>
+			{:else if filteredEmojis.length === 0}
+				<div class="flex h-64 flex-col items-center justify-center">
+					<Smile size={32} class="opacity-30 mb-2" />
+					<p class="text-xs text-[var(--ttx-text-dim)]">
+						Tidak ada emoji ditemukan untuk "{searchQuery}"
+					</p>
+				</div>
+			{:else}
+				<div
+					class="grid gap-1.5"
+					style="grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));"
+				>
+					{#each filteredEmojis as emoji (emoji.id)}
+						{@const native = getEmojiNative(emoji)}
+						{#if native}
+							<button
+								type="button"
+								onclick={() => addEmoji(emoji)}
+								title={emoji.name}
+								class="flex aspect-square items-center justify-center rounded-lg border border-transparent text-xl transition-all duration-100 active:scale-90 bg-[var(--ttx-bg-card-subtle)]/40 hover:bg-[var(--ttx-accent-light)] hover:border-[var(--ttx-border-subtle)]"
+							>
+								{native}
+							</button>
+						{/if}
+					{/each}
+				</div>
+			{/if}
+		</div>
+
+		<!-- Selected Emojis Tray -->
+		<div class="flex items-center gap-3 border-t border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 py-3 shrink-0">
 			<div class="relative flex-1">
-				<Search
-					size={15}
-					class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
-				/>
 				<input
 					type="text"
-					bind:value={searchQuery}
-					oninput={onSearchInput}
-					placeholder="Cari emoji (mis: heart, fire, flag, coffee, rocket)..."
-					class="h-9 w-full rounded-lg pl-9 pr-8 text-xs outline-none transition-all {isDark
-						? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-						: 'border border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:bg-white'}"
+					readonly
+					value={selectedEmojis.join('')}
+					placeholder="Klik emoji di atas untuk memasukkannya ke sini..."
+					class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] px-3 text-base tracking-wider text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none"
 				/>
-				{#if searchQuery}
-					<button
-						type="button"
-						onclick={clearSearch}
-						class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+				{#if selectedEmojis.length > 0}
+					<span
+						class="absolute right-3 top-1/2 -translate-y-1/2 rounded bg-[var(--ttx-accent)]/20 px-1.5 py-0.5 text-[10px] font-bold text-[var(--ttx-accent-text)]"
 					>
-						<X size={14} />
-					</button>
+						{selectedEmojis.length}
+					</span>
 				{/if}
 			</div>
 
-			<!-- Skin Tone Buttons -->
-			<div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
-				<span class="text-[10px] font-bold uppercase tracking-wider mr-1 {isDark ? 'text-slate-500' : 'text-slate-400'}">
-					Warna Kulit:
-				</span>
-				{#each SKIN_TONES as tone, i}
-					<button
-						type="button"
-						onclick={() => (skinTone = i)}
-						title={SKIN_LABELS[i]}
-						class="flex h-7 w-7 items-center justify-center rounded-md border text-sm transition-all {skinTone === i
-							? 'border-blue-500 bg-blue-500/20 shadow-xs'
-							: isDark
-								? 'border-[#1e2e50] bg-[#111a2f] hover:bg-[#16223b]'
-								: 'border-slate-200 bg-slate-50 hover:bg-slate-100'}"
-					>
-						{i === 0 ? '✋' : tone}
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		<!-- Category Tabs -->
-		{#if !searchQuery.trim() && !isLoading}
-			<div class="flex flex-wrap items-center gap-1.5 pt-1">
-				{#each categories as cat}
-					<button
-						type="button"
-						onclick={() => selectCategory(cat)}
-						title={CATEGORY_LABELS[cat] ?? cat}
-						class="flex h-8 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-all {selectedCategory === cat
-							? 'border-blue-500 bg-blue-600 text-white shadow-xs'
-							: isDark
-								? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:border-slate-600'
-								: 'border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300'}"
-					>
-						<span class="text-sm">{getCategoryIcon(cat)}</span>
-						<span>{CATEGORY_LABELS[cat] ?? cat}</span>
-					</button>
-				{/each}
-			</div>
-		{/if}
-	</div>
-
-	<!-- Emoji Grid Area -->
-	<div
-		class="flex-1 min-h-[300px] overflow-y-auto rounded-xl border p-4 {isDark
-			? 'border-[#1a253c] bg-[#0d1525]'
-			: 'border-slate-200 bg-white'}"
-	>
-		{#if isLoading}
-			<div class="flex h-64 flex-col items-center justify-center gap-3">
-				<div class="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"></div>
-				<p class="text-xs {isDark ? 'text-slate-400' : 'text-slate-600'}">Memuat database emoji...</p>
-			</div>
-		{:else if loadError}
-			<div class="flex h-64 flex-col items-center justify-center">
-				<p class="text-xs text-rose-400">Gagal memuat database emoji.</p>
-			</div>
-		{:else if filteredEmojis.length === 0}
-			<div class="flex h-64 flex-col items-center justify-center">
-				<Smile size={32} class="opacity-30 mb-2" />
-				<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-400'}">
-					Tidak ada emoji ditemukan untuk "{searchQuery}"
-				</p>
-			</div>
-		{:else}
-			<div
-				class="grid gap-1.5"
-				style="grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));"
+			<button
+				type="button"
+				onclick={removeLastEmoji}
+				disabled={selectedEmojis.length === 0}
+				title="Hapus satu emoji terakhir"
+				class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] transition-colors hover:text-[var(--ttx-text-main)] disabled:opacity-30 disabled:pointer-events-none"
 			>
-				{#each filteredEmojis as emoji (emoji.id)}
-					{@const native = getEmojiNative(emoji)}
-					{#if native}
-						<button
-							type="button"
-							onclick={() => addEmoji(emoji)}
-							title={emoji.name}
-							class="flex aspect-square items-center justify-center rounded-lg border text-xl transition-all duration-100 active:scale-90 {isDark
-								? 'border-transparent bg-[#111a2f]/40 hover:bg-[#16223b] hover:border-[#1e2e50]'
-								: 'border-transparent bg-slate-50 hover:bg-slate-100 hover:border-slate-200'}"
-						>
-							{native}
-						</button>
-					{/if}
-				{/each}
-			</div>
-		{/if}
-	</div>
+				⌫
+			</button>
 
-	<!-- Selected Emojis Tray -->
-	<div
-		class="flex items-center gap-3 rounded-xl border p-3.5 shrink-0 {isDark
-			? 'border-[#1a253c] bg-[#0d1525]'
-			: 'border-slate-200 bg-white'}"
-	>
-		<div class="relative flex-1">
-			<input
-				type="text"
-				readonly
-				value={selectedEmojis.join('')}
-				placeholder="Klik emoji di atas untuk memasukkannya ke sini..."
-				class="h-10 w-full rounded-lg border px-3 text-base tracking-wider outline-none {isDark
-					? 'border-[#1e2e50] bg-[#080d1a] text-slate-100 placeholder-slate-500'
-					: 'border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400'}"
-			/>
-			{#if selectedEmojis.length > 0}
-				<span
-					class="absolute right-3 top-1/2 -translate-y-1/2 rounded bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-bold text-blue-400"
-				>
-					{selectedEmojis.length}
-				</span>
-			{/if}
+			<button
+				type="button"
+				onclick={clearSelected}
+				disabled={selectedEmojis.length === 0}
+				title="Hapus semua pilihan"
+				class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-dim)] transition-colors hover:bg-rose-500/10 hover:text-rose-500 disabled:opacity-30 disabled:pointer-events-none"
+			>
+				<Trash2 size={15} />
+			</button>
+
+			<button
+				type="button"
+				onclick={copySelectedEmojis}
+				disabled={selectedEmojis.length === 0}
+				class="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-[var(--ttx-accent)] px-4 text-xs font-bold text-white shadow-xs transition-colors hover:bg-[var(--ttx-accent-hover)] disabled:opacity-30 disabled:pointer-events-none"
+			>
+				{#if copied}
+					<Check size={14} />
+					Tersalin
+				{:else}
+					<Copy size={14} />
+					Salin ({selectedEmojis.length})
+				{/if}
+			</button>
 		</div>
-
-		<button
-			type="button"
-			onclick={removeLastEmoji}
-			disabled={selectedEmojis.length === 0}
-			title="Hapus satu emoji terakhir"
-			class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors disabled:opacity-30 disabled:pointer-events-none {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white'
-				: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
-		>
-			⌫
-		</button>
-
-		<button
-			type="button"
-			onclick={clearSelected}
-			disabled={selectedEmojis.length === 0}
-			title="Hapus semua pilihan"
-			class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition-colors disabled:opacity-30 disabled:pointer-events-none {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:text-rose-400 hover:border-rose-500/40'
-				: 'border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200'}"
-		>
-			<Trash2 size={15} />
-		</button>
-
-		<button
-			type="button"
-			onclick={copySelectedEmojis}
-			disabled={selectedEmojis.length === 0}
-			class="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-blue-600 px-4 text-xs font-bold text-white shadow-xs transition-colors hover:bg-blue-500 disabled:opacity-30 disabled:pointer-events-none"
-		>
-			{#if copied}
-				<Check size={14} />
-				Tersalin
-			{:else}
-				<Copy size={14} />
-				Salin ({selectedEmojis.length})
-			{/if}
-		</button>
 	</div>
 </div>
-

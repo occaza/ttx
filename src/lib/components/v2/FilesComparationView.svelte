@@ -244,17 +244,15 @@ lemon`;
 	<div class="flex flex-wrap items-center justify-between gap-3">
 		<div class="flex items-center gap-3">
 			<div
-				class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-					: 'border-blue-200 bg-blue-50 text-blue-600'}"
+				class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]"
 			>
 				<ArrowRightLeft size={18} />
 			</div>
 			<div>
-				<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
+				<h1 class="text-base font-bold text-[var(--ttx-text-main)]">
 					Files Comparation
 				</h1>
-				<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
+				<p class="text-xs text-[var(--ttx-text-muted)]">
 					Bandingkan dua file teks berdampingan untuk menemukan baris yang berbeda atau duplikat
 				</p>
 			</div>
@@ -264,9 +262,7 @@ lemon`;
 			<button
 				type="button"
 				onclick={loadSample}
-				class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white hover:border-blue-500/50'
-					: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600 hover:border-blue-300'}"
+				class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
 			>
 				<Sparkles size={13} />
 				Contoh Data
@@ -274,9 +270,7 @@ lemon`;
 			<button
 				type="button"
 				onclick={clearAll}
-				class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:text-rose-400 hover:border-rose-500/40'
-					: 'border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200'}"
+				class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--ttx-text-dim)] transition-all hover:bg-rose-500/10 hover:text-rose-500"
 			>
 				<Trash2 size={13} />
 				Reset
@@ -284,252 +278,194 @@ lemon`;
 		</div>
 	</div>
 
-	<!-- Options & Action Bar -->
-	<div
-		class="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3.5 {isDark
-			? 'border-[#1a253c] bg-[#0d1525]'
-			: 'border-slate-200 bg-white'}"
-	>
-		<div class="flex flex-wrap items-center gap-4 text-xs font-medium">
-			<label class="flex items-center gap-2 cursor-pointer select-none">
-				<input
-					type="checkbox"
-					bind:checked={caseSensitive}
-					class="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-				/>
-				<span class={isDark ? 'text-slate-300' : 'text-slate-700'}>Case Sensitive</span>
-			</label>
-			<label class="flex items-center gap-2 cursor-pointer select-none">
-				<input
-					type="checkbox"
-					bind:checked={ignoreEmpty}
-					class="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-				/>
-				<span class={isDark ? 'text-slate-300' : 'text-slate-700'}>Abaikan Baris Kosong</span>
-			</label>
-			<label class="flex items-center gap-2 cursor-pointer select-none">
-				<input
-					type="checkbox"
-					bind:checked={onlyDiff}
-					class="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-				/>
-				<span class={isDark ? 'text-slate-300' : 'text-slate-700'}>Hanya Baris Berbeda</span>
-			</label>
+	<!-- Unified Card: stats strip + toolbar + dual editor -->
+	<div class="flex flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs">
+		<!-- Stats Strip -->
+		<div class="grid grid-cols-2 sm:grid-cols-5 divide-x divide-[var(--ttx-border-base)] border-b border-[var(--ttx-border-base)]">
+			<div class="flex flex-col items-center justify-center gap-0.5 px-4 py-3">
+				<p class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">Total Baris A</p>
+				<p class="text-2xl font-black text-[var(--ttx-text-main)]">{stats().totalA}</p>
+			</div>
+			<div class="flex flex-col items-center justify-center gap-0.5 px-4 py-3">
+				<p class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">Total Baris B</p>
+				<p class="text-2xl font-black text-[var(--ttx-text-main)]">{stats().totalB}</p>
+			</div>
+			<div class="flex flex-col items-center justify-center gap-0.5 px-4 py-3">
+				<p class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Cocok di Keduanya</p>
+				<p class="text-2xl font-black text-emerald-400">{stats().inBoth}</p>
+			</div>
+			<div class="flex flex-col items-center justify-center gap-0.5 px-4 py-3">
+				<p class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Hanya di A</p>
+				<p class="text-2xl font-black text-amber-400">{stats().onlyInA}</p>
+			</div>
+			<div class="flex flex-col items-center justify-center gap-0.5 px-4 py-3">
+				<p class="text-[10px] font-bold uppercase tracking-wider text-purple-400">Hanya di B</p>
+				<p class="text-2xl font-black text-purple-400">{stats().onlyInB}</p>
+			</div>
 		</div>
 
-		<div class="flex items-center gap-2">
-			<button
-				type="button"
-				onclick={compare}
-				disabled={!textA.trim() && !textB.trim()}
-				class="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition-colors hover:bg-blue-500 disabled:opacity-40 disabled:pointer-events-none"
-			>
-				<ArrowRightLeft size={14} />
-				Bandingkan Sekarang
-			</button>
-			{#if hasCompared}
-				<button
-					type="button"
-					onclick={copyCombined}
-					class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white'
-						: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
-				>
-					{#if copied}
-						<Check size={14} class="text-emerald-400" />
-						<span class="text-emerald-400">Tersalin</span>
-					{:else}
-						<Copy size={14} />
-						<span>Salin Hasil</span>
-					{/if}
-				</button>
-				<button
-					type="button"
-					onclick={downloadResult}
-					class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white'
-						: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
-				>
-					<Download size={14} />
-					<span>Download .txt</span>
-				</button>
-			{/if}
-		</div>
-	</div>
-
-	<!-- Statistics Badges -->
-	<div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-		<div
-			class="rounded-xl border p-3 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-400' : 'text-slate-500'}">Total Baris A</span>
-			<p class="text-base font-bold mt-0.5 {isDark ? 'text-white' : 'text-slate-900'}">{stats().totalA}</p>
-		</div>
-		<div
-			class="rounded-xl border p-3 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-400' : 'text-slate-500'}">Total Baris B</span>
-			<p class="text-base font-bold mt-0.5 {isDark ? 'text-white' : 'text-slate-900'}">{stats().totalB}</p>
-		</div>
-		<div
-			class="rounded-xl border p-3 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">Cocok di Keduanya</span>
-			<p class="text-base font-bold mt-0.5 text-emerald-400">{stats().inBoth}</p>
-		</div>
-		<div
-			class="rounded-xl border p-3 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<span class="text-[10px] font-bold uppercase tracking-wider text-amber-400">Hanya di A</span>
-			<p class="text-base font-bold mt-0.5 text-amber-400">{stats().onlyInA}</p>
-		</div>
-		<div
-			class="rounded-xl border p-3 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<span class="text-[10px] font-bold uppercase tracking-wider text-purple-400">Hanya di B</span>
-			<p class="text-base font-bold mt-0.5 text-purple-400">{stats().onlyInB}</p>
-		</div>
-	</div>
-
-	<!-- Unified Dual Pane Editor & Diff View -->
-	<div
-		class="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border lg:flex-row {isDark
-			? 'border-[#1a253c]'
-			: 'border-slate-200'}"
-	>
-		<!-- Left Pane: File / Text A -->
-		<div
-			class="flex flex-col flex-1 min-h-[260px] lg:min-h-0 {isDark
-				? 'border-b lg:border-b-0 lg:border-r border-[#1a253c]'
-				: 'border-b lg:border-b-0 lg:border-r border-slate-200'}"
-		>
-			<div
-				class="flex items-center justify-between border-b px-4 h-11 shrink-0 {isDark
-					? 'border-[#1a253c] bg-[#11192c]'
-					: 'border-slate-200 bg-slate-50'}"
-			>
-				<div class="flex items-center gap-2">
-					<FileText size={14} class="text-blue-400" />
-					<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
-						{nameA}
-					</span>
-					<span class="rounded-md bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-400">
-						{textA.split(/\r?\n/).filter((l) => (ignoreEmpty ? l.trim() !== '' : true)).length} baris
-					</span>
-				</div>
-				<div class="flex items-center gap-1.5">
-					<button
-						type="button"
-						onclick={() => fileInputA?.click()}
-						class="flex items-center gap-1 rounded-md border px-2.5 py-1 text-[11px] font-medium transition-colors {isDark
-							? 'border-[#223150] bg-[#141e33] text-slate-300 hover:text-white'
-							: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
-					>
-						<Upload size={12} />
-						Unggah
-					</button>
-				</div>
+		<!-- Toolbar Strip -->
+		<div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 py-2.5">
+			<div class="flex flex-wrap items-center gap-4 text-xs font-medium">
+				<label class="flex items-center gap-2 cursor-pointer select-none">
+					<input
+						type="checkbox"
+						bind:checked={caseSensitive}
+						class="rounded accent-[var(--ttx-accent)]"
+					/>
+					<span class="text-[var(--ttx-text-muted)]">Case Sensitive</span>
+				</label>
+				<label class="flex items-center gap-2 cursor-pointer select-none">
+					<input
+						type="checkbox"
+						bind:checked={ignoreEmpty}
+						class="rounded accent-[var(--ttx-accent)]"
+					/>
+					<span class="text-[var(--ttx-text-muted)]">Abaikan Baris Kosong</span>
+				</label>
+				<label class="flex items-center gap-2 cursor-pointer select-none">
+					<input
+						type="checkbox"
+						bind:checked={onlyDiff}
+						class="rounded accent-[var(--ttx-accent)]"
+					/>
+					<span class="text-[var(--ttx-text-muted)]">Hanya Baris Berbeda</span>
+				</label>
 			</div>
 
-			{#if hasCompared && outA.length > 0}
-				<div
-					class="flex-1 min-h-[360px] overflow-y-auto p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
-						? 'bg-[#080d1a] text-slate-300'
-						: 'bg-slate-50 text-slate-800'}"
+			<div class="flex items-center gap-2">
+				<button
+					type="button"
+					onclick={compare}
+					disabled={!textA.trim() && !textB.trim()}
+					class="flex items-center gap-1.5 rounded-lg bg-[var(--ttx-accent)] px-4 py-2 text-xs font-bold text-white shadow-xs transition-colors hover:bg-[var(--ttx-accent-hover)] disabled:opacity-40 disabled:pointer-events-none"
 				>
-					{#each outA as line, idx}
-						<div
-							class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
-								? isDark ? 'bg-rose-950/40 text-rose-300 border-l-2 border-rose-500' : 'bg-rose-50 text-rose-800 border-l-2 border-rose-500'
-								: line.includes('(cocok di')
-									? isDark ? 'bg-emerald-950/20 text-emerald-300' : 'bg-emerald-50 text-emerald-800'
-									: isDark ? 'text-slate-500' : 'text-slate-400'}"
-						>
-							<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
-							<span class="flex-1 break-all">{line || '—'}</span>
-						</div>
-					{/each}
-				</div>
-			{:else}
-				<textarea
-					bind:value={textA}
-					placeholder="Ketik teks A di sini atau klik Unggah File..."
-					class="w-full flex-1 min-h-[360px] resize-none p-4 font-mono text-xs sm:text-sm outline-none transition-colors {isDark
-						? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-						: 'bg-white text-slate-800 placeholder-slate-400'}"
-				></textarea>
-			{/if}
-		</div>
-
-		<!-- Right Pane: File / Text B -->
-		<div class="flex flex-col flex-1 min-h-[260px] lg:min-h-0">
-			<div
-				class="flex items-center justify-between border-b px-4 h-11 shrink-0 {isDark
-					? 'border-[#1a253c] bg-[#11192c]'
-					: 'border-slate-200 bg-slate-50'}"
-			>
-				<div class="flex items-center gap-2">
-					<FileText size={14} class="text-purple-400" />
-					<span class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
-						{nameB}
-					</span>
-					<span class="rounded-md bg-purple-500/10 px-2 py-0.5 text-[11px] font-medium text-purple-400">
-						{textB.split(/\r?\n/).filter((l) => (ignoreEmpty ? l.trim() !== '' : true)).length} baris
-					</span>
-				</div>
-				<div class="flex items-center gap-1.5">
+					<ArrowRightLeft size={14} />
+					Bandingkan Sekarang
+				</button>
+				{#if hasCompared}
 					<button
 						type="button"
-						onclick={() => fileInputB?.click()}
-						class="flex items-center gap-1 rounded-md border px-2.5 py-1 text-[11px] font-medium transition-colors {isDark
-							? 'border-[#223150] bg-[#141e33] text-slate-300 hover:text-white'
-							: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
+						onclick={copyCombined}
+						class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2 text-xs font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
 					>
-						<Upload size={12} />
-						Unggah
+						{#if copied}
+							<Check size={14} class="text-emerald-400" />
+							<span class="text-emerald-400">Tersalin</span>
+						{:else}
+							<Copy size={14} />
+							<span>Salin Hasil</span>
+						{/if}
 					</button>
+					<button
+						type="button"
+						onclick={downloadResult}
+						class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2 text-xs font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
+					>
+						<Download size={14} />
+						<span>Download .txt</span>
+					</button>
+				{/if}
+			</div>
+		</div>
+
+		<!-- Dual Pane Editor & Diff View -->
+		<div class="flex min-w-0 flex-1 flex-col overflow-hidden lg:flex-row">
+			<!-- Left Pane: File / Text A -->
+			<div class="flex flex-col flex-1 min-h-[260px] lg:min-h-0 border-b lg:border-b-0 lg:border-r border-[var(--ttx-border-base)]">
+				<div class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
+					<div class="flex items-center gap-2">
+						<FileText size={14} class="text-blue-400" />
+						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+							{nameA}
+						</span>
+						<span class="rounded-md bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-400">
+							{textA.split(/\r?\n/).filter((l) => (ignoreEmpty ? l.trim() !== '' : true)).length} baris
+						</span>
+					</div>
+					<div class="flex items-center gap-1.5">
+						<button
+							type="button"
+							onclick={() => fileInputA?.click()}
+							class="flex items-center gap-1 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 py-1 text-[11px] font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
+						>
+							<Upload size={12} />
+							Unggah
+						</button>
+					</div>
 				</div>
+
+				{#if hasCompared && outA.length > 0}
+					<div class="flex-1 min-h-[360px] overflow-y-auto p-3 font-mono text-xs leading-relaxed space-y-1 bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)]">
+						{#each outA as line, idx}
+							<div
+								class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
+									? 'bg-rose-950/40 text-rose-300 border-l-2 border-rose-500'
+									: line.includes('(cocok di')
+										? 'bg-emerald-950/20 text-emerald-300'
+										: 'text-[var(--ttx-text-dim)]'}"
+							>
+								<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
+								<span class="flex-1 break-all">{line || '—'}</span>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<textarea
+						bind:value={textA}
+						placeholder="Ketik teks A di sini atau klik Unggah File..."
+						class="w-full flex-1 min-h-[360px] resize-none p-4 font-mono text-xs sm:text-sm outline-none bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+					></textarea>
+				{/if}
 			</div>
 
-			{#if hasCompared && outB.length > 0}
-				<div
-					class="flex-1 min-h-[380px] overflow-y-auto p-3 font-mono text-xs leading-relaxed space-y-1 {isDark
-						? 'bg-[#080d1a] text-slate-300'
-						: 'bg-slate-50 text-slate-800'}"
-				>
-					{#each outB as line, idx}
-						<div
-							class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
-								? isDark ? 'bg-purple-950/40 text-purple-300 border-l-2 border-purple-500' : 'bg-purple-50 text-purple-800 border-l-2 border-purple-500'
-								: line
-									? isDark ? 'bg-emerald-950/20 text-emerald-300' : 'bg-emerald-50 text-emerald-800'
-									: isDark ? 'text-slate-500' : 'text-slate-400'}"
+			<!-- Right Pane: File / Text B -->
+			<div class="flex flex-col flex-1 min-h-[260px] lg:min-h-0">
+				<div class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
+					<div class="flex items-center gap-2">
+						<FileText size={14} class="text-purple-400" />
+						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+							{nameB}
+						</span>
+						<span class="rounded-md bg-purple-500/10 px-2 py-0.5 text-[11px] font-medium text-purple-400">
+							{textB.split(/\r?\n/).filter((l) => (ignoreEmpty ? l.trim() !== '' : true)).length} baris
+						</span>
+					</div>
+					<div class="flex items-center gap-1.5">
+						<button
+							type="button"
+							onclick={() => fileInputB?.click()}
+							class="flex items-center gap-1 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 py-1 text-[11px] font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
 						>
-							<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
-							<span class="flex-1 break-all">{line || '—'}</span>
-						</div>
-					{/each}
+							<Upload size={12} />
+							Unggah
+						</button>
+					</div>
 				</div>
-			{:else}
-				<textarea
-					bind:value={textB}
-					placeholder="Ketik teks B di sini atau klik Unggah File..."
-					class="w-full flex-1 min-h-[360px] resize-none p-4 font-mono text-xs sm:text-sm outline-none transition-colors {isDark
-						? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-						: 'bg-white text-slate-800 placeholder-slate-400'}"
-				></textarea>
-			{/if}
+
+				{#if hasCompared && outB.length > 0}
+					<div class="flex-1 min-h-[380px] overflow-y-auto p-3 font-mono text-xs leading-relaxed space-y-1 bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)]">
+						{#each outB as line, idx}
+							<div
+								class="flex items-start gap-2.5 px-2 py-1 rounded {line.includes('(tidak ada di')
+									? 'bg-purple-950/40 text-purple-300 border-l-2 border-purple-500'
+									: line
+										? 'bg-emerald-950/20 text-emerald-300'
+										: 'text-[var(--ttx-text-dim)]'}"
+							>
+								<span class="w-8 shrink-0 text-right select-none opacity-40 font-mono text-[10px]">{idx + 1}</span>
+								<span class="flex-1 break-all">{line || '—'}</span>
+							</div>
+						{/each}
+					</div>
+				{:else}
+					<textarea
+						bind:value={textB}
+						placeholder="Ketik teks B di sini atau klik Unggah File..."
+						class="w-full flex-1 min-h-[360px] resize-none p-4 font-mono text-xs sm:text-sm outline-none bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+					></textarea>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
-

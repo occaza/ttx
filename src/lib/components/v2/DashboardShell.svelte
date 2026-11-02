@@ -41,6 +41,7 @@
 	import DisclaimerView from '$lib/components/v2/DisclaimerView.svelte';
 	import DataDeletionView from '$lib/components/v2/DataDeletionView.svelte';
 	import SharedNotepadView from '$lib/components/v2/SharedNotepadView.svelte';
+	import LuckySpinView from '$lib/components/v2/LuckySpinView.svelte';
 
 	let {
 		initialTool = null,
@@ -78,7 +79,8 @@
 		'/disclaimer': 'disclaimer',
 		'/data-deletion': 'data-deletion',
 		'/shared-notepad': 'shared-notepad',
-		'/notepad': 'shared-notepad'
+		'/notepad': 'shared-notepad',
+		'/lucky-spin': 'lucky-spin'
 	};
 
 	let internalTool = $state<string | null>(initialTool);
@@ -104,6 +106,7 @@
 		'TEXT OPERATIONS',
 		'DATA & PARSING',
 		'GENERAL UTILITIES',
+		'MINI GAMES',
 		'SECURITY & MISC'
 	];
 
@@ -113,6 +116,7 @@
 		'TEXT OPERATIONS': tools.filter((t) => t.category === 'Text Operations'),
 		'DATA & PARSING': tools.filter((t) => t.category === 'Data & Parsing'),
 		'GENERAL UTILITIES': tools.filter((t) => t.category === 'General Utilities'),
+		'MINI GAMES': tools.filter((t) => t.category === 'Mini Games'),
 		'SECURITY & MISC': tools.filter((t) => t.category === 'Security & Misc')
 	};
 
@@ -217,12 +221,16 @@
 						(t.href === '/notepad' || t.href === '/shared-notepad'))
 			);
 			if (current) {
-				const catKey = current.category.toUpperCase();
-				if (categories.includes(catKey)) {
-					if (openCategory === null) {
-						openCategory = catKey;
+				const currentCatItems = categoryItems[selectedCategory] || [];
+				const alreadyBelongsToSelected = currentCatItems.some((it) => isToolActive(it.href));
+				if (!alreadyBelongsToSelected) {
+					const catKey = current.category.toUpperCase();
+					if (categories.includes(catKey)) {
+						if (openCategory === null) {
+							openCategory = catKey;
+						}
+						selectedCategory = catKey;
 					}
-					selectedCategory = catKey;
 				}
 			}
 		}
@@ -629,7 +637,7 @@
 					{:else}
 						{@const isOpen = openCategory === category}
 						{@const items = categoryItems[category] || []}
-						{@const isCategoryActive = selectedCategory === category || (Boolean(activeTool) && items.some((it) => isToolActive(it.href)))}
+						{@const isCategoryActive = selectedCategory === category && (!activeTool || items.some((it) => isToolActive(it.href)))}
 						<div class="space-y-1">
 							<button
 								type="button"
@@ -649,13 +657,14 @@
 							{#if isOpen}
 								<div class="ml-3 pl-3 border-l py-1 space-y-0.5 border-[var(--ttx-border-base)]">
 									{#each items as item}
-										{@const isItemActive = isToolActive(item.href)}
+										{@const isItemActive = isCategoryActive && isToolActive(item.href)}
 										<button
 											type="button"
 											class="w-full flex items-center justify-between py-1.5 px-2 rounded-md text-xs transition-colors text-left {isItemActive
 												? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] font-semibold'
 												: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] hover:bg-[var(--ttx-bg-hover)]'}"
 											onclick={() => {
+												selectedCategory = category;
 												isSidebarOpen = false;
 												openTool(item.href);
 											}}
@@ -803,6 +812,8 @@
 					<EmojiPickerView {isDark} />
 				{:else if activeTool === 'pageid'}
 					<PageIdView {isDark} />
+				{:else if activeTool === 'lucky-spin'}
+					<LuckySpinView {isDark} />
 				{:else if activeTool === 'shared-notepad' || activeTool === 'notepad'}
 					<SharedNotepadView {isDark} data={notepadData} />
 				{:else if activeTool === 'privacy-policy'}

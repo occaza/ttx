@@ -87,18 +87,14 @@ Line 10: Juliet`);
 <div class="flex flex-col gap-5 w-full flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
-		<div
-			class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-				: 'border-blue-200 bg-blue-50 text-blue-600'}"
-		>
+		<div class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">
 			<Scissors size={18} />
 		</div>
 		<div>
-			<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
+			<h1 class="text-base font-bold text-[var(--ttx-text-main)]">
 				Extract / Slice Lines
 			</h1>
-			<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
+			<p class="text-xs text-[var(--ttx-text-muted)]">
 				Potong dan ambil jumlah baris spesifik dari dokumen teks Anda
 			</p>
 		</div>
@@ -107,16 +103,8 @@ Line 10: Juliet`);
 	<!-- Main Workspace -->
 	<div class="flex flex-col gap-4 lg:flex-row flex-1 min-h-[520px] lg:min-h-[calc(100dvh-13.5rem)]">
 		<!-- Left Settings Panel -->
-		<div
-			class="flex w-full flex-col gap-4 rounded-xl border p-4 lg:w-72 lg:shrink-0 lg:h-full {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<p
-				class="text-[10px] font-bold uppercase tracking-wider {isDark
-					? 'text-slate-500'
-					: 'text-slate-400'}"
-			>
+		<div class="flex w-full lg:w-72 shrink-0 flex-col gap-4 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-4">
+			<p class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 				Pengaturan Baris
 			</p>
 
@@ -124,7 +112,7 @@ Line 10: Juliet`);
 				<div>
 					<label
 						for="slice-start-line"
-						class="mb-1 block text-xs font-medium {isDark ? 'text-slate-300' : 'text-slate-700'}"
+						class="mb-1 block text-xs font-medium text-[var(--ttx-text-muted)]"
 					>
 						Mulai dari baris ke-
 					</label>
@@ -134,16 +122,14 @@ Line 10: Juliet`);
 						bind:value={startLine}
 						min="1"
 						max={maxLines > 0 ? maxLines : undefined}
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 font-mono text-xs text-[var(--ttx-text-main)] outline-none focus:border-[var(--ttx-border-focus)]"
 					/>
 				</div>
 
 				<div>
 					<label
 						for="slice-line-count"
-						class="mb-1 block text-xs font-medium {isDark ? 'text-slate-300' : 'text-slate-700'}"
+						class="mb-1 block text-xs font-medium text-[var(--ttx-text-muted)]"
 					>
 						Jumlah baris diambil
 					</label>
@@ -152,47 +138,37 @@ Line 10: Juliet`);
 						type="number"
 						bind:value={lineCount}
 						min="1"
-						class="h-9 w-full rounded-lg px-3 font-mono text-xs outline-none {isDark
-							? 'border border-[#1e2e50] bg-[#111a2f] text-slate-100 focus:border-blue-500'
-							: 'border border-slate-200 bg-slate-50 text-slate-900 focus:border-blue-500'}"
+						class="h-9 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 font-mono text-xs text-[var(--ttx-text-main)] outline-none focus:border-[var(--ttx-border-focus)]"
 					/>
 				</div>
 			</div>
 
-			<div class="h-px {isDark ? 'bg-[#1a253c]' : 'bg-slate-200'}"></div>
+			<div class="h-px bg-[var(--ttx-border-base)]"></div>
 
 			<!-- Toggles -->
 			<div class="space-y-2">
-				<p
-					class="text-[10px] font-bold uppercase tracking-wider {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
-				>
+				<p class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 					Opsi
 				</p>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={removeEmpty}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}"
-						>Abaikan Baris Kosong</span
-					>
+					<span class="text-xs text-[var(--ttx-text-muted)]">Abaikan Baris Kosong</span>
 				</label>
 				<label class="flex cursor-pointer items-center gap-2">
 					<input
 						type="checkbox"
 						bind:checked={includeLineNumbers}
-						class="h-3.5 w-3.5 rounded accent-blue-600"
+						class="h-3.5 w-3.5 rounded accent-[var(--ttx-accent)]"
 					/>
-					<span class="text-xs {isDark ? 'text-slate-300' : 'text-slate-700'}"
-						>Sertakan Nomor Baris</span
-					>
+					<span class="text-xs text-[var(--ttx-text-muted)]">Sertakan Nomor Baris</span>
 				</label>
 			</div>
 
-			<div class="h-px {isDark ? 'bg-[#1a253c]' : 'bg-slate-200'}"></div>
+			<div class="h-px bg-[var(--ttx-border-base)]"></div>
 
 			<!-- Upload -->
 			<input
@@ -205,9 +181,7 @@ Line 10: Juliet`);
 			<button
 				type="button"
 				onclick={() => fileInputEl?.click()}
-				class="flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-all {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:border-slate-600 hover:text-slate-200'
-					: 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:text-slate-800'}"
+				class="flex items-center justify-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2 text-xs font-medium text-[var(--ttx-text-muted)] transition-all hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)]"
 			>
 				<Upload size={13} /> Upload File
 			</button>
@@ -217,45 +191,25 @@ Line 10: Juliet`);
 				type="button"
 				onclick={extractLines}
 				disabled={!input.trim()}
-				class="mt-auto flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40 {isDark
-					? 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'
-					: 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'}"
+				class="mt-auto flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40 bg-[var(--ttx-accent)] text-white hover:bg-[var(--ttx-accent-hover)] active:scale-95"
 			>
 				<Scissors size={14} /> Potong & Ambil Baris
 			</button>
 		</div>
 
 		<!-- Right: Editors -->
-		<div
-			class="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border sm:flex-row {isDark
-				? 'border-[#1a253c]'
-				: 'border-slate-200'}"
-		>
+		<div class="flex flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs sm:flex-row">
 			<!-- Input Pane -->
-			<div
-				class="flex flex-1 flex-col min-h-[260px] sm:min-h-0 {isDark
-					? 'border-r border-[#1a253c]'
-					: 'border-r border-slate-200'}"
-			>
-				<div
-					class="flex h-11 shrink-0 items-center justify-between border-b px-4 {isDark
-						? 'border-[#1a253c] bg-[#0d1525]'
-						: 'border-slate-200 bg-slate-50'}"
-				>
-					<span
-						class="text-[10px] font-bold uppercase tracking-wider {isDark
-							? 'text-slate-500'
-							: 'text-slate-400'}"
-					>
+			<div class="flex flex-1 flex-col min-h-[260px] sm:min-h-0 border-r border-[var(--ttx-border-base)]">
+				<div class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 						Input ({maxLines} baris)
 					</span>
 					{#if input}
 						<button
 							type="button"
 							onclick={clearAll}
-							class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {isDark
-								? 'text-slate-500 hover:bg-red-500/10 hover:text-red-400'
-								: 'text-slate-400 hover:bg-red-50 hover:text-red-500'}"
+							class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors text-[var(--ttx-text-dim)] hover:bg-rose-500/10 hover:text-rose-500"
 						>
 							<Trash2 size={11} /> Clear
 						</button>
@@ -264,37 +218,21 @@ Line 10: Juliet`);
 				<textarea
 					bind:value={input}
 					placeholder="Paste teks di sini, satu baris per entri..."
-					class="w-full flex-1 resize-none p-4 font-mono text-xs outline-none leading-relaxed {isDark
-						? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-						: 'bg-white text-slate-800 placeholder-slate-400'}"
+					class="w-full flex-1 resize-none bg-[var(--ttx-bg-card)] p-4 font-mono text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none leading-relaxed"
 				></textarea>
 			</div>
 
 			<!-- Output Pane -->
 			<div class="flex flex-1 flex-col min-h-[220px] sm:min-h-0">
-				<div
-					class="flex h-11 shrink-0 items-center justify-between border-b px-4 {isDark
-						? 'border-[#1a253c] bg-[#0d1525]'
-						: 'border-slate-200 bg-slate-50'}"
-				>
-					<span
-						class="text-[10px] font-bold uppercase tracking-wider {isDark
-							? 'text-slate-500'
-							: 'text-slate-400'}"
-					>
+				<div class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 						Hasil Potongan
 					</span>
 					{#if output}
 						<button
 							type="button"
 							onclick={copyOutput}
-							class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {copied
-								? isDark
-									? 'bg-green-500/10 text-green-400'
-									: 'bg-green-50 text-green-600'
-								: isDark
-									? 'text-slate-400 hover:bg-blue-500/10 hover:text-blue-300'
-									: 'text-slate-500 hover:bg-blue-50 hover:text-blue-600'}"
+							class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {copied ? 'bg-emerald-500/10 text-emerald-500' : 'text-[var(--ttx-text-dim)] hover:bg-[var(--ttx-accent-light)] hover:text-[var(--ttx-accent-text)]'}"
 						>
 							{#if copied}
 								<Check size={11} /> Copied!
@@ -306,11 +244,7 @@ Line 10: Juliet`);
 				</div>
 				<div class="relative flex-1">
 					{#if !output}
-						<div
-							class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center {isDark
-								? 'text-slate-700'
-								: 'text-slate-300'}"
-						>
+						<div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-[var(--ttx-text-dim)]">
 							<Scissors size={32} strokeWidth={1} class="mb-2" />
 							<p class="text-xs">Hasil potongan baris akan muncul di sini</p>
 						</div>
@@ -318,13 +252,10 @@ Line 10: Juliet`);
 					<textarea
 						value={output}
 						readonly
-						class="absolute inset-0 h-full w-full resize-none p-4 font-mono text-xs outline-none leading-relaxed {isDark
-							? 'bg-[#08101e] text-slate-300'
-							: 'bg-slate-50 text-slate-700'}"
+						class="absolute inset-0 h-full w-full resize-none bg-[var(--ttx-bg-card-subtle)] p-4 font-mono text-xs text-[var(--ttx-text-muted)] outline-none leading-relaxed"
 					></textarea>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-

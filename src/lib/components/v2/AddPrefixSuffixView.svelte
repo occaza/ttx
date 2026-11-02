@@ -58,214 +58,134 @@
 <div class="flex flex-col gap-5 flex-1">
 	<!-- Header -->
 	<div class="flex items-center gap-3">
-		<div
-			class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-				: 'border-blue-200 bg-blue-50 text-blue-600'}"
-		>
+		<div class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">
 			<TextCursorInput size={18} />
 		</div>
 		<div>
-			<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
-				Add Prefix / Suffix
-			</h1>
-			<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
-				Tambah teks di awal dan akhir setiap baris
-			</p>
+			<h1 class="text-base font-bold text-[var(--ttx-text-main)]">Add Prefix / Suffix</h1>
+			<p class="text-xs text-[var(--ttx-text-muted)]">Tambah teks di awal dan akhir setiap baris</p>
 		</div>
 	</div>
 
-	<!-- Prefix / Suffix inputs + action toolbar -->
-	<div
-		class="flex flex-wrap items-center gap-3 rounded-xl border p-3 {isDark
-			? 'border-[#1a253c] bg-[#0d1525]'
-			: 'border-slate-200 bg-white'}"
-	>
-		<!-- Prefix input -->
-		<div
-			class="flex items-center gap-2 rounded-lg border px-3 py-2 {isDark
-				? 'border-[#1e2e50] bg-[#111a2f]'
-				: 'border-slate-200 bg-slate-50'}"
-		>
-			<span
-				class="shrink-0 text-[10px] font-bold uppercase tracking-wider {isDark
-					? 'text-slate-500'
-					: 'text-slate-400'}"
-			>
-				Prefix
-			</span>
+	<!-- Unified card -->
+	<div class="flex flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs">
+		<!-- Toolbar strip -->
+		<div class="flex flex-wrap items-center gap-3 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 py-2.5">
+			<!-- Prefix input -->
+			<div class="flex items-center gap-2 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2">
+				<span class="shrink-0 text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+					Prefix
+				</span>
+				<input
+					type="text"
+					bind:value={prefix}
+					placeholder="e.g. - "
+					class="w-24 bg-transparent text-xs outline-none text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+				/>
+			</div>
+
+			<!-- Suffix input -->
+			<div class="flex items-center gap-2 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2">
+				<span class="shrink-0 text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+					Suffix
+				</span>
+				<input
+					type="text"
+					bind:value={suffix}
+					placeholder="e.g. ;"
+					class="w-24 bg-transparent text-xs outline-none text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+				/>
+			</div>
+
+			<div class="h-4 w-px bg-[var(--ttx-border-base)]"></div>
+
+			<!-- Upload -->
 			<input
-				type="text"
-				bind:value={prefix}
-				placeholder="e.g. - "
-				class="w-24 bg-transparent text-xs outline-none {isDark
-					? 'text-slate-200 placeholder-slate-600'
-					: 'text-slate-800 placeholder-slate-400'}"
+				bind:this={fileInputEl}
+				type="file"
+				accept=".txt,.md,.csv"
+				class="hidden"
+				onchange={handleFileUpload}
 			/>
-		</div>
-
-		<!-- Suffix input -->
-		<div
-			class="flex items-center gap-2 rounded-lg border px-3 py-2 {isDark
-				? 'border-[#1e2e50] bg-[#111a2f]'
-				: 'border-slate-200 bg-slate-50'}"
-		>
-			<span
-				class="shrink-0 text-[10px] font-bold uppercase tracking-wider {isDark
-					? 'text-slate-500'
-					: 'text-slate-400'}"
-			>
-				Suffix
-			</span>
-			<input
-				type="text"
-				bind:value={suffix}
-				placeholder="e.g. ;"
-				class="w-24 bg-transparent text-xs outline-none {isDark
-					? 'text-slate-200 placeholder-slate-600'
-					: 'text-slate-800 placeholder-slate-400'}"
-			/>
-		</div>
-
-		<div class="h-5 w-px {isDark ? 'bg-slate-800' : 'bg-slate-200'}"></div>
-
-		<!-- Upload -->
-		<input
-			bind:this={fileInputEl}
-			type="file"
-			accept=".txt,.md,.csv"
-			class="hidden"
-			onchange={handleFileUpload}
-		/>
-		<button
-			type="button"
-			onclick={() => fileInputEl?.click()}
-			class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-all {isDark
-				? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:border-slate-600 hover:text-slate-200'
-				: 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:text-slate-800'}"
-		>
-			<Upload size={13} /> Upload
-		</button>
-
-		{#if input}
 			<button
 				type="button"
-				onclick={clear}
-				class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {isDark
-					? 'text-slate-500 hover:bg-red-500/10 hover:text-red-400'
-					: 'text-slate-400 hover:bg-red-50 hover:text-red-500'}"
+				onclick={() => fileInputEl?.click()}
+				class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2 text-xs font-medium text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)] transition-all"
 			>
-				<Trash2 size={11} /> Clear
+				<Upload size={13} /> Upload
 			</button>
-		{/if}
 
-		<div class="ml-auto flex items-center gap-2">
-			{#if lineCount > 0}
-				<span class="text-[10px] {isDark ? 'text-slate-600' : 'text-slate-400'}">
-					{lineCount} baris
-				</span>
+			{#if input}
+				<button
+					type="button"
+					onclick={clear}
+					class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors text-[var(--ttx-text-dim)] hover:bg-rose-500/10 hover:text-rose-500"
+				>
+					<Trash2 size={11} /> Clear
+				</button>
 			{/if}
-			<button
-				type="button"
-				onclick={applyFix}
-				disabled={!input.trim()}
-				class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40 {isDark
-					? 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'
-					: 'bg-blue-600 text-white hover:bg-blue-500 active:scale-95'}"
-			>
-				<Play size={12} fill="currentColor" /> Generate
-			</button>
-		</div>
-	</div>
 
-	<!-- Split editor -->
-	<div
-		class="flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border sm:flex-row {isDark
-			? 'border-[#1a253c]'
-			: 'border-slate-200'}"
-	>
-		<!-- Input -->
-		<div
-			class="flex flex-1 flex-col min-h-[260px] sm:min-h-0 {isDark
-				? 'border-r border-[#1a253c]'
-				: 'border-r border-slate-200'}"
-		>
-			<div
-				class="flex h-11 shrink-0 items-center px-4 border-b {isDark
-					? 'border-[#1a253c] bg-[#0d1525]'
-					: 'border-slate-200 bg-slate-50'}"
-			>
-				<span
-					class="text-[10px] font-bold uppercase tracking-wider {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
+			<div class="ml-auto flex items-center gap-2">
+				{#if lineCount > 0}
+					<span class="text-[10px] text-[var(--ttx-text-dim)]">{lineCount} baris</span>
+				{/if}
+				<button
+					type="button"
+					onclick={applyFix}
+					disabled={!input.trim()}
+					class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold transition-all disabled:cursor-not-allowed disabled:opacity-40 bg-[var(--ttx-accent)] text-white hover:bg-[var(--ttx-accent-hover)] active:scale-95"
 				>
-					Input
-				</span>
+					<Play size={12} fill="currentColor" /> Generate
+				</button>
 			</div>
-			<textarea
-				bind:value={input}
-				placeholder="Paste teks di sini..."
-				class="w-full flex-1 resize-none p-4 font-mono text-sm outline-none {isDark
-					? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-					: 'bg-white text-slate-800 placeholder-slate-400'}"
-			></textarea>
 		</div>
 
-		<!-- Output -->
-		<div class="flex flex-1 flex-col min-h-[220px] sm:min-h-0">
-			<div
-				class="flex h-11 shrink-0 items-center justify-between border-b px-4 {isDark
-					? 'border-[#1a253c] bg-[#0d1525]'
-					: 'border-slate-200 bg-slate-50'}"
-			>
-				<span
-					class="text-[10px] font-bold uppercase tracking-wider {isDark
-						? 'text-slate-500'
-						: 'text-slate-400'}"
-				>
-					Output
-				</span>
-				{#if output}
-					<button
-						type="button"
-						onclick={copyOutput}
-						class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {copied
-							? isDark
-								? 'bg-green-500/10 text-green-400'
-								: 'bg-green-50 text-green-600'
-							: isDark
-								? 'text-slate-400 hover:bg-blue-500/10 hover:text-blue-300'
-								: 'text-slate-500 hover:bg-blue-50 hover:text-blue-600'}"
-					>
-						{#if copied}
-							<Check size={11} /> Copied!
-						{:else}
-							<Copy size={11} /> Copy
-						{/if}
-					</button>
-				{/if}
-			</div>
-			<div class="relative flex-1">
-				{#if !output && !input}
-					<div
-						class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center {isDark
-							? 'text-slate-700'
-							: 'text-slate-300'}"
-					>
-						<TextCursorInput size={32} strokeWidth={1} class="mb-2" />
-						<p class="text-xs">Preview output muncul di sini</p>
-					</div>
-				{/if}
+		<!-- Split editor area -->
+		<div class="flex min-w-0 flex-1 flex-col overflow-hidden sm:flex-row">
+			<!-- Input -->
+			<div class="flex flex-1 flex-col min-h-[260px] sm:min-h-0 border-r border-[var(--ttx-border-base)]">
+				<div class="flex h-9 shrink-0 items-center border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">Input</span>
+				</div>
 				<textarea
-					value={output}
-					readonly
-					class="absolute inset-0 h-full w-full resize-none p-4 font-mono text-sm outline-none {isDark
-						? 'bg-[#08101e] text-slate-300'
-						: 'bg-slate-50 text-slate-700'}"
+					bind:value={input}
+					placeholder="Paste teks di sini..."
+					class="w-full flex-1 resize-none bg-[var(--ttx-bg-card)] p-4 font-mono text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none"
 				></textarea>
+			</div>
+
+			<!-- Output -->
+			<div class="flex flex-1 flex-col min-h-[220px] sm:min-h-0">
+				<div class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">Output</span>
+					{#if output}
+						<button
+							type="button"
+							onclick={copyOutput}
+							class="flex items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium transition-colors {copied ? 'bg-emerald-500/10 text-emerald-500' : 'text-[var(--ttx-text-dim)] hover:bg-[var(--ttx-accent-light)] hover:text-[var(--ttx-accent-text)]'}"
+						>
+							{#if copied}
+								<Check size={11} /> Copied!
+							{:else}
+								<Copy size={11} /> Copy
+							{/if}
+						</button>
+					{/if}
+				</div>
+				<div class="relative flex-1">
+					{#if !output && !input}
+						<div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-[var(--ttx-text-dim)]">
+							<TextCursorInput size={32} strokeWidth={1} class="mb-2" />
+							<p class="text-xs">Preview output muncul di sini</p>
+						</div>
+					{/if}
+					<textarea
+						value={output}
+						readonly
+						class="absolute inset-0 h-full w-full resize-none bg-[var(--ttx-bg-card-subtle)] p-4 font-mono text-sm text-[var(--ttx-text-muted)] outline-none"
+					></textarea>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
-

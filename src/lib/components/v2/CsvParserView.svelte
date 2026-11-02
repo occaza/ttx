@@ -199,18 +199,12 @@ END:VCARD`;
 	<!-- Header -->
 	<div class="flex flex-wrap items-center justify-between gap-3 shrink-0">
 		<div class="flex items-center gap-3">
-			<div
-				class="flex h-9 w-9 items-center justify-center rounded-xl border {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-blue-400'
-					: 'border-blue-200 bg-blue-50 text-blue-600'}"
-			>
+			<div class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">
 				<Contact size={18} />
 			</div>
 			<div>
-				<h1 class="text-base font-bold {isDark ? 'text-white' : 'text-slate-900'}">
-					CSV & vCard Contact Parser
-				</h1>
-				<p class="text-xs {isDark ? 'text-slate-500' : 'text-slate-500'}">
+				<h1 class="text-base font-bold text-[var(--ttx-text-main)]">CSV & vCard Contact Parser</h1>
+				<p class="text-xs text-[var(--ttx-text-muted)]">
 					Ekstrak nama dan nomor telepon dari file vCard (.vcf) atau teks kontak secara instan
 				</p>
 			</div>
@@ -220,9 +214,7 @@ END:VCARD`;
 			<button
 				type="button"
 				onclick={loadSample}
-				class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white hover:border-blue-500/50'
-					: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600 hover:border-blue-300'}"
+				class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)] transition-all"
 			>
 				<Sparkles size={13} />
 				Contoh vCard
@@ -230,9 +222,7 @@ END:VCARD`;
 			<button
 				type="button"
 				onclick={() => fileInputEl?.click()}
-				class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white hover:border-blue-500/50'
-					: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600 hover:border-blue-300'}"
+				class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)] transition-all"
 			>
 				<Upload size={13} />
 				Unggah File
@@ -240,9 +230,7 @@ END:VCARD`;
 			<button
 				type="button"
 				onclick={clearAll}
-				class="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-400 hover:text-rose-400 hover:border-rose-500/40'
-					: 'border-slate-200 bg-white text-slate-600 hover:text-rose-600 hover:border-rose-200'}"
+				class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-1.5 text-xs font-medium text-[var(--ttx-text-dim)] hover:text-rose-500 hover:bg-rose-500/10 hover:border-rose-500/30 transition-all"
 			>
 				<Trash2 size={13} />
 				Reset
@@ -250,181 +238,141 @@ END:VCARD`;
 		</div>
 	</div>
 
-	<!-- Options & Stats Toolbar -->
-	<div
-		class="flex flex-wrap items-center justify-between gap-3 rounded-xl border p-3.5 shrink-0 {isDark
-			? 'border-[#1a253c] bg-[#0d1525]'
-			: 'border-slate-200 bg-white'}"
-	>
-		<div class="flex items-center gap-3">
-			<label
-				for="delimiter-select"
-				class="text-xs font-medium {isDark ? 'text-slate-400' : 'text-slate-600'}"
-			>
-				Pemisah Output:
-			</label>
-			<select
-				id="delimiter-select"
-				bind:value={delimiter}
-				onchange={parseVCard}
-				class="h-8 rounded-lg border px-2.5 text-xs outline-none transition-colors {isDark
-					? 'border-[#1e2e50] bg-[#111a2f] text-slate-200'
-					: 'border-slate-200 bg-slate-50 text-slate-800'}"
-			>
-				<option value=" | ">Nama | Telepon</option>
-				<option value=",">Nama, Telepon (CSV)</option>
-				<option value=" - ">Nama - Telepon</option>
-				<option value="	">Nama [Tab] Telepon</option>
-			</select>
+	<!-- Unified card: stats + toolbar + editor -->
+	<div class="flex flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs">
+		<!-- Stats strip -->
+		<div class="grid grid-cols-3 divide-x divide-[var(--ttx-border-base)] border-b border-[var(--ttx-border-base)]">
+			<div class="flex items-center gap-3 px-4 py-3">
+				<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+					<Users size={18} />
+				</div>
+				<div>
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+						Total Kontak
+					</span>
+					<p class="text-lg font-bold text-[var(--ttx-text-main)]">{totalContacts}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center gap-3 px-4 py-3">
+				<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+					<Phone size={18} />
+				</div>
+				<div>
+					<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+						Ada Nomor Telepon
+					</span>
+					<p class="text-lg font-bold text-emerald-400">{withPhone}</p>
+				</div>
+			</div>
+
+			<div class="flex items-center gap-3 px-4 py-3">
+				<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-400">
+					<PhoneOff size={18} />
+				</div>
+				<div>
+					<span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">
+						Tanpa Nomor Telepon
+					</span>
+					<p class="text-lg font-bold text-rose-400">{withoutPhone}</p>
+				</div>
+			</div>
 		</div>
 
-		<div class="flex items-center gap-2">
-			<button
-				type="button"
-				onclick={parseVCard}
-				class="flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition-colors hover:bg-blue-500"
-			>
-				<Contact size={14} />
-				Ekstrak Kontak
-			</button>
-			{#if output}
+		<!-- Toolbar strip -->
+		<div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 py-2.5 shrink-0">
+			<div class="flex items-center gap-3">
+				<label
+					for="delimiter-select"
+					class="text-xs font-medium text-[var(--ttx-text-muted)]"
+				>
+					Pemisah Output:
+				</label>
+				<select
+					id="delimiter-select"
+					bind:value={delimiter}
+					onchange={parseVCard}
+					class="h-8 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 text-xs text-[var(--ttx-text-main)] outline-none transition-colors"
+				>
+					<option value=" | ">Nama | Telepon</option>
+					<option value=",">Nama, Telepon (CSV)</option>
+					<option value=" - ">Nama - Telepon</option>
+					<option value="	">Nama [Tab] Telepon</option>
+				</select>
+			</div>
+
+			<div class="flex items-center gap-2">
 				<button
 					type="button"
-					onclick={copyOutput}
-					class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white'
-						: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
+					onclick={parseVCard}
+					class="flex items-center gap-1.5 rounded-lg bg-[var(--ttx-accent)] px-4 py-2 text-xs font-bold text-white shadow-xs transition-colors hover:bg-[var(--ttx-accent-hover)]"
 				>
-					{#if copied}
-						<Check size={14} class="text-emerald-400" />
-						<span class="text-emerald-400">Tersalin</span>
-					{:else}
-						<Copy size={14} />
-						<span>Salin</span>
-					{/if}
+					<Contact size={14} />
+					Ekstrak Kontak
 				</button>
-				<button
-					type="button"
-					onclick={downloadOutput}
-					class="flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-300 hover:text-white'
-						: 'border-slate-200 bg-white text-slate-700 hover:text-blue-600'}"
-				>
-					<Download size={14} />
-					<span>Download .txt</span>
-				</button>
-			{/if}
-		</div>
-	</div>
-
-	<!-- Statistics Badges -->
-	<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 shrink-0">
-		<div
-			class="flex items-center gap-3 rounded-xl border p-3.5 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
-				<Users size={18} />
-			</div>
-			<div>
-				<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-400' : 'text-slate-500'}">
-					Total Kontak
-				</span>
-				<p class="text-lg font-bold {isDark ? 'text-white' : 'text-slate-900'}">{totalContacts}</p>
+				{#if output}
+					<button
+						type="button"
+						onclick={copyOutput}
+						class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2 text-xs font-medium text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)] transition-all"
+					>
+						{#if copied}
+							<Check size={14} class="text-emerald-400" />
+							<span class="text-emerald-400">Tersalin</span>
+						{:else}
+							<Copy size={14} />
+							<span>Salin</span>
+						{/if}
+					</button>
+					<button
+						type="button"
+						onclick={downloadOutput}
+						class="flex items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 py-2 text-xs font-medium text-[var(--ttx-text-muted)] hover:border-[var(--ttx-border-focus)] hover:text-[var(--ttx-text-main)] transition-all"
+					>
+						<Download size={14} />
+						<span>Download .txt</span>
+					</button>
+				{/if}
 			</div>
 		</div>
 
-		<div
-			class="flex items-center gap-3 rounded-xl border p-3.5 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
-				<Phone size={18} />
+		<!-- Editor panel: input | output -->
+		<div class="flex-1 min-w-0 flex flex-col lg:flex-row overflow-hidden">
+			<!-- Left Pane: Input -->
+			<div class="flex-1 flex flex-col min-h-[220px] lg:min-h-0 border-b lg:border-b-0 lg:border-r border-[var(--ttx-border-base)]">
+				<div class="flex items-center justify-between px-4 h-9 border-b shrink-0 bg-[var(--ttx-bg-card-subtle)] border-[var(--ttx-border-base)]">
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+						Input Data (vCard / CSV / Teks)
+					</span>
+					<span class="text-[11px] font-mono text-[var(--ttx-text-dim)]">
+						{input ? input.split(/\r?\n/).length : 0} baris
+					</span>
+				</div>
+				<textarea
+					bind:value={input}
+					oninput={parseVCard}
+					placeholder="Tempel file .vcf vCard atau teks kontak di sini..."
+					class="flex-1 resize-none p-4 text-xs sm:text-sm font-mono outline-none w-full bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+				></textarea>
 			</div>
-			<div>
-				<span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
-					Ada Nomor Telepon
-				</span>
-				<p class="text-lg font-bold text-emerald-400">{withPhone}</p>
-			</div>
-		</div>
 
-		<div
-			class="flex items-center gap-3 rounded-xl border p-3.5 {isDark
-				? 'border-[#1a253c] bg-[#0d1525]'
-				: 'border-slate-200 bg-white'}"
-		>
-			<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-400">
-				<PhoneOff size={18} />
+			<!-- Right Pane: Output -->
+			<div class="flex-1 flex flex-col min-h-[220px] lg:min-h-0">
+				<div class="flex items-center justify-between px-4 h-9 border-b shrink-0 bg-[var(--ttx-bg-card-subtle)] border-[var(--ttx-border-base)]">
+					<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+						Hasil Ekstraksi Kontak
+					</span>
+					<span class="text-[11px] font-mono text-[var(--ttx-text-dim)]">
+						{output ? output.split(/\r?\n/).length : 0} baris
+					</span>
+				</div>
+				<textarea
+					value={output}
+					readonly
+					placeholder="Hasil ekstraksi kontak akan muncul di sini..."
+					class="flex-1 resize-none p-4 text-xs sm:text-sm font-mono outline-none w-full bg-[var(--ttx-bg-card-subtle)] text-[var(--ttx-text-muted)]"
+				></textarea>
 			</div>
-			<div>
-				<span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">
-					Tanpa Nomor Telepon
-				</span>
-				<p class="text-lg font-bold text-rose-400">{withoutPhone}</p>
-			</div>
-		</div>
-	</div>
-
-	<!-- Editor panel: input | output -->
-	<div
-		class="flex-1 min-w-0 flex flex-col lg:flex-row rounded-xl border overflow-hidden {isDark
-			? 'border-[#1a253c]'
-			: 'border-slate-200'}"
-	>
-		<!-- Left Pane: Input -->
-		<div
-			class="flex-1 flex flex-col min-h-[220px] lg:min-h-0 {isDark
-				? 'border-b lg:border-b-0 lg:border-r border-[#1a253c]'
-				: 'border-b lg:border-b-0 lg:border-r border-slate-200'}"
-		>
-			<div
-				class="flex items-center justify-between px-4 h-11 border-b shrink-0 {isDark
-					? 'bg-[#0d1525] border-[#1a253c]'
-					: 'bg-slate-50 border-slate-200'}"
-			>
-				<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">
-					Input Data (vCard / CSV / Teks)
-				</span>
-				<span class="text-[11px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">
-					{input ? input.split(/\r?\n/).length : 0} baris
-				</span>
-			</div>
-			<textarea
-				bind:value={input}
-				oninput={parseVCard}
-				placeholder="Tempel file .vcf vCard atau teks kontak di sini..."
-				class="flex-1 resize-none p-4 text-xs sm:text-sm font-mono outline-none w-full {isDark
-					? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-					: 'bg-white text-slate-800 placeholder-slate-400'}"
-			></textarea>
-		</div>
-
-		<!-- Right Pane: Output -->
-		<div class="flex-1 flex flex-col min-h-[220px] lg:min-h-0">
-			<div
-				class="flex items-center justify-between px-4 h-11 border-b shrink-0 {isDark
-					? 'bg-[#0d1525] border-[#1a253c]'
-					: 'bg-slate-50 border-slate-200'}"
-			>
-				<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-500' : 'text-slate-400'}">
-					Hasil Ekstraksi Kontak
-				</span>
-				<span class="text-[11px] font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">
-					{output ? output.split(/\r?\n/).length : 0} baris
-				</span>
-			</div>
-			<textarea
-				value={output}
-				readonly
-				placeholder="Hasil ekstraksi kontak akan muncul di sini..."
-				class="flex-1 resize-none p-4 text-xs sm:text-sm font-mono outline-none w-full {isDark
-					? 'bg-[#08101e] text-slate-300'
-					: 'bg-slate-50 text-slate-700'}"
-			></textarea>
 		</div>
 	</div>
 </div>
-

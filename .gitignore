@@ -30,6 +30,7 @@ vite.config.ts.timestamp-*
 experimental/
 src/routes/(experimental)/
 *backup*
+*.bak
 
 # Tools archive (SvelteKit ignores _prefixed dirs, kept on disk only)
 src/routes/_tools/

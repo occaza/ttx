@@ -179,23 +179,23 @@
 
 <div class="flex flex-col gap-3 sm:gap-4 w-full flex-1 min-h-0 h-full overflow-hidden">
 	<!-- HEADER BAR -->
-	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b shrink-0 {isDark ? 'border-[#1a253c]' : 'border-slate-200'}">
+	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--ttx-border-base)] shrink-0">
 		<div class="flex items-center gap-3">
-			<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md shadow-blue-500/20 shrink-0">
+			<div class="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] shadow-xs shrink-0">
 				<NotebookPen class="h-5 w-5" />
 			</div>
 			<div>
 				<div class="flex items-center gap-2">
-					<h1 class="text-base sm:text-lg font-bold tracking-tight {isDark ? 'text-white' : 'text-slate-900'}">
+					<h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--ttx-text-main)]">
 						Shared Notepad
 					</h1>
 					{#if data?.slug}
-						<span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-mono font-bold rounded-lg {isDark ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30' : 'bg-blue-50 text-blue-700 border border-blue-200'}">
+						<span class="inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-mono font-bold rounded-lg bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] border border-[var(--ttx-border-subtle)]">
 							{data.slug}
 						</span>
 					{/if}
 				</div>
-				<p class="text-xs {isDark ? 'text-slate-400' : 'text-slate-500'}">
+				<p class="text-xs text-[var(--ttx-text-muted)]">
 					Catatan kolaborasi realtime dengan tautan unik, terenkripsi aman, dan bebas batas waktu.
 				</p>
 			</div>
@@ -208,9 +208,7 @@
 					type="button"
 					onclick={refresh}
 					disabled={refreshing}
-					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all {isDark
-						? 'border-[#223356] bg-[#11192b] text-slate-300 hover:text-white hover:bg-[#16233d]'
-						: 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}"
+					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
 					title="Muat ulang catatan dari server"
 				>
 					<RefreshCw size={13} class={refreshing ? 'animate-spin' : ''} />
@@ -220,14 +218,12 @@
 				<button
 					type="button"
 					onclick={copyLink}
-					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all {isDark
-						? 'border-[#223356] bg-[#11192b] text-slate-300 hover:text-white hover:bg-[#16233d]'
-						: 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'}"
+					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
 					title="Salin tautan catatan untuk dibagikan"
 				>
 					{#if copiedLink}
-						<Check size={13} class="text-emerald-400" />
-						<span class="text-emerald-400">Tautan Tersalin!</span>
+						<Check size={13} class="text-emerald-500" />
+						<span class="text-emerald-500">Tautan Tersalin!</span>
 					{:else}
 						<Copy size={13} />
 						<span>Salin Link</span>
@@ -237,7 +233,7 @@
 
 			<a
 				href="/notepad"
-				class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 active:scale-95 text-white shadow-xs transition-all"
+				class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white shadow-xs transition-all"
 				title="Buat dokumen catatan bersama baru"
 			>
 				<FilePlus2 size={13} />
@@ -248,14 +244,14 @@
 
 	{#if !data?.slug}
 		<!-- EMPTY / NO SLUG STATE: Guide user to open or create a note -->
-		<div class="flex-1 flex flex-col items-center justify-center p-8 text-center rounded-xl border {isDark ? 'border-[#1a253c] bg-[#0d1525]' : 'border-slate-200 bg-white'}">
-			<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400 mb-4">
+		<div class="flex-1 flex flex-col items-center justify-center p-8 text-center rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs">
+			<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--ttx-accent-subtle)] text-[var(--ttx-accent-text)] mb-4">
 				<NotebookPen size={32} />
 			</div>
-			<h2 class="text-lg font-bold mb-2 {isDark ? 'text-white' : 'text-slate-900'}">
+			<h2 class="text-lg font-bold mb-2 text-[var(--ttx-text-main)]">
 				Mulai Catatan Bersama
 			</h2>
-			<p class="text-xs max-w-md mb-6 leading-relaxed {isDark ? 'text-slate-400' : 'text-slate-500'}">
+			<p class="text-xs max-w-md mb-6 leading-relaxed text-[var(--ttx-text-muted)]">
 				Buat dokumen baru dengan tautan unik 12-karakter, atau masukkan ID dokumen yang ingin Anda buka.
 			</p>
 
@@ -264,13 +260,11 @@
 					type="text"
 					bind:value={targetSlug}
 					placeholder="Masukkan ID / slug (mis: a1b2c3d4e5f6)"
-					class="h-10 px-3.5 rounded-lg border text-xs font-mono w-full outline-none transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-						: 'border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+					class="h-10 px-3.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)] text-xs font-mono w-full outline-none transition-colors"
 				/>
 				<a
 					href={targetSlug.trim() ? `/notepad/${targetSlug.trim()}` : '/notepad'}
-					class="h-10 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 w-full sm:w-auto shadow-sm transition-all"
+					class="h-10 px-4 rounded-lg bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 w-full sm:w-auto shadow-xs transition-all"
 				>
 					<span>{targetSlug.trim() ? 'Buka Catatan' : 'Buat Baru'}</span>
 					<ArrowRight size={14} />
@@ -279,19 +273,19 @@
 		</div>
 	{:else if data.isLocked}
 		<!-- LOCKED STATE -->
-		<div class="flex-1 flex flex-col items-center justify-center p-8 text-center rounded-xl border {isDark ? 'border-[#1a253c] bg-[#0d1525]' : 'border-slate-200 bg-white'}">
-			<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-400 mb-4">
+		<div class="flex-1 flex flex-col items-center justify-center p-8 text-center rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs">
+			<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500 mb-4">
 				<Lock size={32} />
 			</div>
-			<h2 class="text-lg font-bold mb-2 {isDark ? 'text-white' : 'text-slate-900'}">
+			<h2 class="text-lg font-bold mb-2 text-[var(--ttx-text-main)]">
 				Catatan Ini Terkunci
 			</h2>
-			<p class="text-xs max-w-sm mb-6 leading-relaxed {isDark ? 'text-slate-400' : 'text-slate-500'}">
+			<p class="text-xs max-w-sm mb-6 leading-relaxed text-[var(--ttx-text-muted)]">
 				Dokumen ini dilindungi dengan kata sandi. Silakan masukkan password untuk membaca dan menyunting isinya.
 			</p>
 
 			{#if unlockError}
-				<div class="mb-4 flex items-center gap-2 p-3 rounded-lg text-xs font-medium border border-rose-500/30 bg-rose-500/10 text-rose-400 max-w-sm w-full text-left">
+				<div class="mb-4 flex items-center gap-2 p-3 rounded-lg text-xs font-medium border border-rose-500/30 bg-rose-500/10 text-rose-500 max-w-sm w-full text-left">
 					<AlertCircle size={15} class="shrink-0" />
 					<span>{unlockError}</span>
 				</div>
@@ -308,14 +302,12 @@
 					name="password"
 					bind:value={unlockPassword}
 					placeholder="Masukkan password..."
-					class="h-10 px-3.5 rounded-lg border text-xs outline-none transition-colors {isDark
-						? 'border-[#1e2e50] bg-[#111a2f] text-slate-100 placeholder-slate-500 focus:border-blue-500'
-						: 'border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+					class="h-10 px-3.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)] text-xs outline-none transition-colors"
 					required
 				/>
 				<button
 					type="submit"
-					class="h-10 rounded-lg bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-40"
+					class="h-10 rounded-lg bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 disabled:opacity-40"
 					disabled={unlocking || !unlockPassword}
 				>
 					{#if unlocking}
@@ -329,20 +321,20 @@
 			</form>
 		</div>
 	{:else}
-		<!-- UNLOCKED NOTEBOOK WORKSPACE -->
+		<!-- UNLOCKED NOTEBOOK WORKSPACE: UNIFIED CARD -->
 		<form
 			method="POST"
 			action="?/save"
 			use:enhance={afterSave}
 			bind:this={saveFormEl}
-			class="flex-1 flex flex-col min-h-0 h-full max-h-full rounded-xl border overflow-hidden {isDark ? 'border-[#1a253c]' : 'border-slate-200'}"
+			class="flex flex-1 flex-col min-h-0 h-full max-h-full rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden"
 		>
 			<!-- WORKSPACE TOOLBAR -->
-			<div class="flex flex-wrap items-center justify-between gap-3 px-4 h-11 border-b shrink-0 {isDark ? 'bg-[#0d1525] border-[#1a253c]' : 'bg-slate-50 border-slate-200'}">
+			<div class="flex flex-wrap items-center justify-between gap-3 px-4 h-11 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] shrink-0">
 				<!-- Left: Cut Tool & Info -->
 				<div class="flex items-center gap-3">
 					<div class="flex items-center gap-1.5">
-						<span class="text-[10px] font-bold uppercase tracking-wider {isDark ? 'text-slate-400' : 'text-slate-600'}">
+						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
 							Cut Top:
 						</span>
 						<input
@@ -350,28 +342,24 @@
 							min="1"
 							max={lineCount}
 							bind:value={cutLinesCount}
-							class="h-7 w-14 rounded-md border text-center font-mono text-xs outline-none transition-colors {isDark
-								? 'border-[#1e2e50] bg-[#111a2f] text-slate-200 focus:border-blue-500'
-								: 'border-slate-200 bg-white text-slate-800 focus:border-blue-500'}"
+							class="h-7 w-14 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-center font-mono text-xs text-[var(--ttx-text-main)] focus:border-[var(--ttx-accent)] outline-none transition-colors"
 						/>
-						<span class="text-xs font-mono {isDark ? 'text-slate-500' : 'text-slate-400'}">baris</span>
+						<span class="text-xs font-mono text-[var(--ttx-text-dim)]">baris</span>
 						<button
 							type="button"
 							onclick={cutTopLines}
 							disabled={lineCount === 0 || cutting}
-							class="h-7 px-2.5 rounded-md border text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-30 {isDark
-								? 'border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20'
-								: 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'}"
+							class="h-7 px-2.5 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-30"
 							title="Potong baris teratas dan salin ke clipboard (otomatis dicatat ke history saat disimpan)"
 						>
-							<Zap size={11} class="text-amber-400" />
+							<Zap size={11} class="text-amber-500" />
 							<span>Cut</span>
 						</button>
 					</div>
 
-					<div class="h-4 w-px {isDark ? 'bg-slate-800' : 'bg-slate-200'}"></div>
+					<div class="h-4 w-px bg-[var(--ttx-border-subtle)]"></div>
 
-					<div class="flex items-center gap-1 text-[11px] font-mono {isDark ? 'text-slate-400' : 'text-slate-500'}">
+					<div class="flex items-center gap-1 text-[11px] font-mono text-[var(--ttx-text-muted)]">
 						<span>{lineCount.toLocaleString()} baris</span>
 						<span class="opacity-40">|</span>
 						<span>{text.length.toLocaleString()} karakter</span>
@@ -383,7 +371,7 @@
 					<!-- Password Protection Control -->
 					{#if !data.hasPassword}
 						<div class="relative hidden sm:block">
-							<div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none {isDark ? 'text-slate-500' : 'text-slate-400'}">
+							<div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-[var(--ttx-text-dim)]">
 								<Lock size={12} />
 							</div>
 							<input
@@ -391,18 +379,14 @@
 								name="password"
 								bind:value={passwordInput}
 								placeholder="Set Password (opsional)"
-								class="h-7 w-44 pl-7 pr-2.5 text-xs rounded-md border outline-none transition-colors {isDark
-									? 'border-[#1e2e50] bg-[#111a2f] text-slate-200 placeholder-slate-500 focus:border-blue-500'
-									: 'border-slate-200 bg-white text-slate-800 placeholder-slate-400 focus:border-blue-500'}"
+								class="h-7 w-44 pl-7 pr-2.5 text-xs rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)] outline-none transition-colors"
 							/>
 						</div>
 					{:else}
 						<button
 							type="button"
 							onclick={() => (showChangePasswordModal = true)}
-							class="h-7 px-2.5 rounded-md border text-xs font-medium flex items-center gap-1.5 transition-colors {isDark
-								? 'border-blue-500/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20'
-								: 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100'}"
+							class="h-7 px-2.5 rounded-md border border-[var(--ttx-accent)]/30 bg-[var(--ttx-accent-subtle)] text-[var(--ttx-accent-text)] hover:opacity-90 text-xs font-medium flex items-center gap-1.5 transition-colors"
 							title="Klik untuk ubah atau hapus password (hanya admin)"
 						>
 							<Lock size={12} />
@@ -412,7 +396,7 @@
 
 					<!-- Save feedback -->
 					{#if saved}
-						<span class="flex items-center gap-1 text-xs font-bold text-emerald-400 px-1 animate-fade-in">
+						<span class="flex items-center gap-1 text-xs font-bold text-emerald-500 px-1 animate-fade-in">
 							<Check size={13} /> Tersimpan!
 						</span>
 					{/if}
@@ -422,7 +406,7 @@
 						type="submit"
 						onclick={handleSaveClick}
 						disabled={isSaving}
-						class="h-7 px-3 rounded-md bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-40"
+						class="h-7 px-3 rounded-md bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-40"
 					>
 						<Save size={13} />
 						<span>{isSaving ? 'Menyimpan...' : 'Simpan'}</span>
@@ -431,9 +415,9 @@
 			</div>
 
 			<!-- MAIN EDITOR WITH SYNCED LINE-NUMBER GUTTER -->
-			<div class="flex-1 min-h-0 h-full flex overflow-hidden {isDark ? 'bg-[#08101e]' : 'bg-white'}">
+			<div class="flex-1 min-h-0 h-full flex overflow-hidden bg-[var(--ttx-bg-card)]">
 				<!-- Gutter line numbers -->
-				<div class="w-12 shrink-0 h-full max-h-full border-r select-none overflow-hidden font-mono text-xs {isDark ? 'border-[#1a253c] bg-[#0c1424] text-slate-600' : 'border-slate-200 bg-slate-50 text-slate-400'}">
+				<div class="w-12 shrink-0 h-full max-h-full border-r border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] select-none overflow-hidden font-mono text-xs text-[var(--ttx-text-dim)]">
 					<div style="transform: translateY({-textareaScrollTop}px); padding-top: 16px;">
 						{#each Array(lineCount) as _, i}
 							<div class="text-right pr-3" style="height: 22px; line-height: 22px;">
@@ -451,14 +435,12 @@
 					placeholder="Tulis atau paste catatan bersama di sini..."
 					onscroll={syncScroll}
 					style="line-height: 22px;"
-					class="w-full flex-1 h-full min-h-0 resize-none p-4 font-mono text-xs sm:text-sm outline-none overflow-y-auto {isDark
-						? 'bg-[#08101e] text-slate-200 placeholder-slate-600'
-						: 'bg-white text-slate-800 placeholder-slate-400'}"
+					class="w-full flex-1 h-full min-h-0 resize-none p-4 font-mono text-xs sm:text-sm outline-none overflow-y-auto bg-transparent text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
 				></textarea>
 			</div>
 
 			<!-- WORKSPACE BOTTOM STATUS -->
-			<div class="flex flex-wrap items-center justify-between gap-3 px-4 py-2 border-t text-[11px] font-mono shrink-0 {isDark ? 'border-[#1a253c] bg-[#0d1525] text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-500'}">
+			<div class="flex flex-wrap items-center justify-between gap-3 px-4 py-2 border-t border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] text-[11px] font-mono shrink-0 text-[var(--ttx-text-muted)]">
 				<div class="flex items-center gap-1.5">
 					<Clock size={12} class="opacity-60" />
 					<span>Terakhir diubah: {formatDate(data.updatedAt)}</span>
@@ -477,36 +459,36 @@
 				method="POST"
 				action="?/changePassword"
 				use:enhance={handleChangePassword}
-				class="rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border {isDark ? 'bg-[#0d1525] border-[#1a253c] text-white' : 'bg-white border-slate-200 text-slate-900'}"
+				class="rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)]"
 			>
 				<button
 					type="button"
-					class="absolute top-4 right-4 text-slate-400 hover:text-slate-200"
+					class="absolute top-4 right-4 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)]"
 					onclick={() => (showChangePasswordModal = false)}
 				>
 					<X size={18} />
 				</button>
 
 				<div class="flex items-center gap-2.5 mb-3">
-					<div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+					<div class="p-2 rounded-lg bg-[var(--ttx-accent-subtle)] text-[var(--ttx-accent-text)]">
 						<KeyRound size={18} />
 					</div>
 					<h3 class="font-bold text-base">Ubah / Hapus Password</h3>
 				</div>
 
-				<p class="text-xs leading-relaxed mb-4 {isDark ? 'text-slate-400' : 'text-slate-600'}">
+				<p class="text-xs leading-relaxed mb-4 text-[var(--ttx-text-muted)]">
 					Tindakan ini memerlukan Password Recovery Admin untuk mengizinkan perubahan proteksi.
 				</p>
 
 				{#if changePasswordError}
-					<div class="mb-3.5 p-2.5 rounded-lg text-xs border border-rose-500/30 bg-rose-500/10 text-rose-400">
+					<div class="mb-3.5 p-2.5 rounded-lg text-xs border border-rose-500/30 bg-rose-500/10 text-rose-500">
 						{changePasswordError}
 					</div>
 				{/if}
 
 				<div class="space-y-3">
 					<div>
-						<label class="block text-[10px] font-bold uppercase tracking-wider mb-1 {isDark ? 'text-slate-400' : 'text-slate-600'}" for="adminPassword">
+						<label class="block text-[10px] font-bold uppercase tracking-wider mb-1 text-[var(--ttx-text-muted)]" for="adminPassword">
 							Admin Recovery Password
 						</label>
 						<input
@@ -514,14 +496,12 @@
 							type="password"
 							name="adminPassword"
 							required
-							class="h-9 w-full rounded-lg border px-3 text-xs outline-none transition-colors {isDark
-								? 'border-[#1e2e50] bg-[#111a2f] text-slate-200 focus:border-blue-500'
-								: 'border-slate-200 bg-slate-50 text-slate-900 focus:border-blue-500'}"
+							class="h-9 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] focus:border-[var(--ttx-accent)] px-3 text-xs outline-none transition-colors"
 						/>
 					</div>
 
 					<div>
-						<label class="block text-[10px] font-bold uppercase tracking-wider mb-1 {isDark ? 'text-slate-400' : 'text-slate-600'}" for="newPassword">
+						<label class="block text-[10px] font-bold uppercase tracking-wider mb-1 text-[var(--ttx-text-muted)]" for="newPassword">
 							Password Baru (Kosongkan jika ingin membuka proteksi)
 						</label>
 						<input
@@ -529,16 +509,14 @@
 							type="password"
 							name="newPassword"
 							placeholder="Kosongkan untuk menghapus password"
-							class="h-9 w-full rounded-lg border px-3 text-xs outline-none transition-colors {isDark
-								? 'border-[#1e2e50] bg-[#111a2f] text-slate-200 placeholder-slate-500 focus:border-blue-500'
-								: 'border-slate-200 bg-slate-50 text-slate-900 placeholder-slate-400 focus:border-blue-500'}"
+							class="h-9 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)] px-3 text-xs outline-none transition-colors"
 						/>
 					</div>
 
 					<button
 						type="submit"
 						disabled={changingPassword}
-						class="h-9 w-full mt-2 rounded-lg bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
+						class="h-9 w-full mt-2 rounded-lg bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
 					>
 						{#if changingPassword}
 							<div class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
@@ -553,20 +531,20 @@
 	<!-- MODAL: SAVE WARNING (>1000 LINES) -->
 	{#if showSaveWarning}
 		<div class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-			<div class="rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border {isDark ? 'bg-[#0d1525] border-[#1a253c] text-white' : 'bg-white border-slate-200 text-slate-900'}">
-				<h3 class="text-base font-bold mb-2 text-amber-400 flex items-center gap-2">
+			<div class="rounded-2xl max-w-sm w-full p-6 shadow-2xl relative border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)]">
+				<h3 class="text-base font-bold mb-2 text-amber-500 flex items-center gap-2">
 					<AlertCircle size={18} /> Perhatian: Batas Baris
 				</h3>
-				<p class="text-xs mb-2 {isDark ? 'text-slate-300' : 'text-slate-700'}">
+				<p class="text-xs mb-2 text-[var(--ttx-text-main)]">
 					Dokumen Anda saat ini memiliki <strong class="font-mono">{lineCount.toLocaleString()} baris</strong>.
 				</p>
-				<p class="text-xs mb-5 leading-relaxed {isDark ? 'text-slate-400' : 'text-slate-600'}">
+				<p class="text-xs mb-5 leading-relaxed text-[var(--ttx-text-muted)]">
 					Shared Notepad publik hanya menyimpan <strong class="font-mono">1.000 baris pertama</strong>. Baris ke-{(LINE_LIMIT + 1).toLocaleString()} ke atas akan terpotong secara permanen.
 				</p>
 				<div class="flex gap-2.5">
 					<button
 						type="button"
-						class="flex-1 h-9 rounded-lg border text-xs font-semibold transition-colors {isDark ? 'border-[#1e2e50] hover:bg-[#152035] text-slate-300' : 'border-slate-200 hover:bg-slate-100 text-slate-700'}"
+						class="flex-1 h-9 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] hover:bg-[var(--ttx-bg-hover)] text-[var(--ttx-text-main)] text-xs font-semibold transition-colors"
 						onclick={() => (showSaveWarning = false)}
 					>
 						Batal
