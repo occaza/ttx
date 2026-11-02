@@ -14,10 +14,22 @@
 		History,
 		Plus,
 		ListPlus,
-		X
+		X,
+		Settings,
+		Sliders
 	} from '@lucide/svelte';
 
 	let { isDark = true }: { isDark?: boolean } = $props();
+
+	let activeTab = $state<'options' | 'settings' | 'history'>('options');
+	let controlsCardEl = $state<HTMLElement | null>(null);
+
+	function scrollToTab(tab: 'options' | 'settings' | 'history') {
+		activeTab = tab;
+		if (controlsCardEl) {
+			controlsCardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
+	}
 
 	// Presets
 	const PRESETS = [
@@ -546,6 +558,16 @@
 		<div class="flex items-center gap-2 self-start sm:self-auto">
 			<button
 				type="button"
+				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+				onclick={() => scrollToTab('settings')}
+				title="Buka Pengaturan"
+			>
+				<Sliders size={14} class="text-[var(--ttx-accent-text)]" />
+				<span>Pengaturan</span>
+			</button>
+
+			<button
+				type="button"
 				class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-xs font-semibold text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all"
 				onclick={() => (soundEnabled = !soundEnabled)}
 				title={soundEnabled ? 'Matikan Suara' : 'Aktifkan Suara'}
@@ -565,7 +587,7 @@
 	<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 		<!-- KIRI / TENGAH: WHEEL CANVAS (7 COLS) -->
 		<div
-			class="lg:col-span-7 flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden"
+			class="lg:col-span-7 flex flex-col items-center justify-center p-5 sm:p-8 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden"
 		>
 			<!-- Confetti canvas overlay -->
 			<canvas
@@ -581,14 +603,14 @@
 					bind:this={canvasEl}
 					width={400}
 					height={400}
-					class="w-[290px] h-[290px] sm:w-[360px] sm:h-[360px] md:w-[390px] md:h-[390px] select-none cursor-pointer transition-transform active:scale-[0.99]"
+					class="w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] md:w-[390px] md:h-[390px] select-none cursor-pointer transition-transform active:scale-[0.99]"
 					onclick={spin}
 					title="Klik roda atau tombol untuk memutar"
 				></canvas>
 			</div>
 
 			<!-- Tombol Spin Utama -->
-			<div class="w-full max-w-sm mt-4 flex flex-col gap-2.5">
+			<div class="w-full max-w-sm mt-3 flex flex-col gap-2.5">
 				<button
 					type="button"
 					onclick={spin}
@@ -607,6 +629,26 @@
 						Masukkan minimal 2 opsi pada daftar di samping untuk mulai memutar.
 					</p>
 				{/if}
+
+				<!-- Quick Access Bar Khusus Mobile -->
+				<div class="flex items-center justify-center gap-2 pt-1 sm:hidden">
+					<button
+						type="button"
+						onclick={() => scrollToTab('options')}
+						class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+					>
+						<ListPlus size={13} class="text-[var(--ttx-accent-text)]" />
+						<span>Ubah Opsi ({items.length})</span>
+					</button>
+					<button
+						type="button"
+						onclick={() => scrollToTab('settings')}
+						class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+					>
+						<Sliders size={13} class="text-amber-400" />
+						<span>Pengaturan</span>
+					</button>
+				</div>
 			</div>
 
 			<!-- Winner Card Banner (Jika ada) -->
@@ -632,180 +674,300 @@
 			{/if}
 		</div>
 
-		<!-- KANAN: KONTROL, DAFTAR OPSI, & RIWAYAT (5 COLS) -->
-		<div class="lg:col-span-5 flex flex-col gap-5">
-			<!-- CARD PRESET CEPAT -->
-			<div
-				class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 shadow-xs transition-colors"
-			>
-				<p class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)] mb-3 flex items-center gap-1.5">
-					<ListPlus size={14} class="text-[var(--ttx-accent-text)]" />
-					<span>Pilihan Preset Siap Pakai</span>
-				</p>
-				<div class="flex flex-wrap gap-1.5">
-					{#each PRESETS as preset}
-						<button
-							type="button"
-							disabled={isSpinning}
-							onclick={() => applyPreset(preset.items)}
-							class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] hover:border-[var(--ttx-accent)]/40 transition-all disabled:opacity-50"
-						>
-							{preset.name}
-						</button>
-					{/each}
-				</div>
+		<!-- KANAN / BAWAH: KONTROL, DAFTAR OPSI, PENGATURAN & RIWAYAT (UNIFIED CARD WITH SEGMENTED TABS) -->
+		<div
+			bind:this={controlsCardEl}
+			class="lg:col-span-5 flex flex-col rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden scroll-mt-6"
+		>
+			<!-- Segmented Tabs Header (Mudah di-tap di HP) -->
+			<div class="flex items-center p-1.5 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] gap-1">
+				<button
+					type="button"
+					onclick={() => (activeTab = 'options')}
+					class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all {activeTab === 'options'
+						? 'bg-[var(--ttx-bg-card)] text-[var(--ttx-accent-text)] shadow-xs border border-[var(--ttx-border-subtle)]'
+						: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
+				>
+					<ListPlus size={15} />
+					<span>Opsi ({items.length})</span>
+				</button>
+
+				<button
+					type="button"
+					onclick={() => (activeTab = 'settings')}
+					class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all {activeTab === 'settings'
+						? 'bg-[var(--ttx-bg-card)] text-[var(--ttx-accent-text)] shadow-xs border border-[var(--ttx-border-subtle)]'
+						: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
+				>
+					<Sliders size={15} />
+					<span>Pengaturan</span>
+				</button>
+
+				<button
+					type="button"
+					onclick={() => (activeTab = 'history')}
+					class="flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs sm:text-sm font-bold transition-all {activeTab === 'history'
+						? 'bg-[var(--ttx-bg-card)] text-[var(--ttx-accent-text)] shadow-xs border border-[var(--ttx-border-subtle)]'
+						: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
+				>
+					<History size={15} />
+					<span>Riwayat {#if history.length > 0}({history.length}){/if}</span>
+				</button>
 			</div>
 
-			<!-- CARD DAFTAR OPSI -->
-			<div
-				class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-5 shadow-xs transition-colors flex flex-col gap-4"
-			>
-				<div class="flex items-center justify-between">
-					<div class="flex items-center gap-2">
-						<p class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
-							Daftar Opsi
-						</p>
-						<span
-							class="px-2 py-0.5 text-[11px] font-mono font-bold rounded-md bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-accent-text)]"
-						>
-							{items.length} Opsi
-						</span>
-					</div>
-
-					<div class="flex items-center gap-1.5">
-						<button
-							type="button"
-							onclick={shuffleItems}
-							disabled={isSpinning || items.length < 2}
-							class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] disabled:opacity-40 transition-all"
-							title="Acak urutan opsi"
-						>
-							<Shuffle size={12} />
-							<span>Acak</span>
-						</button>
-						<button
-							type="button"
-							onclick={() => (rawInput = '')}
-							disabled={isSpinning || items.length === 0}
-							class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-rose-400 hover:bg-rose-500/10 disabled:opacity-40 transition-all"
-							title="Kosongkan daftar"
-						>
-							<Trash2 size={12} />
-							<span>Hapus</span>
-						</button>
-					</div>
-				</div>
-
-				<!-- Textarea Input -->
-				<div class="flex flex-col gap-1.5">
-					<textarea
-						bind:value={rawInput}
-						disabled={isSpinning}
-						placeholder="Ketik opsi di sini (1 baris = 1 opsi)..."
-						rows={7}
-						class="w-full p-3 text-xs sm:text-sm font-sans rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] resize-y leading-relaxed transition-all"
-					></textarea>
-					<p class="text-[11px] text-[var(--ttx-text-dim)]">
-						Satu baris untuk setiap opsi pada roda putar.
-					</p>
-				</div>
-
-				<!-- Opsi Pengaturan Putaran -->
-				<div class="pt-3 border-t border-[var(--ttx-border-base)] flex flex-col gap-3">
-					<div class="flex items-center justify-between">
-						<label for="spin-duration" class="text-xs font-medium text-[var(--ttx-text-muted)]">
-							Durasi Putaran: <span class="font-bold text-[var(--ttx-text-main)] font-mono">{spinDuration}s</span>
-						</label>
-						<input
-							type="range"
-							id="spin-duration"
-							min="2"
-							max="10"
-							step="1"
-							bind:value={spinDuration}
-							disabled={isSpinning}
-							class="w-28 sm:w-32 accent-blue-600 cursor-pointer"
-						/>
-					</div>
-
-					<label class="flex items-center gap-2 cursor-pointer text-xs text-[var(--ttx-text-main)] select-none">
-						<input
-							type="checkbox"
-							bind:checked={removeOnWin}
-							disabled={isSpinning}
-							class="checkbox checkbox-xs rounded accent-blue-600"
-						/>
-						<span>Hapus opsi pemenang otomatis setelah terpilih</span>
-					</label>
-				</div>
-			</div>
-
-			<!-- CARD RIWAYAT PEMENANG -->
-			<div
-				class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-5 shadow-xs transition-colors flex flex-col gap-3"
-			>
-				<div class="flex items-center justify-between">
-					<div class="flex items-center gap-2">
-						<History size={14} class="text-[var(--ttx-accent-text)]" />
-						<p class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
-							Riwayat Putaran
-						</p>
-						{#if history.length > 0}
-							<span class="text-[11px] font-mono font-semibold text-[var(--ttx-text-dim)]">
-								({history.length})
+			<!-- TAB CONTENT -->
+			<div class="p-4 sm:p-5 flex-1 flex flex-col min-h-[340px]">
+				<!-- TAB 1: DAFTAR OPSI -->
+				{#if activeTab === 'options'}
+					<div class="flex flex-col gap-4">
+						<!-- Preset Cepat -->
+						<div class="flex flex-col gap-2">
+							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
+								Preset Siap Pakai:
 							</span>
-						{/if}
+							<div class="flex flex-wrap gap-1.5">
+								{#each PRESETS as preset}
+									<button
+										type="button"
+										disabled={isSpinning}
+										onclick={() => applyPreset(preset.items)}
+										class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] hover:border-[var(--ttx-accent)]/40 transition-all disabled:opacity-50"
+									>
+										{preset.name}
+									</button>
+								{/each}
+							</div>
+						</div>
+
+						<div class="h-px bg-[var(--ttx-border-subtle)]"></div>
+
+						<!-- Input Textarea & Toolbar -->
+						<div class="flex flex-col gap-2.5">
+							<div class="flex items-center justify-between">
+								<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
+									Ketik / Tempel Opsi:
+								</span>
+								<div class="flex items-center gap-1.5">
+									<button
+										type="button"
+										onclick={shuffleItems}
+										disabled={isSpinning || items.length < 2}
+										class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] disabled:opacity-40 transition-all shadow-xs"
+										title="Acak urutan opsi"
+									>
+										<Shuffle size={13} />
+										<span>Acak</span>
+									</button>
+									<button
+										type="button"
+										onclick={() => (rawInput = '')}
+										disabled={isSpinning || items.length === 0}
+										class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 disabled:opacity-40 transition-all shadow-xs"
+										title="Kosongkan daftar"
+									>
+										<Trash2 size={13} />
+										<span>Hapus</span>
+									</button>
+								</div>
+							</div>
+
+							<textarea
+								bind:value={rawInput}
+								disabled={isSpinning}
+								placeholder="Tulis opsi di sini, satu baris untuk satu opsi...&#10;&#10;Contoh:&#10;Pilihan A&#10;Pilihan B&#10;Pilihan C"
+								rows={8}
+								class="w-full p-3.5 text-sm sm:text-base font-sans rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] resize-y leading-relaxed transition-all min-h-[160px]"
+							></textarea>
+							<p class="text-xs text-[var(--ttx-text-muted)]">
+								Total: <strong class="text-[var(--ttx-text-main)] font-mono">{items.length} opsi</strong> aktif di roda putar.
+							</p>
+						</div>
 					</div>
 
-					{#if history.length > 0}
-						<div class="flex items-center gap-1.5">
-							<button
-								type="button"
-								onclick={copyHistory}
-								class="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] transition-all"
-								title="Salin semua riwayat"
-							>
-								{#if copiedHistory}
-									<Check size={11} class="text-emerald-400" />
-									<span class="text-emerald-400 font-semibold">Tersalin</span>
-								{:else}
-									<Copy size={11} />
-									<span>Salin</span>
-								{/if}
-							</button>
-							<button
-								type="button"
-								onclick={clearHistory}
-								class="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-rose-400 hover:bg-rose-500/10 transition-all"
-								title="Hapus riwayat"
-							>
-								<Trash2 size={11} />
-							</button>
-						</div>
-					{/if}
-				</div>
-
-				{#if history.length === 0}
-					<p class="text-xs text-[var(--ttx-text-dim)] py-2 text-center">
-						Belum ada hasil putaran. Putar roda untuk melihat pemenang di sini.
-					</p>
-				{:else}
-					<div class="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1">
-						{#each history as item, index}
-							<div
-								class="flex items-center justify-between px-3 py-2 rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-xs"
-							>
-								<div class="flex items-center gap-2 min-w-0">
-									<span class="font-mono text-[11px] text-[var(--ttx-text-dim)] w-4 shrink-0">
-										#{history.length - index}
-									</span>
-									<span class="font-bold text-[var(--ttx-text-main)] truncate">{item.text}</span>
+				<!-- TAB 2: PENGATURAN (SETTINGS) - Didesain khusus terbaca jelas di HP -->
+				{:else if activeTab === 'settings'}
+					<div class="flex flex-col gap-4">
+						<!-- Card 1: Durasi Putaran -->
+						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] p-4 flex flex-col gap-3 shadow-xs">
+							<div class="flex items-center justify-between">
+								<div>
+									<h3 class="text-sm font-bold text-[var(--ttx-text-main)]">Durasi Putaran Roda</h3>
+									<p class="text-xs text-[var(--ttx-text-muted)] mt-0.5">Waktu roda berputar sebelum berhenti</p>
 								</div>
-								<span class="text-[10px] font-mono text-[var(--ttx-text-dim)] shrink-0 ml-2">
-									{item.time}
+								<span class="px-3 py-1 rounded-lg bg-[var(--ttx-accent-subtle)] border border-[var(--ttx-border-subtle)] text-sm font-mono font-extrabold text-[var(--ttx-accent-text)]">
+									{spinDuration} Detik
 								</span>
 							</div>
-						{/each}
+
+							<!-- Slider Durasi (Tebal & Mudah Digeser di HP) -->
+							<div class="flex flex-col gap-1.5 pt-1">
+								<input
+									type="range"
+									id="spin-duration-slider"
+									min="2"
+									max="10"
+									step="1"
+									bind:value={spinDuration}
+									disabled={isSpinning}
+									class="w-full h-3 bg-[var(--ttx-border-subtle)] rounded-lg appearance-none cursor-pointer accent-[var(--ttx-accent)]"
+								/>
+								<div class="flex justify-between text-xs font-semibold text-[var(--ttx-text-muted)] px-0.5">
+									<span>2s (Cepat)</span>
+									<span>6s (Normal)</span>
+									<span>10s (Lama)</span>
+								</div>
+							</div>
+
+							<!-- Quick Preset Durasi -->
+							<div class="flex items-center gap-2 pt-2 border-t border-[var(--ttx-border-subtle)]">
+								<span class="text-xs font-medium text-[var(--ttx-text-muted)]">Cepat:</span>
+								{#each [3, 5, 8] as sec}
+									<button
+										type="button"
+										onclick={() => (spinDuration = sec)}
+										disabled={isSpinning}
+										class="px-3 py-1 text-xs font-semibold rounded-lg border transition-all {spinDuration === sec
+											? 'border-[var(--ttx-accent)] bg-[var(--ttx-accent)] text-white shadow-xs'
+											: 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
+									>
+										{sec}s
+									</button>
+								{/each}
+							</div>
+						</div>
+
+						<!-- Card 2: Hapus Pemenang Otomatis -->
+						<button
+							type="button"
+							disabled={isSpinning}
+							onclick={() => (removeOnWin = !removeOnWin)}
+							class="w-full rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] p-4 flex items-center justify-between gap-3 text-left transition-all hover:bg-[var(--ttx-bg-hover)] shadow-xs cursor-pointer"
+						>
+							<div class="flex items-start gap-3 min-w-0 pr-2">
+								<div class="p-2 rounded-lg bg-amber-500/10 text-amber-500 shrink-0 mt-0.5">
+									<Trophy size={18} />
+								</div>
+								<div>
+									<h3 class="text-sm font-bold text-[var(--ttx-text-main)]">Hapus Pemenang Otomatis</h3>
+									<p class="text-xs text-[var(--ttx-text-muted)] mt-0.5 leading-relaxed">
+										Opsi yang terpilih langsung dihapus dari daftar agar tidak terpilih lagi di putaran berikutnya.
+									</p>
+								</div>
+							</div>
+
+							<!-- iOS-style Switch Indicator -->
+							<div
+								class="w-12 h-6 rounded-full transition-colors relative shrink-0 p-0.5 {removeOnWin
+									? 'bg-emerald-500'
+									: 'bg-[var(--ttx-border-base)]'}"
+							>
+								<div
+									class="w-5 h-5 rounded-full bg-white shadow-sm transition-transform {removeOnWin
+										? 'translate-x-6'
+										: 'translate-x-0'}"
+								></div>
+							</div>
+						</button>
+
+						<!-- Card 3: Efek Suara -->
+						<button
+							type="button"
+							onclick={() => (soundEnabled = !soundEnabled)}
+							class="w-full rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] p-4 flex items-center justify-between gap-3 text-left transition-all hover:bg-[var(--ttx-bg-hover)] shadow-xs cursor-pointer"
+						>
+							<div class="flex items-start gap-3 min-w-0 pr-2">
+								<div class="p-2 rounded-lg bg-[var(--ttx-accent-subtle)] text-[var(--ttx-accent-text)] shrink-0 mt-0.5">
+									{#if soundEnabled}
+										<Volume2 size={18} />
+									{:else}
+										<VolumeX size={18} />
+									{/if}
+								</div>
+								<div>
+									<h3 class="text-sm font-bold text-[var(--ttx-text-main)]">Efek Suara (Audio)</h3>
+									<p class="text-xs text-[var(--ttx-text-muted)] mt-0.5 leading-relaxed">
+										Bunyi detak putaran dan suara kemenangan saat pemenang terpilih.
+									</p>
+								</div>
+							</div>
+
+							<div
+								class="w-12 h-6 rounded-full transition-colors relative shrink-0 p-0.5 {soundEnabled
+									? 'bg-[var(--ttx-accent)]'
+									: 'bg-[var(--ttx-border-base)]'}"
+							>
+								<div
+									class="w-5 h-5 rounded-full bg-white shadow-sm transition-transform {soundEnabled
+										? 'translate-x-6'
+										: 'translate-x-0'}"
+								></div>
+							</div>
+						</button>
+					</div>
+
+				<!-- TAB 3: RIWAYAT PEMENANG -->
+				{:else if activeTab === 'history'}
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center justify-between">
+							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
+								Riwayat Putaran ({history.length})
+							</span>
+							{#if history.length > 0}
+								<div class="flex items-center gap-1.5">
+									<button
+										type="button"
+										onclick={copyHistory}
+										class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+										title="Salin semua riwayat"
+									>
+										{#if copiedHistory}
+											<Check size={12} class="text-emerald-500" />
+											<span class="text-emerald-500">Tersalin</span>
+										{:else}
+											<Copy size={12} />
+											<span>Salin</span>
+										{/if}
+									</button>
+									<button
+										type="button"
+										onclick={clearHistory}
+										class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 transition-all shadow-xs"
+										title="Hapus riwayat"
+									>
+										<Trash2 size={12} />
+										<span>Hapus</span>
+									</button>
+								</div>
+							{/if}
+						</div>
+
+						{#if history.length === 0}
+							<div class="flex flex-col items-center justify-center py-12 text-center text-[var(--ttx-text-muted)]">
+								<History size={32} class="opacity-30 mb-2" />
+								<p class="text-sm font-medium">Belum ada riwayat putaran.</p>
+								<p class="text-xs text-[var(--ttx-text-dim)] mt-0.5">Hasil pemenang akan dicatat otomatis di sini.</p>
+							</div>
+						{:else}
+							<div class="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+								{#each history as item, index}
+									<div
+										class="flex items-center justify-between p-3 rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] shadow-xs"
+									>
+										<div class="flex items-center gap-3 min-w-0">
+											<span class="flex items-center justify-center w-6 h-6 rounded-md bg-[var(--ttx-bg-card)] border border-[var(--ttx-border-subtle)] font-mono text-xs font-bold text-[var(--ttx-accent-text)] shrink-0">
+												#{history.length - index}
+											</span>
+											<span class="text-sm font-bold text-[var(--ttx-text-main)] truncate">
+												{item.text}
+											</span>
+										</div>
+										<span class="text-xs font-mono text-[var(--ttx-text-muted)] shrink-0 ml-2">
+											{item.time}
+										</span>
+									</div>
+								{/each}
+							</div>
+						{/if}
 					</div>
 				{/if}
 			</div>

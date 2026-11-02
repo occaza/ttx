@@ -333,6 +333,10 @@
 		activeTool === 'data-deletion'
 	);
 
+	const isScrollableTool = $derived(
+		isDocumentPage || activeTool === 'lucky-spin'
+	);
+
 	function openTool(href: string) {
 		const cleanHref = href.split('?')[0];
 		const queryString = href.includes('?') ? '?' + href.split('?')[1] : '';
@@ -750,7 +754,7 @@
 		<!-- MAIN SCROLL CONTAINER: spans from sidebar to screen edge with scrollbar on the far right -->
 		<div
 			bind:this={mainScrollContainer}
-			class="flex-1 flex items-start min-w-0 h-full {activeTool && !isDocumentPage
+			class="flex-1 flex items-start min-w-0 h-full {activeTool && !isScrollableTool
 				? 'overflow-hidden'
 				: 'overflow-y-auto'} overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
 			style="--scrollbar-thumb: var(--ttx-scrollbar); --scrollbar-thumb-hover: var(--ttx-scrollbar-hover);"
@@ -764,7 +768,7 @@
 
 			<!-- MAIN CONTENT CARDS -->
 			<div
-				class="flex-1 min-w-0 {activeTool && !isDocumentPage
+				class="flex-1 min-w-0 {activeTool && !isScrollableTool
 					? 'h-full max-h-full overflow-hidden'
 					: 'min-h-full'} flex flex-col px-3.5 py-4 sm:px-8 sm:py-6 lg:px-10"
 			>
