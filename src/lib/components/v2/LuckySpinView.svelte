@@ -559,7 +559,7 @@
 	<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:items-stretch flex-1">
 		<!-- KIRI / TENGAH: WHEEL CANVAS (7 COLS) -->
 		<div
-			class="lg:col-span-7 flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden h-full"
+			class="lg:col-span-7 flex flex-col items-center justify-start p-5 sm:p-7 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden h-full gap-3.5"
 		>
 			<!-- Confetti canvas overlay -->
 			<canvas
@@ -569,66 +569,65 @@
 				class="absolute inset-0 pointer-events-none z-20 w-full h-full max-w-[420px] max-h-[420px] mx-auto"
 			></canvas>
 
-			<!-- Konten Roda & Tombol Spin (Tersusun rapi dan konsisten) -->
-			<div class="flex flex-col items-center justify-center w-full my-auto gap-4">
-				<!-- Canvas Wheel Container -->
-				<div class="relative flex items-center justify-center">
-					<canvas
-						bind:this={canvasEl}
-						width={400}
-						height={400}
-						class="w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] md:w-[390px] md:h-[390px] select-none cursor-pointer transition-transform active:scale-[0.99]"
-						onclick={spin}
-						title="Klik roda atau tombol untuk memutar"
-					></canvas>
-				</div>
+			<!-- Canvas Wheel Container (Posisi diam di atas) -->
+			<div class="relative flex items-center justify-center">
+				<canvas
+					bind:this={canvasEl}
+					width={400}
+					height={400}
+					class="w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[380px] md:h-[380px] select-none cursor-pointer transition-transform active:scale-[0.99]"
+					onclick={spin}
+					title="Klik roda atau tombol untuk memutar"
+				></canvas>
+			</div>
 
-				<!-- Tombol Spin Utama (Konsisten dekat di bawah roda) -->
-				<div class="w-full max-w-sm flex flex-col gap-2">
+			<!-- Tombol Spin Utama (Posisi diam tepat di bawah roda) -->
+			<div class="w-full max-w-sm flex flex-col gap-2">
+				<button
+					type="button"
+					onclick={spin}
+					disabled={isSpinning || items.length < 2}
+					class="w-full flex items-center justify-center gap-2 py-3 px-6 text-sm font-bold text-white rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+					{isSpinning
+						? 'bg-slate-600'
+						: 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-blue-500/25 hover:shadow-blue-500/40'}"
+				>
+					<RotateCw size={17} class={isSpinning ? 'animate-spin' : ''} />
+					<span>{isSpinning ? 'Sedang Memutar...' : 'PUTAR RODA SEKARANG'}</span>
+				</button>
+
+				{#if items.length < 2}
+					<p class="text-[11px] text-center text-rose-400 font-medium">
+						Masukkan minimal 2 opsi pada daftar di samping untuk mulai memutar.
+					</p>
+				{/if}
+
+				<!-- Quick Access Bar Khusus Mobile -->
+				<div class="flex items-center justify-center gap-2 pt-1 sm:hidden">
 					<button
 						type="button"
-						onclick={spin}
-						disabled={isSpinning || items.length < 2}
-						class="w-full flex items-center justify-center gap-2 py-3 px-6 text-sm font-bold text-white rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
-						{isSpinning
-							? 'bg-slate-600'
-							: 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-blue-500/25 hover:shadow-blue-500/40'}"
+						onclick={() => scrollToTab('options')}
+						class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
 					>
-						<RotateCw size={17} class={isSpinning ? 'animate-spin' : ''} />
-						<span>{isSpinning ? 'Sedang Memutar...' : 'PUTAR RODA SEKARANG'}</span>
+						<ListPlus size={13} class="text-[var(--ttx-accent-text)]" />
+						<span>Ubah Opsi ({items.length})</span>
 					</button>
-
-					{#if items.length < 2}
-						<p class="text-[11px] text-center text-rose-400 font-medium">
-							Masukkan minimal 2 opsi pada daftar di samping untuk mulai memutar.
-						</p>
-					{/if}
-
-					<!-- Quick Access Bar Khusus Mobile -->
-					<div class="flex items-center justify-center gap-2 pt-1 sm:hidden">
-						<button
-							type="button"
-							onclick={() => scrollToTab('options')}
-							class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
-						>
-							<ListPlus size={13} class="text-[var(--ttx-accent-text)]" />
-							<span>Ubah Opsi ({items.length})</span>
-						</button>
-						<button
-							type="button"
-							onclick={() => scrollToTab('settings')}
-							class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
-						>
-							<Sliders size={13} class="text-amber-400" />
-							<span>Pengaturan</span>
-						</button>
-					</div>
+					<button
+						type="button"
+						onclick={() => scrollToTab('settings')}
+						class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+					>
+						<Sliders size={13} class="text-amber-400" />
+						<span>Pengaturan</span>
+					</button>
 				</div>
+			</div>
 
-				<!-- Winner Card Banner (Jika ada) -->
+			<!-- Slot Khusus Banner Hasil (Posisi di bawah tombol tanpa menggeser roda/tombol) -->
+			<div class="w-full max-w-sm min-h-[54px] flex items-center">
 				{#if winner && !showWinnerModal}
 					<div
-						class="w-full max-w-sm p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-between gap-3 animate-in fade-in"
+						class="w-full p-2.5 sm:p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-between gap-3 animate-in fade-in"
 					>
 						<div class="flex items-center gap-2.5 min-w-0">
 							<Trophy size={18} class="text-amber-400 shrink-0" />
