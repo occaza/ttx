@@ -22,14 +22,6 @@
 	let { isDark = true }: { isDark?: boolean } = $props();
 
 	let activeTab = $state<'options' | 'settings' | 'history'>('options');
-	let controlsCardEl = $state<HTMLElement | null>(null);
-
-	function scrollToTab(tab: 'options' | 'settings' | 'history') {
-		activeTab = tab;
-		if (controlsCardEl) {
-			controlsCardEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		}
-	}
 
 	// Presets
 	const PRESETS = [
@@ -314,14 +306,14 @@
 			ctx.fillStyle = '#ffffff';
 
 			// Ukuran font adaptif berdasarkan jumlah item
-			const fontSize = Math.max(11, Math.min(16, Math.floor(320 / count)));
+			const fontSize = Math.max(12, Math.min(18, Math.floor(380 / count)));
 			ctx.font = `bold ${fontSize}px system-ui, sans-serif`;
 			ctx.shadowColor = 'rgba(0,0,0,0.45)';
 			ctx.shadowBlur = 4;
 
 			// Truncate text jika kepanjangan
 			let text = items[i];
-			const maxTextWidth = radius - 60;
+			const maxTextWidth = radius - 70;
 			if (ctx.measureText(text).width > maxTextWidth) {
 				while (ctx.measureText(text + '…').width > maxTextWidth && text.length > 2) {
 					text = text.slice(0, -1);
@@ -329,7 +321,7 @@
 				text += '…';
 			}
 
-			ctx.fillText(text, radius - 20, 0);
+			ctx.fillText(text, radius - 24, 0);
 			ctx.restore();
 		}
 
@@ -348,7 +340,7 @@
 		// Center Hub (Tombol tengah)
 		ctx.save();
 		ctx.beginPath();
-		ctx.arc(center, center, 32, 0, Math.PI * 2);
+		ctx.arc(center, center, 36, 0, Math.PI * 2);
 		ctx.fillStyle = isDark ? '#0f172a' : '#ffffff';
 		ctx.fill();
 		ctx.lineWidth = 4;
@@ -357,15 +349,15 @@
 
 		// Mini dot tengah
 		ctx.beginPath();
-		ctx.arc(center, center, 8, 0, Math.PI * 2);
+		ctx.arc(center, center, 10, 0, Math.PI * 2);
 		ctx.fillStyle = isDark ? '#60a5fa' : '#3b82f6';
 		ctx.fill();
 		ctx.restore();
 
 		// Pointer segitiga di atas (menunjuk ke bawah)
 		ctx.save();
-		const pointerLength = 26;
-		const pointerWidth = 18;
+		const pointerLength = 30;
+		const pointerWidth = 22;
 		const topY = 4;
 
 		ctx.beginPath();
@@ -529,7 +521,7 @@
 	});
 </script>
 
-<div class="flex flex-col gap-6 w-full flex-1 pb-10">
+<div class="flex flex-col gap-5 w-full pb-8">
 	<!-- HEADER -->
 	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 		<div class="flex items-center gap-3">
@@ -556,33 +548,33 @@
 	</div>
 
 	<!-- MAIN WORKSPACE -->
-	<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:items-stretch flex-1">
+	<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:items-stretch">
 		<!-- KIRI / TENGAH: WHEEL CANVAS (7 COLS) -->
 		<div
-			class="lg:col-span-7 flex flex-col items-center justify-start p-5 sm:p-7 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden h-full gap-3.5"
+			class="lg:col-span-7 flex flex-col items-center justify-center p-5 sm:p-6 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs relative overflow-hidden gap-3.5 lg:h-[620px]"
 		>
 			<!-- Confetti canvas overlay -->
 			<canvas
 				bind:this={confettiCanvasEl}
-				width={420}
-				height={420}
-				class="absolute inset-0 pointer-events-none z-20 w-full h-full max-w-[420px] max-h-[420px] mx-auto"
+				width={500}
+				height={500}
+				class="absolute inset-0 pointer-events-none z-20 w-full h-full max-w-[500px] max-h-[500px] mx-auto"
 			></canvas>
 
 			<!-- Canvas Wheel Container (Posisi diam di atas) -->
-			<div class="relative flex items-center justify-center">
+			<div class="relative flex items-center justify-center shrink-0">
 				<canvas
 					bind:this={canvasEl}
-					width={400}
-					height={400}
-					class="w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[380px] md:h-[380px] select-none cursor-pointer transition-transform active:scale-[0.99]"
+					width={500}
+					height={500}
+					class="w-[300px] h-[300px] sm:w-[360px] sm:h-[360px] lg:w-[420px] lg:h-[420px] select-none cursor-pointer transition-transform active:scale-[0.99]"
 					onclick={spin}
 					title="Klik roda atau tombol untuk memutar"
 				></canvas>
 			</div>
 
-			<!-- Tombol Spin Utama (Posisi diam tepat di bawah roda) -->
-			<div class="w-full max-w-sm flex flex-col gap-2">
+			<!-- Tombol Spin Utama (Konsisten dekat di bawah roda) -->
+			<div class="w-full max-w-sm flex flex-col gap-2 shrink-0">
 				<button
 					type="button"
 					onclick={spin}
@@ -601,33 +593,13 @@
 						Masukkan minimal 2 opsi pada daftar di samping untuk mulai memutar.
 					</p>
 				{/if}
-
-				<!-- Quick Access Bar Khusus Mobile -->
-				<div class="flex items-center justify-center gap-2 pt-1 sm:hidden">
-					<button
-						type="button"
-						onclick={() => scrollToTab('options')}
-						class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
-					>
-						<ListPlus size={13} class="text-[var(--ttx-accent-text)]" />
-						<span>Ubah Opsi ({items.length})</span>
-					</button>
-					<button
-						type="button"
-						onclick={() => scrollToTab('settings')}
-						class="flex-1 flex items-center justify-center gap-1.5 py-2 px-2 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs font-semibold text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
-					>
-						<Sliders size={13} class="text-amber-400" />
-						<span>Pengaturan</span>
-					</button>
-				</div>
 			</div>
 
-			<!-- Slot Khusus Banner Hasil (Posisi di bawah tombol tanpa menggeser roda/tombol) -->
-			<div class="w-full max-w-sm min-h-[54px] flex items-center">
+			<!-- Slot Status / Banner Hasil (Tinggi fixed 52px, tidak pernah mengubah ukuran / melebar) -->
+			<div class="w-full max-w-sm h-[52px] shrink-0">
 				{#if winner && !showWinnerModal}
 					<div
-						class="w-full p-2.5 sm:p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-between gap-3 animate-in fade-in"
+						class="w-full h-full p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-between gap-3 animate-in fade-in"
 					>
 						<div class="flex items-center gap-2.5 min-w-0">
 							<Trophy size={18} class="text-amber-400 shrink-0" />
@@ -644,14 +616,23 @@
 							Lihat Detail
 						</button>
 					</div>
+				{:else}
+					<div
+						class="w-full h-full p-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)]/50 flex items-center justify-between text-xs text-[var(--ttx-text-muted)]"
+					>
+						<div class="flex items-center gap-2">
+							<Sparkles size={14} class="text-amber-400 shrink-0" />
+							<span>Siap diputar</span>
+						</div>
+						<span class="font-mono text-[11px] font-semibold text-[var(--ttx-text-dim)]">{items.length} opsi terdaftar</span>
+					</div>
 				{/if}
 			</div>
 		</div>
 
 		<!-- KANAN / BAWAH: KONTROL, DAFTAR OPSI, PENGATURAN & RIWAYAT (UNIFIED CARD WITH SEGMENTED TABS) -->
 		<div
-			bind:this={controlsCardEl}
-			class="lg:col-span-5 flex flex-col rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden scroll-mt-6"
+			class="lg:col-span-5 flex flex-col rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden scroll-mt-6 lg:h-[620px]"
 		>
 			<!-- Segmented Tabs Header (Mudah di-tap di HP) -->
 			<div class="flex items-center p-1.5 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] gap-1">
@@ -693,7 +674,7 @@
 			<div class="p-4 sm:p-5 flex-1 flex flex-col min-h-0">
 				<!-- TAB 1: DAFTAR OPSI -->
 				{#if activeTab === 'options'}
-					<div class="flex flex-col gap-4 flex-1 h-full min-h-0 justify-between">
+					<div class="flex flex-col gap-3.5 flex-1 min-h-0">
 						<!-- Preset Cepat -->
 						<div class="flex flex-col gap-2 shrink-0">
 							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">

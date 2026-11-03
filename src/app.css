@@ -109,11 +109,16 @@
 	}
 }
 
-/* Fix iOS Safari mobile viewport overflow & bouncing */
-html,
+/* Fix iOS Safari mobile viewport overflow & bouncing without breaking full page capture */
+html {
+	overflow-x: clip;
+	-webkit-text-size-adjust: 100%;
+}
+
 body {
 	width: 100%;
 	max-width: 100%;
-	overflow-x: hidden;
+	min-height: 100%;
+	overflow-x: clip;
 	-webkit-text-size-adjust: 100%;
 }

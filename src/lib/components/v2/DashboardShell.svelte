@@ -333,10 +333,6 @@
 		activeTool === 'data-deletion'
 	);
 
-	const isScrollableTool = $derived(
-		isDocumentPage || activeTool === 'lucky-spin'
-	);
-
 	function openTool(href: string) {
 		const cleanHref = href.split('?')[0];
 		const queryString = href.includes('?') ? '?' + href.split('?')[1] : '';
@@ -389,15 +385,19 @@
 	/>
 </svelte:head>
 
-<!-- Global Style override to lock outer scroll so sidebar stays completely still -->
+<!-- Style override: desktop locks outer scroll for IDE feel; mobile keeps natural scroll for full page capture -->
 <style>
-	:global(body:has(.ttx-dashboard)) {
-		overflow: hidden !important;
+	@media (min-width: 1024px) {
+		:global(body:has(.ttx-dashboard)) {
+			overflow: hidden !important;
+		}
+		:global(body:has(.ttx-dashboard) main.flex-1) {
+			height: 100vh !important;
+			overflow: hidden !important;
+		}
 	}
 	:global(body:has(.ttx-dashboard) main.flex-1) {
 		padding-top: 0 !important;
-		height: 100vh !important;
-		overflow: hidden !important;
 	}
 	.diagonal-hatch {
 		background-image: repeating-linear-gradient(
@@ -423,9 +423,9 @@
 	}
 </style>
 
-<div class="ttx-dashboard flex flex-col h-[100dvh] w-full max-w-full overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
+<div class="ttx-dashboard flex flex-col min-h-screen lg:h-[100dvh] w-full max-w-full lg:overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
 	<!-- TOP NAVIGATION BAR -->
-	<header class="shrink-0 border-b z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)]">
+	<header class="sticky top-0 lg:static shrink-0 border-b z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)]">
 		<div class="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 gap-2">
 			<!-- Left: Hamburger (mobile) + Brand Logo -->
 			<div class="flex items-center gap-2 sm:gap-4 shrink-0">
@@ -589,7 +589,7 @@
 	</header>
 
 	<!-- MAIN WORKSPACE CONTAINER -->
-	<div class="flex-1 flex overflow-hidden relative">
+	<div class="flex-1 flex min-h-0 lg:overflow-hidden relative">
 		<!-- Mobile Sidebar Backdrop -->
 		{#if isSidebarOpen}
 			<button
@@ -754,9 +754,7 @@
 		<!-- MAIN SCROLL CONTAINER: spans from sidebar to screen edge with scrollbar on the far right -->
 		<div
 			bind:this={mainScrollContainer}
-			class="flex-1 flex items-start min-w-0 h-full {activeTool && !isScrollableTool
-				? 'overflow-hidden'
-				: 'overflow-y-auto'} overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
+			class="flex-1 flex items-start min-w-0 w-full min-h-full lg:h-full overflow-y-auto overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
 			style="--scrollbar-thumb: var(--ttx-scrollbar); --scrollbar-thumb-hover: var(--ttx-scrollbar-hover);"
 		>
 			<!-- LEFT DIAGONAL STRIPED GUTTER (Sticky, stays locked full height while scrolling) -->
@@ -768,9 +766,7 @@
 
 			<!-- MAIN CONTENT CARDS -->
 			<div
-				class="flex-1 min-w-0 {activeTool && !isScrollableTool
-					? 'h-full max-h-full overflow-hidden'
-					: 'min-h-full'} flex flex-col px-3.5 py-4 sm:px-8 sm:py-6 lg:px-10"
+				class="flex-1 min-w-0 w-full min-h-full flex flex-col px-3.5 py-4 pb-12 sm:px-8 sm:py-6 sm:pb-8 lg:px-10"
 			>
 			{#if activeTool}
 				<!-- IN-PAGE TOOL PANEL -->
@@ -864,15 +860,36 @@
 						</button>
 					</div>
 				{:else}
-					<div class="space-y-8 sm:space-y-12">
+					<div class="space-y-10 sm:space-y-14">
+						<!-- HOMEPAGE HEADER -->
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[var(--ttx-border-base)]">
+							<div>
+								<h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--ttx-text-main)]">
+									Koleksi Alat & Utilitas
+								</h1>
+								<p class="text-xs text-[var(--ttx-text-muted)] mt-0.5">
+									Semua tools diproses secara instan di browser Anda tanpa perlu login.
+								</p>
+							</div>
+							<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] w-fit shrink-0">
+								<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+								{tools.length} Tools Tersedia
+							</span>
+						</div>
+
 						<!-- POPULAR TOOLS SECTION -->
 						{#if !searchQuery || filteredPopular.length > 0}
 							<section id="category-popular-tools" class="scroll-mt-6">
-								<div class="flex items-center gap-2 mb-3 sm:mb-4">
-									<div class="w-1.5 h-3.5 rounded-full bg-blue-500"></div>
-									<h2 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-700'}">
-										POPULAR TOOLS
-									</h2>
+								<div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
+									<div class="flex items-center gap-2">
+										<div class="w-1.5 h-4 rounded-full bg-blue-500"></div>
+										<h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
+											Popular Tools
+										</h2>
+									</div>
+									<span class="text-[11px] font-mono text-[var(--ttx-text-dim)]">
+										{filteredPopular.length} alat
+									</span>
 								</div>
 
 								<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5">
@@ -889,16 +906,9 @@
 												<ToolIcon size={18} class="hidden sm:block" />
 											</div>
 											<div class="min-w-0 flex-1">
-												<div class="flex items-center gap-2">
-													<h3 class="text-sm font-semibold sm:font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
-														{tool.title}
-													</h3>
-													{#if isEmbedded}
-														<span class="sm:hidden shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
-															Instant
-														</span>
-													{/if}
-												</div>
+												<h3 class="text-sm font-semibold sm:font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
+													{tool.title}
+												</h3>
 												<p class="text-xs text-[var(--ttx-text-muted)] line-clamp-1 mt-0.5 sm:hidden">
 													{tool.desc}
 												</p>
@@ -918,12 +928,17 @@
 						<!-- CATEGORIZED TOOLS -->
 						{#each Object.entries(groupedTools()) as [category, categoryTools]}
 							{@const categoryId = `category-${category.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
-							<section id={categoryId} class="scroll-mt-6">
-								<div class="flex items-center gap-2 mb-3 sm:mb-4">
-									<div class="w-1.5 h-3.5 rounded-full bg-slate-500/60"></div>
-									<h2 class="text-xs font-bold uppercase tracking-wider {isDark ? 'text-slate-300' : 'text-slate-700'}">
-										{category.toUpperCase()} TOOLS
-									</h2>
+							<section id={categoryId} class="scroll-mt-6 pt-6 sm:pt-8 border-t border-[var(--ttx-border-base)]">
+								<div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
+									<div class="flex items-center gap-2">
+										<div class="w-1.5 h-4 rounded-full bg-blue-500"></div>
+										<h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
+											{category}
+										</h2>
+									</div>
+									<span class="text-[11px] font-mono text-[var(--ttx-text-dim)]">
+										{categoryTools.length} alat
+									</span>
 								</div>
 
 								<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5">
@@ -940,16 +955,9 @@
 												<ToolIcon size={18} class="hidden sm:block" />
 											</div>
 											<div class="min-w-0 flex-1">
-												<div class="flex items-center gap-2">
-													<h3 class="text-sm font-semibold sm:font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
-														{tool.title}
-													</h3>
-													{#if isEmbedded}
-														<span class="sm:hidden shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
-															Instant
-														</span>
-													{/if}
-												</div>
+												<h3 class="text-sm font-semibold sm:font-medium truncate transition-colors text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent-text)]">
+													{tool.title}
+												</h3>
 												<p class="text-xs text-[var(--ttx-text-muted)] line-clamp-1 mt-0.5 sm:hidden">
 													{tool.desc}
 												</p>
