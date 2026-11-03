@@ -38,6 +38,7 @@
 	let isSaving = $state(false);
 	let refreshing = $state(false);
 	let copiedLink = $state(false);
+	let copiedAll = $state(false);
 	let showSaveWarning = $state(false);
 	let saveFormEl: HTMLFormElement | undefined = $state();
 	let ta: HTMLTextAreaElement | undefined = $state();
@@ -107,16 +108,25 @@
 		};
 	};
 
-	function handleSaveClick(e: MouseEvent) {
+	function handleSaveClick(e?: MouseEvent) {
 		if (lineCount > LINE_LIMIT) {
-			e.preventDefault();
+			e?.preventDefault();
 			showSaveWarning = true;
+			return;
 		}
+		saveFormEl?.requestSubmit();
 	}
 
 	function confirmSave() {
 		showSaveWarning = false;
 		saveFormEl?.requestSubmit();
+	}
+
+	async function copyAllText() {
+		if (!text) return;
+		await navigator.clipboard.writeText(text);
+		copiedAll = true;
+		setTimeout(() => (copiedAll = false), 1800);
 	}
 
 	async function refresh() {
@@ -177,15 +187,15 @@
 	};
 </script>
 
-<div class="flex flex-col gap-3 sm:gap-4 w-full flex-1 min-h-0 h-full overflow-hidden">
+<div class="flex flex-col gap-3 sm:gap-4 w-full flex-1 min-h-[520px] sm:min-h-0 h-full">
 	<!-- HEADER BAR -->
-	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--ttx-border-base)] shrink-0">
+	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--ttx-border-base)] shrink-0">
 		<div class="flex items-center gap-3">
 			<div class="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] shadow-xs shrink-0">
 				<NotebookPen class="h-5 w-5" />
 			</div>
 			<div>
-				<div class="flex items-center gap-2">
+				<div class="flex items-center gap-2 flex-wrap">
 					<h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--ttx-text-main)]">
 						Shared Notepad
 					</h1>
@@ -202,13 +212,13 @@
 		</div>
 
 		<!-- Top Header Actions -->
-		<div class="flex items-center gap-2">
+		<div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
 			{#if data?.slug}
 				<button
 					type="button"
 					onclick={refresh}
 					disabled={refreshing}
-					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+					class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
 					title="Muat ulang catatan dari server"
 				>
 					<RefreshCw size={13} class={refreshing ? 'animate-spin' : ''} />
@@ -218,12 +228,12 @@
 				<button
 					type="button"
 					onclick={copyLink}
-					class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+					class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
 					title="Salin tautan catatan untuk dibagikan"
 				>
 					{#if copiedLink}
 						<Check size={13} class="text-emerald-500" />
-						<span class="text-emerald-500">Tautan Tersalin!</span>
+						<span class="text-emerald-500">Tersalin!</span>
 					{:else}
 						<Copy size={13} />
 						<span>Salin Link</span>
@@ -233,12 +243,33 @@
 
 			<a
 				href="/notepad"
-				class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white shadow-xs transition-all"
+				class="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] shadow-xs transition-all"
 				title="Buat dokumen catatan bersama baru"
 			>
 				<FilePlus2 size={13} />
-				<span>Catatan Baru</span>
+				<span class="hidden sm:inline">Catatan Baru</span>
 			</a>
+
+			{#if data?.slug && !data?.isLocked}
+				<button
+					type="button"
+					onclick={handleSaveClick}
+					disabled={isSaving}
+					class="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white shadow-xs transition-all disabled:opacity-40"
+					title="Simpan perubahan catatan"
+				>
+					{#if isSaving}
+						<div class="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+						<span>Menyimpan...</span>
+					{:else if saved}
+						<Check size={13} class="text-white" />
+						<span>Tersimpan!</span>
+					{:else}
+						<Save size={13} />
+						<span>Simpan</span>
+					{/if}
+				</button>
+			{/if}
 		</div>
 	</div>
 
@@ -327,22 +358,22 @@
 			action="?/save"
 			use:enhance={afterSave}
 			bind:this={saveFormEl}
-			class="flex flex-1 flex-col min-h-0 h-full max-h-full rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden"
+			class="flex flex-1 flex-col min-h-[520px] sm:min-h-0 h-full max-h-full rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs overflow-hidden"
 		>
 			<!-- WORKSPACE TOOLBAR -->
-			<div class="flex flex-wrap items-center justify-between gap-3 px-4 h-11 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] shrink-0">
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 px-3.5 py-2.5 sm:px-4 sm:h-11 sm:py-0 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] shrink-0">
 				<!-- Left: Cut Tool & Info -->
-				<div class="flex items-center gap-3">
+				<div class="flex flex-wrap items-center justify-between sm:justify-start gap-2 sm:gap-3">
 					<div class="flex items-center gap-1.5">
 						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
-							Cut Top:
+							Cut:
 						</span>
 						<input
 							type="number"
 							min="1"
-							max={lineCount}
+							max={Math.max(1, lineCount)}
 							bind:value={cutLinesCount}
-							class="h-7 w-14 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-center font-mono text-xs text-[var(--ttx-text-main)] focus:border-[var(--ttx-accent)] outline-none transition-colors"
+							class="h-7 w-12 sm:w-14 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-center font-mono text-xs text-[var(--ttx-text-main)] focus:border-[var(--ttx-accent)] outline-none transition-colors"
 						/>
 						<span class="text-xs font-mono text-[var(--ttx-text-dim)]">baris</span>
 						<button
@@ -350,27 +381,27 @@
 							onclick={cutTopLines}
 							disabled={lineCount === 0 || cutting}
 							class="h-7 px-2.5 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-30"
-							title="Potong baris teratas dan salin ke clipboard (otomatis dicatat ke history saat disimpan)"
+							title="Potong baris teratas dan salin ke clipboard"
 						>
 							<Zap size={11} class="text-amber-500" />
 							<span>Cut</span>
 						</button>
 					</div>
 
-					<div class="h-4 w-px bg-[var(--ttx-border-subtle)]"></div>
+					<div class="hidden sm:block h-4 w-px bg-[var(--ttx-border-subtle)]"></div>
 
-					<div class="flex items-center gap-1 text-[11px] font-mono text-[var(--ttx-text-muted)]">
+					<div class="flex items-center gap-1.5 text-[11px] font-mono text-[var(--ttx-text-muted)]">
 						<span>{lineCount.toLocaleString()} baris</span>
-						<span class="opacity-40">|</span>
-						<span>{text.length.toLocaleString()} karakter</span>
+						<span class="opacity-40">•</span>
+						<span>{text.length.toLocaleString()} char</span>
 					</div>
 				</div>
 
-				<!-- Right: Password & Save Status -->
-				<div class="flex items-center gap-2">
-					<!-- Password Protection Control -->
+				<!-- Right: Password, Copy All & Save Button -->
+				<div class="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+					<!-- Password Protection Control (active on mobile and desktop) -->
 					{#if !data.hasPassword}
-						<div class="relative hidden sm:block">
+						<div class="relative flex-1 sm:flex-initial">
 							<div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-[var(--ttx-text-dim)]">
 								<Lock size={12} />
 							</div>
@@ -379,48 +410,66 @@
 								name="password"
 								bind:value={passwordInput}
 								placeholder="Set Password (opsional)"
-								class="h-7 w-44 pl-7 pr-2.5 text-xs rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)] outline-none transition-colors"
+								class="h-7 w-full sm:w-44 pl-7 pr-2.5 text-xs rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)] outline-none transition-colors"
 							/>
 						</div>
 					{:else}
 						<button
 							type="button"
 							onclick={() => (showChangePasswordModal = true)}
-							class="h-7 px-2.5 rounded-md border border-[var(--ttx-accent)]/30 bg-[var(--ttx-accent-subtle)] text-[var(--ttx-accent-text)] hover:opacity-90 text-xs font-medium flex items-center gap-1.5 transition-colors"
+							class="h-7 px-2.5 rounded-md border border-[var(--ttx-accent)]/30 bg-[var(--ttx-accent-subtle)] text-[var(--ttx-accent-text)] hover:opacity-90 text-xs font-medium flex items-center gap-1.5 transition-colors shrink-0"
 							title="Klik untuk ubah atau hapus password (hanya admin)"
 						>
 							<Lock size={12} />
-							<span>Terkunci Password</span>
+							<span>Terkunci</span>
 						</button>
 					{/if}
 
-					<!-- Save feedback -->
-					{#if saved}
-						<span class="flex items-center gap-1 text-xs font-bold text-emerald-500 px-1 animate-fade-in">
-							<Check size={13} /> Tersimpan!
-						</span>
-					{/if}
+					<!-- Quick Copy All Button -->
+					<button
+						type="button"
+						onclick={copyAllText}
+						disabled={!text}
+						class="h-7 px-2.5 rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] hover:bg-[var(--ttx-bg-hover)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] text-xs font-semibold flex items-center gap-1 transition-all disabled:opacity-30 shrink-0"
+						title="Salin seluruh isi catatan ke clipboard"
+					>
+						{#if copiedAll}
+							<Check size={12} class="text-emerald-500" />
+							<span class="text-emerald-500 font-bold">Disalin</span>
+						{:else}
+							<Copy size={12} />
+							<span class="hidden xs:inline">Salin</span>
+						{/if}
+					</button>
 
 					<!-- Submit Save Button -->
 					<button
 						type="submit"
 						onclick={handleSaveClick}
 						disabled={isSaving}
-						class="h-7 px-3 rounded-md bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-40"
+						class="h-7 px-3 rounded-md bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-40 shrink-0"
 					>
-						<Save size={13} />
-						<span>{isSaving ? 'Menyimpan...' : 'Simpan'}</span>
+						{#if isSaving}
+							<div class="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+							<span>Menyimpan...</span>
+						{:else if saved}
+							<Check size={13} class="text-white" />
+							<span>Tersimpan!</span>
+						{:else}
+							<Save size={13} />
+							<span>Simpan</span>
+						{/if}
 					</button>
 				</div>
 			</div>
 
 			<!-- MAIN EDITOR WITH SYNCED LINE-NUMBER GUTTER -->
-			<div class="flex-1 min-h-0 h-full flex overflow-hidden bg-[var(--ttx-bg-card)]">
+			<div class="flex-1 min-h-[380px] sm:min-h-0 h-full flex overflow-hidden bg-[var(--ttx-bg-card)]">
 				<!-- Gutter line numbers -->
-				<div class="w-12 shrink-0 h-full max-h-full border-r border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] select-none overflow-hidden font-mono text-xs text-[var(--ttx-text-dim)]">
-					<div style="transform: translateY({-textareaScrollTop}px); padding-top: 16px;">
+				<div class="w-9 sm:w-12 shrink-0 h-full max-h-full border-r border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] select-none overflow-hidden font-mono text-xs text-[var(--ttx-text-dim)]">
+					<div class="pt-3.5 sm:pt-4" style="transform: translateY({-textareaScrollTop}px);">
 						{#each Array(lineCount) as _, i}
-							<div class="text-right pr-3" style="height: 22px; line-height: 22px;">
+							<div class="text-right pr-2 sm:pr-3" style="height: 22px; line-height: 22px;">
 								{i + 1}
 							</div>
 						{/each}
@@ -435,18 +484,20 @@
 					placeholder="Tulis atau paste catatan bersama di sini..."
 					onscroll={syncScroll}
 					style="line-height: 22px;"
-					class="w-full flex-1 h-full min-h-0 resize-none p-4 font-mono text-xs sm:text-sm outline-none overflow-y-auto bg-transparent text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+					class="w-full flex-1 h-full min-h-[380px] sm:min-h-0 resize-none p-3.5 sm:p-4 font-mono text-xs sm:text-sm outline-none overflow-y-auto bg-transparent text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
 				></textarea>
 			</div>
 
 			<!-- WORKSPACE BOTTOM STATUS -->
-			<div class="flex flex-wrap items-center justify-between gap-3 px-4 py-2 border-t border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] text-[11px] font-mono shrink-0 text-[var(--ttx-text-muted)]">
-				<div class="flex items-center gap-1.5">
-					<Clock size={12} class="opacity-60" />
-					<span>Terakhir diubah: {formatDate(data.updatedAt)}</span>
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 px-3.5 sm:px-4 py-2 border-t border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] text-[11px] font-mono shrink-0 text-[var(--ttx-text-muted)]">
+				<div class="flex items-center gap-1.5 truncate">
+					<Clock size={12} class="opacity-60 shrink-0" />
+					<span class="truncate">Terakhir diubah: {formatDate(data.updatedAt)}</span>
 				</div>
-				<div class="flex items-center gap-3">
-					<span>Batas: {lineCount > LINE_LIMIT ? `${LINE_LIMIT} baris (terlampaui)` : `${lineCount}/${LINE_LIMIT} baris`}</span>
+				<div class="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+					<span class={lineCount > LINE_LIMIT ? 'text-rose-500 font-bold' : ''}>
+						Batas: {lineCount > LINE_LIMIT ? `${LINE_LIMIT} baris (terlampaui)` : `${lineCount}/${LINE_LIMIT} baris`}
+					</span>
 				</div>
 			</div>
 		</form>
