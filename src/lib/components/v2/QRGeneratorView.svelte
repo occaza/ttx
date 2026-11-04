@@ -178,13 +178,13 @@
 
 <div class="space-y-4 w-full">
 	<!-- HEADER SECTION -->
-	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--ttx-border-base)]">
-		<div class="flex items-center gap-3">
+	<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--ttx-border-base)]">
+		<div class="flex items-start sm:items-center gap-3">
 			<div class="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] shadow-xs shrink-0">
 				<QrCode class="h-5 w-5" />
 			</div>
 			<div>
-				<div class="flex items-center gap-2">
+				<div class="flex items-center gap-2 flex-wrap">
 					<h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--ttx-text-main)]">
 						QR Code Generator
 					</h1>
@@ -201,7 +201,7 @@
 
 		<button
 			type="button"
-			class="self-start sm:self-center flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
+			class="self-start sm:self-center flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs shrink-0"
 			onclick={handleReset}
 			title="Kembalikan konfigurasi default"
 		>
@@ -211,12 +211,12 @@
 	</div>
 
 	<!-- MAIN WORKSPACE -->
-	<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+	<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
 		<!-- LEFT COLUMN: CONTROLS & SETTINGS (7 COLS) -->
-		<div class="lg:col-span-7 flex flex-col gap-4">
+		<div class="lg:col-span-7 flex flex-col gap-3.5 sm:gap-4">
 
 			<!-- 1. CONTENT TYPE SELECTOR & INPUT -->
-			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 shadow-xs transition-colors">
+			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-3.5 sm:p-5 shadow-xs transition-colors">
 				<div class="flex items-center justify-between mb-3">
 					<span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-[var(--ttx-text-main)]">
 						<Sparkles size={14} class="text-[var(--ttx-accent-text)]" />
@@ -230,7 +230,7 @@
 				</div>
 
 				<!-- Type tabs switcher -->
-				<div class="grid grid-cols-3 gap-2 p-1 rounded-xl mb-4 bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-base)]">
+				<div class="grid grid-cols-3 gap-1.5 sm:gap-2 p-1 rounded-xl mb-3.5 bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-base)]">
 					{#each [
 						{ id: 'url', label: 'Tautan URL', icon: Globe },
 						{ id: 'text', label: 'Teks Bebas', icon: TypeIcon },
@@ -240,7 +240,7 @@
 						{@const TabIcon = tab.icon}
 						<button
 							type="button"
-							class="h-9 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all duration-150 {isActive
+							class="h-9 px-1.5 sm:px-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition-all duration-150 {isActive
 								? 'bg-[var(--ttx-accent)] text-white shadow-md shadow-blue-500/20 font-bold'
 								: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
 							onclick={() => {
@@ -248,8 +248,8 @@
 								handleInputChange();
 							}}
 						>
-							<TabIcon size={14} />
-							<span>{tab.label}</span>
+							<TabIcon size={13} class="shrink-0" />
+							<span class="truncate">{tab.label}</span>
 						</button>
 					{/each}
 				</div>
@@ -265,7 +265,7 @@
 							<input
 								id="qr-url-input"
 								type="url"
-								class="w-full h-11 pl-9 pr-3 rounded-xl text-xs sm:text-sm font-mono transition-all outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
+								class="w-full h-10 sm:h-11 pl-9 pr-3 rounded-xl text-xs sm:text-sm font-mono transition-all outline-none border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-accent)]"
 								placeholder="https://contohdomain.com"
 								bind:value={config.inputValue}
 								oninput={handleInputChange}
@@ -294,7 +294,7 @@
 					</div>
 				{:else if config.contentType === 'wifi'}
 					<div class="space-y-3">
-						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
 							<!-- SSID -->
 							<div class="space-y-1.5">
 								<label for="qr-wifi-ssid" class="text-xs font-medium text-[var(--ttx-text-muted)]">
@@ -357,7 +357,7 @@
 							</div>
 						{/if}
 
-						<label class="inline-flex items-center gap-2 cursor-pointer pt-1">
+						<label class="inline-flex items-center gap-2 cursor-pointer pt-0.5">
 							<input
 								type="checkbox"
 								class="w-4 h-4 rounded accent-[var(--ttx-accent)]"
@@ -373,18 +373,18 @@
 
 				<!-- Validation message alert -->
 				{#if validationMessage}
-					<div class="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium {isInputValid
+					<div class="mt-3 flex items-start gap-2 px-3 py-2 rounded-xl text-xs font-medium {isInputValid
 						? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] border border-[var(--ttx-border-subtle)]'
 						: 'bg-rose-500/10 text-rose-500 border border-rose-500/20'}">
-						<AlertTriangle size={13} class="shrink-0" />
-						<span>{validationMessage}</span>
+						<AlertTriangle size={13} class="shrink-0 mt-0.5" />
+						<span class="leading-relaxed">{validationMessage}</span>
 					</div>
 				{/if}
 			</div>
 
 			<!-- 2. WARNA & PRESET GAYA -->
-			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 shadow-xs transition-colors space-y-4">
-				<div class="flex items-center justify-between">
+			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-3.5 sm:p-5 shadow-xs transition-colors space-y-3.5 sm:space-y-4">
+				<div class="flex flex-wrap items-center justify-between gap-2">
 					<span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-[var(--ttx-text-main)]">
 						<Palette size={14} class="text-[var(--ttx-accent-text)]" />
 						2. Warna & Palet
@@ -403,19 +403,19 @@
 				<!-- Preset Color Swatches -->
 				<div>
 					<p class="text-[11px] font-medium mb-2 text-[var(--ttx-text-dim)]">Pilihan Tema Cepat</p>
-					<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+					<div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2">
 						{#each COLOR_PRESETS as preset}
 							{@const isActive = config.foregroundColor === preset.fg && config.backgroundColor === preset.bg && !config.isTransparent}
 							<button
 								type="button"
-								class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium border transition-all text-left {isActive
+								class="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-[11px] sm:text-xs font-medium border transition-all text-left {isActive
 									? 'border-[var(--ttx-accent)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] font-semibold shadow-xs'
 									: 'border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)]'}"
 								onclick={() => applyPreset(preset.fg, preset.bg)}
 							>
-								<span class="w-4 h-4 rounded-full border border-black/20 overflow-hidden relative shrink-0 shadow-inner">
+								<span class="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-black/20 overflow-hidden relative shrink-0 shadow-inner">
 									<span class="absolute inset-0" style="background:{preset.bg}"></span>
-									<span class="absolute inset-[3px] rounded-full" style="background:{preset.fg}"></span>
+									<span class="absolute inset-[2.5px] rounded-full" style="background:{preset.fg}"></span>
 								</span>
 								<span class="truncate">{preset.name}</span>
 							</button>
@@ -424,12 +424,12 @@
 				</div>
 
 				<!-- Custom Pickers -->
-				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-0.5">
 					<!-- QR Foreground Color -->
-					<div class="flex items-center gap-3 p-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)]">
+					<div class="flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)]">
 						<input
 							type="color"
-							class="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0 p-0 shrink-0"
+							class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg cursor-pointer bg-transparent border-0 p-0 shrink-0"
 							bind:value={config.foregroundColor}
 							onchange={handleConfigChange}
 						/>
@@ -446,10 +446,10 @@
 					</div>
 
 					<!-- QR Background Color -->
-					<div class="flex items-center gap-3 p-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] transition-opacity {config.isTransparent ? 'opacity-35 pointer-events-none' : ''}">
+					<div class="flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] transition-opacity {config.isTransparent ? 'opacity-35 pointer-events-none' : ''}">
 						<input
 							type="color"
-							class="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0 p-0 shrink-0"
+							class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg cursor-pointer bg-transparent border-0 p-0 shrink-0"
 							bind:value={config.backgroundColor}
 							onchange={handleConfigChange}
 							disabled={config.isTransparent}
@@ -470,30 +470,30 @@
 
 				<!-- Contrast warning/success indicator -->
 				{#if !config.isTransparent}
-					<div class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs {contrastResult.isRisky
+					<div class="flex items-start gap-2.5 px-3 py-2 rounded-xl text-xs {contrastResult.isRisky
 						? 'bg-amber-500/10 border border-amber-500/25 text-amber-500'
 						: 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-500'}">
 						{#if contrastResult.isRisky}
-							<AlertTriangle size={14} class="shrink-0 text-amber-500" />
+							<AlertTriangle size={14} class="shrink-0 mt-0.5 text-amber-500" />
 						{:else}
-							<ShieldCheck size={14} class="shrink-0 text-emerald-500" />
+							<ShieldCheck size={14} class="shrink-0 mt-0.5 text-emerald-500" />
 						{/if}
-						<span class="truncate">{contrastResult.message} (Rasio: {contrastResult.ratio.toFixed(1)}:1)</span>
+						<span class="leading-relaxed">{contrastResult.message} (Rasio: {contrastResult.ratio.toFixed(1)}:1)</span>
 					</div>
 				{/if}
 			</div>
 
 			<!-- 3. DETAIL TEKNIS (MARGIN & ECC) -->
-			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 shadow-xs transition-colors space-y-4">
+			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-3.5 sm:p-5 shadow-xs transition-colors space-y-3.5 sm:space-y-4">
 				<span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-[var(--ttx-text-main)]">
 					<Sliders size={14} class="text-[var(--ttx-accent-text)]" />
 					3. Parameter Output
 				</span>
 
-				<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				<div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
 					<!-- Error Correction Level -->
 					<div class="space-y-1.5">
-						<div class="flex items-center justify-between">
+						<div class="flex flex-wrap items-center justify-between gap-1">
 							<span class="text-xs font-medium text-[var(--ttx-text-muted)]">
 								Tingkat Pemulihan (ECC)
 							</span>
@@ -529,7 +529,7 @@
 								{config.margin} blok
 							</span>
 						</div>
-						<div class="pt-2">
+						<div class="pt-1 sm:pt-1.5">
 							<input
 								id="qr-margin-range"
 								type="range"
@@ -548,10 +548,10 @@
 		</div>
 
 		<!-- RIGHT COLUMN: LIVE PREVIEW & EXPORT ACTIONS (5 COLS) -->
-		<div class="lg:col-span-5 flex flex-col gap-4 lg:sticky lg:top-4">
+		<div class="lg:col-span-5 flex flex-col gap-3.5 sm:gap-4 lg:sticky lg:top-4">
 
 			<!-- PREVIEW CONTAINER -->
-			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 sm:p-5 shadow-xs transition-colors space-y-4">
+			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-3.5 sm:p-5 shadow-xs transition-colors space-y-3.5 sm:space-y-4">
 				<!-- Preview Header -->
 				<div class="flex items-center justify-between">
 					<span class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-[var(--ttx-text-main)]">
@@ -582,7 +582,7 @@
 				</div>
 
 				<!-- QR Canvas Box -->
-				<div class="w-full aspect-square max-w-[340px] mx-auto rounded-2xl border flex items-center justify-center p-6 overflow-hidden transition-all duration-200 shadow-inner border-[var(--ttx-border-subtle)] {previewBgMode === 'dark' ? 'bg-[#050a14]' : previewBgMode === 'checker' ? 'bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f8fafc_0%_50%)] bg-[size:14px_14px]' : 'bg-white'}">
+				<div class="w-full aspect-square max-w-[280px] sm:max-w-[340px] mx-auto rounded-2xl border flex items-center justify-center p-4 sm:p-6 overflow-hidden transition-all duration-200 shadow-inner border-[var(--ttx-border-subtle)] {previewBgMode === 'dark' ? 'bg-[#050a14]' : previewBgMode === 'checker' ? 'bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f8fafc_0%_50%)] bg-[size:14px_14px]' : 'bg-white'}">
 					{#if qrSvg && isInputValid}
 						<div class="w-full h-full [&>svg]:w-full [&>svg]:h-full [&>svg]:block transition-transform duration-200 hover:scale-[1.02]">
 							{@html qrSvg}
@@ -598,12 +598,12 @@
 				</div>
 
 				<!-- Resolution Selector for PNG -->
-				<div class="space-y-1.5 pt-1">
+				<div class="space-y-1.5 pt-0.5">
 					<div class="flex items-center justify-between text-xs font-medium text-[var(--ttx-text-muted)]">
 						<span>Resolusi Gambar PNG</span>
 						<span class="font-mono text-[var(--ttx-accent-text)] font-bold">{config.pngSize} × {config.pngSize} px</span>
 					</div>
-					<div class="grid grid-cols-3 gap-2">
+					<div class="grid grid-cols-3 gap-1.5 sm:gap-2">
 						{#each ([512, 1024, 2048] as PngSize[]) as size}
 							<button
 								type="button"
@@ -619,11 +619,11 @@
 				</div>
 
 				<!-- Action Buttons: Download & Copy -->
-				<div class="space-y-2 pt-2">
+				<div class="space-y-2 pt-1">
 					<!-- Primary: Copy Image to Clipboard -->
 					<button
 						type="button"
-						class="w-full h-11 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all duration-150 {canExport
+						class="w-full h-10 sm:h-11 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all duration-150 {canExport
 							? copiedImage
 								? 'bg-emerald-600 text-white shadow-md'
 								: 'bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] text-white shadow-md shadow-blue-500/20 active:scale-98'
@@ -644,7 +644,7 @@
 					<div class="grid grid-cols-2 gap-2">
 						<button
 							type="button"
-							class="h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all duration-150 {canExport
+							class="h-9 sm:h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all duration-150 {canExport
 								? 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] hover:border-[var(--ttx-border-focus)] hover:bg-[var(--ttx-bg-hover)] active:scale-98 shadow-xs'
 								: 'border-[var(--ttx-border-subtle)] text-[var(--ttx-text-dim)] cursor-not-allowed'}"
 							onclick={handleExportPng}
@@ -656,7 +656,7 @@
 
 						<button
 							type="button"
-							class="h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all duration-150 {canExport
+							class="h-9 sm:h-10 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border transition-all duration-150 {canExport
 								? 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] hover:border-[var(--ttx-border-focus)] hover:bg-[var(--ttx-bg-hover)] active:scale-98 shadow-xs'
 								: 'border-[var(--ttx-border-subtle)] text-[var(--ttx-text-dim)] cursor-not-allowed'}"
 							onclick={handleExportSvg}
