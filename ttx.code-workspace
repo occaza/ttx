@@ -8,9 +8,6 @@
 		},
 		{
 			"path": "../test-postgre"
-		},
-		{
-			"path": "../QRStudio"
 		}
 	],
 	"settings": {}
