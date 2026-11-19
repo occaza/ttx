@@ -18,14 +18,37 @@
 		Palette
 	} from '@lucide/svelte';
 
-	type ColorTheme = 'slate' | 'teal' | 'burgundy' | 'purple' | 'cherry';
+	type ColorTheme =
+		| 'slate'
+		| 'teal'
+		| 'burgundy'
+		| 'purple'
+		| 'cherry'
+		| 'pine'
+		| 'navy'
+		| 'olive'
+		| 'peach'
+		| 'neon'
+		| 'crimson'
+		| 'cyber-purple'
+		| 'bordo'
+		| 'taupe';
 
 	const COLOR_THEMES: { id: ColorTheme; label: string; swatch: string; swatchDark: string }[] = [
-		{ id: 'slate',    label: 'Slate',    swatch: '#3b82f6', swatchDark: '#60a5fa' },
-		{ id: 'teal',     label: 'Teal',     swatch: '#0d5c63', swatchDark: '#44a1a0' },
-		{ id: 'burgundy', label: 'Burgundy', swatch: '#6d001a', swatchDark: '#a03050' },
-		{ id: 'purple',   label: 'Purple',   swatch: '#6a2fb8', swatchDark: '#8855c8' },
-		{ id: 'cherry',   label: 'Cherry',   swatch: '#b4102d', swatchDark: '#c04058' }
+		{ id: 'slate',        label: 'Slate',            swatch: '#3b82f6', swatchDark: '#60a5fa' },
+		{ id: 'teal',         label: 'Teal',             swatch: '#0d5c63', swatchDark: '#44a1a0' },
+		{ id: 'burgundy',     label: 'Burgundy',         swatch: '#6d001a', swatchDark: '#a03050' },
+		{ id: 'purple',       label: 'Purple',           swatch: '#6a2fb8', swatchDark: '#8855c8' },
+		{ id: 'cherry',       label: 'Cherry',           swatch: '#b4102d', swatchDark: '#c04058' },
+		{ id: 'pine',         label: 'Autumn Pine',      swatch: '#c45638', swatchDark: '#e07255' },
+		{ id: 'navy',         label: 'Canyon Navy',      swatch: '#cf5b36', swatchDark: '#e87b55' },
+		{ id: 'olive',        label: 'Moss Olive',       swatch: '#6b2830', swatchDark: '#a4b55c' },
+		{ id: 'peach',        label: 'Steel Peach',      swatch: '#ed7750', swatchDark: '#f58762' },
+		{ id: 'neon',         label: 'Neo Lime',         swatch: '#6f8f10', swatchDark: '#cbee34' },
+		{ id: 'crimson',      label: 'Crimson Obsidian', swatch: '#710014', swatchDark: '#e03046' },
+		{ id: 'cyber-purple', label: 'Neon Purple',      swatch: '#8a2be2', swatchDark: '#a855f7' },
+		{ id: 'bordo',        label: 'Bordo Green',      swatch: '#0f3d3a', swatchDark: '#2db9a5' },
+		{ id: 'taupe',        label: 'Sandy Taupe',      swatch: '#837d5e', swatchDark: '#d7c391' }
 	];
 	import QRGeneratorView from '$lib/components/v2/QRGeneratorView.svelte';
 	import RemoveDuplicateLinesView from '$lib/components/v2/RemoveDuplicateLinesView.svelte';
@@ -576,7 +599,7 @@
 							onkeydown={() => {}}
 						></div>
 						<div
-							class="absolute right-0 top-full mt-2 z-50 flex flex-col gap-1 p-2 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xl min-w-[9rem]"
+							class="absolute right-0 top-full mt-2 z-50 flex max-h-80 min-w-[10rem] overflow-y-auto flex-col gap-1 p-2 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xl"
 						>
 							{#each COLOR_THEMES as t (t.id)}
 								<button
@@ -638,7 +661,7 @@
 					</a>
 					<a
 						href="/register"
-						class="hidden sm:inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 rounded-lg shadow-sm transition-all"
+						class="hidden sm:inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-[var(--ttx-accent-contrast)] bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 rounded-lg shadow-sm transition-all"
 					>
 						Sign Up
 					</a>
@@ -828,7 +851,7 @@
 					</a>
 					<a
 						href="/register"
-						class="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-[var(--ttx-accent)] text-white hover:bg-[var(--ttx-accent-hover)] shadow-sm transition-colors"
+						class="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-[var(--ttx-accent)] text-[var(--ttx-accent-contrast)] hover:bg-[var(--ttx-accent-hover)] shadow-sm transition-colors"
 					>
 						Sign Up
 					</a>

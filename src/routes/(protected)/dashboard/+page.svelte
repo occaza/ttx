@@ -177,7 +177,7 @@
 							{/if}
 							<a
 								href="/notepad2"
-								class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm active:scale-95 transition-all"
+								class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[var(--ttx-accent-contrast)] bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm active:scale-95 transition-all"
 							>
 								<Plus size={14} />
 								<span>Buka Editor</span>
@@ -230,7 +230,7 @@
 							<p class="text-xs text-[var(--ttx-text-dim)] mt-1">Mulai buat dan simpan catatan cloud pertama Anda di Notepad Pro.</p>
 							<a
 								href="/notepad2"
-								class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm transition-all"
+								class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 text-xs font-semibold text-[var(--ttx-accent-contrast)] bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm transition-all"
 							>
 								<Plus size={14} />
 								<span>Buat Dokumen Sekarang</span>

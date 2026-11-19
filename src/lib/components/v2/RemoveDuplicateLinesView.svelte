@@ -143,7 +143,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 	<!-- COMPACT SLIM HEADER -->
 	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--ttx-border-base)]">
 		<div class="flex items-center gap-3">
-			<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-md shadow-blue-500/20 shrink-0">
+			<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] shadow-xs">
 				<Copy class="h-5 w-5" />
 			</div>
 			<div>
@@ -325,7 +325,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 
 				<button
 					type="button"
-					class="h-9.5 px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 shadow-md shadow-blue-500/25 transition-all"
+					class="h-9.5 px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 text-[var(--ttx-accent-contrast)] bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 shadow-xs transition-all disabled:opacity-50"
 					onclick={removeDup}
 					disabled={!input}
 				>

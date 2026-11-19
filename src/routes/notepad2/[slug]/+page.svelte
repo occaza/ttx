@@ -1,31 +1,54 @@
 <script lang="ts">
-	import { tick, onMount, onDestroy } from 'svelte';
+	import { tick, onMount, onDestroy, untrack } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { Save, Trash2, Edit2, Check, Clock, Search, ChevronDown, ChevronUp, X } from '@lucide/svelte';
+	import {
+		Save,
+		Trash2,
+		Edit2,
+		Check,
+		Clock,
+		Search,
+		ChevronDown,
+		ChevronUp,
+		X,
+		Share2
+	} from '@lucide/svelte';
+	import { ThemeSwitcher } from '$lib';
 	import type { PageData } from './$types';
 
 	import { EditorView, basicSetup } from 'codemirror';
 	import { EditorState } from '@codemirror/state';
-	import { search, SearchQuery, setSearchQuery, findNext, findPrevious, replaceNext, replaceAll } from '@codemirror/search';
+	import {
+		search,
+		SearchQuery,
+		setSearchQuery,
+		findNext,
+		findPrevious,
+		replaceNext,
+		replaceAll
+	} from '@codemirror/search';
 	import { keymap } from '@codemirror/view';
 
 	let { data }: { data: PageData } = $props();
-	
+
 	let title = $state(data.doc.title);
 	let content = $state(data.doc.content);
 	let isEditingTitle = $state(false);
 	let isSaving = $state(false);
 	let saveStatus = $state<'idle' | 'saving' | 'saved' | 'error' | 'pending'>('idle');
-	
+
 	let editorContainer: HTMLDivElement | undefined = $state();
 	let view: EditorView | undefined;
 	let titleInputRef: HTMLInputElement | undefined = $state();
-	
+
 	let currentDocId = $state(data.doc.id);
 	let isOwner = $derived(data.isOwner);
 	let isPublic = $state(data.isPublic);
 	let isCopying = $state(false);
+
+	let showShareDropdown = $state(false);
+	let showDeleteDropdown = $state(false);
 
 	let saveTimeout: NodeJS.Timeout;
 
@@ -42,7 +65,7 @@
 	$effect(() => {
 		if (data.doc.id) {
 			title = data.doc.title;
-			
+
 			if (view && currentDocId !== data.doc.id) {
 				currentDocId = data.doc.id;
 				saveStatus = 'idle';
@@ -60,31 +83,32 @@
 		}
 	});
 
-	import { untrack } from 'svelte';
-
 	$effect(() => {
 		if (view && showFindReplace) {
 			const currentFind = findText;
 			const currentCase = matchCase;
-			
+
 			untrack(() => {
 				if (!view) return;
 				view.dispatch({
-					effects: setSearchQuery.of(new SearchQuery({
-						search: currentFind,
-						caseSensitive: currentCase,
-						replace: replaceText
-					}))
+					effects: setSearchQuery.of(
+						new SearchQuery({
+							search: currentFind,
+							caseSensitive: currentCase,
+							replace: replaceText
+						})
+					)
 				});
 			});
 		} else if (view && !showFindReplace) {
-			// Clear search when closed
 			view.dispatch({
-				effects: setSearchQuery.of(new SearchQuery({
-					search: '',
-					caseSensitive: false,
-					replace: ''
-				}))
+				effects: setSearchQuery.of(
+					new SearchQuery({
+						search: '',
+						caseSensitive: false,
+						replace: ''
+					})
+				)
 			});
 		}
 	});
@@ -92,11 +116,13 @@
 	function syncSearchQuery() {
 		if (!view) return;
 		view.dispatch({
-			effects: setSearchQuery.of(new SearchQuery({
-				search: findText,
-				caseSensitive: matchCase,
-				replace: replaceText
-			}))
+			effects: setSearchQuery.of(
+				new SearchQuery({
+					search: findText,
+					caseSensitive: matchCase,
+					replace: replaceText
+				})
+			)
 		});
 	}
 
@@ -111,16 +137,16 @@
 	async function autoSave() {
 		isSaving = true;
 		saveStatus = 'saving';
-		
+
 		const formData = new FormData();
 		formData.append('content', content);
-		
+
 		try {
 			const response = await fetch(`?/save`, {
 				method: 'POST',
 				body: formData
 			});
-			
+
 			if (response.ok) {
 				saveStatus = 'saved';
 				await invalidateAll();
@@ -157,10 +183,22 @@
 		setTimeout(() => document.getElementById('find-input')?.focus(), 50);
 	}
 
-	function handleNextMatch() { syncSearchQuery(); if (view) findNext(view); }
-	function handlePrevMatch() { syncSearchQuery(); if (view) findPrevious(view); }
-	function handleReplace() { syncSearchQuery(); if (view) replaceNext(view); }
-	function handleReplaceAll() { syncSearchQuery(); if (view) replaceAll(view); }
+	function handleNextMatch() {
+		syncSearchQuery();
+		if (view) findNext(view);
+	}
+	function handlePrevMatch() {
+		syncSearchQuery();
+		if (view) findPrevious(view);
+	}
+	function handleReplace() {
+		syncSearchQuery();
+		if (view) replaceNext(view);
+	}
+	function handleReplaceAll() {
+		syncSearchQuery();
+		if (view) replaceAll(view);
+	}
 
 	function formatDate(dateString: string) {
 		const date = new Date(dateString);
@@ -188,53 +226,64 @@
 			}
 		});
 
-		const customKeymap = keymap.of([{
-			key: "Mod-f",
-			run: () => {
-				openSearch();
-				return true;
+		const customKeymap = keymap.of([
+			{
+				key: 'Mod-f',
+				run: () => {
+					openSearch();
+					return true;
+				}
 			}
-		}]);
+		]);
 
 		const theme = EditorView.theme({
-			"&": { height: "100%", width: "100%", outline: "none", backgroundColor: "transparent" },
-			".cm-scroller": { overflow: "auto", fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace" },
-			".cm-content": {
-				padding: "16px 0",
-				fontSize: "14px",
-				lineHeight: "1.6",
-				color: "oklch(var(--bc))"
+			'&': {
+				height: '100%',
+				width: '100%',
+				outline: 'none',
+				backgroundColor: 'transparent'
 			},
-			".cm-lineNumbers": {
-				padding: "0 12px 0 8px"
+			'.cm-scroller': {
+				overflow: 'auto',
+				fontFamily:
+					"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
 			},
-			".cm-gutters": {
-				backgroundColor: "oklch(var(--b2) / 0.5)",
-				borderRight: "1px solid oklch(var(--bc) / 0.05)",
-				color: "oklch(var(--bc) / 0.3)"
+			'.cm-content': {
+				padding: '16px 0',
+				fontSize: '14px',
+				lineHeight: '1.6',
+				color: 'var(--ttx-text-main)'
 			},
-			".cm-activeLineGutter": {
-				backgroundColor: "oklch(var(--p) / 0.1)",
-				color: "oklch(var(--p))"
+			'.cm-lineNumbers': {
+				padding: '0 12px 0 8px'
 			},
-			".cm-activeLine": {
-				backgroundColor: "transparent"
+			'.cm-gutters': {
+				backgroundColor: 'var(--ttx-bg-card-subtle)',
+				borderRight: '1px solid var(--ttx-border-subtle)',
+				color: 'var(--ttx-text-dim)'
 			},
-			".cm-cursor, .cm-dropCursor": {
-				borderLeftColor: "#ffffff",
-				borderLeftWidth: "2px"
+			'.cm-activeLineGutter': {
+				backgroundColor: 'var(--ttx-accent-light)',
+				color: 'var(--ttx-accent-text)'
 			},
-			".cm-searchMatch": {
-				backgroundColor: "oklch(var(--wa) / 0.4)",
-				border: "1px solid transparent"
+			'.cm-activeLine': {
+				backgroundColor: 'transparent'
 			},
-			".cm-searchMatch.cm-searchMatch-selected": {
-				backgroundColor: "oklch(var(--su) / 0.5)",
-				border: "1px solid oklch(var(--su))",
-				outline: "2px solid oklch(var(--su) / 0.3)"
+			'.cm-cursor, .cm-dropCursor': {
+				borderLeftColor: 'var(--ttx-accent)',
+				borderLeftWidth: '2px'
 			},
-			"&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": {
-				backgroundColor: "oklch(var(--p) / 0.3)"
+			'.cm-searchMatch': {
+				backgroundColor: 'var(--ttx-accent-light)',
+				border: '1px solid var(--ttx-border-focus)'
+			},
+			'.cm-searchMatch.cm-searchMatch-selected': {
+				backgroundColor: 'var(--ttx-bg-active)',
+				border: '1px solid var(--ttx-accent)',
+				outline: '2px solid var(--ttx-accent-light)'
+			},
+			'&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
+				backgroundColor: 'var(--ttx-accent-light)'
 			}
 		});
 
@@ -242,7 +291,7 @@
 			const extensions = [
 				customKeymap,
 				basicSetup,
-				search(), // Headless search extension (no panel)
+				search(),
 				updateListener,
 				theme
 			];
@@ -268,13 +317,17 @@
 
 <svelte:window onkeydown={handleKeyDown} />
 
-<div class="flex flex-col h-full relative" style="height: 100vh">
+<div class="relative flex h-full flex-col bg-[var(--ttx-bg-workspace)]" style="height: 100vh">
 	<!-- Grid Background Pattern -->
-	<div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
+	<div
+		class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--ttx-border-subtle)_1px,transparent_1px),linear-gradient(to_bottom,var(--ttx-border-subtle)_1px,transparent_1px)] bg-[size:32px_32px] opacity-25"
+	></div>
 
-	<!-- Toolbar -->
-	<div class="flex h-14 items-center justify-between border-b border-base-content/10 bg-base-100 px-4 pl-12 shrink-0">
-		<div class="flex items-center gap-4 flex-1">
+	<!-- Top Toolbar -->
+	<header
+		class="relative z-30 flex h-14 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-header)] pl-14 pr-4 sm:pl-16 sm:pr-6"
+	>
+		<div class="flex flex-1 items-center gap-3 overflow-hidden">
 			<!-- Title Edit -->
 			{#if isEditingTitle}
 				<form
@@ -293,216 +346,376 @@
 						type="text"
 						name="title"
 						bind:value={title}
-						class="input input-sm input-bordered focus:outline-none w-64"
+						class="h-8 w-52 sm:w-64 rounded-lg border border-[var(--ttx-border-focus)] bg-[var(--ttx-bg-input)] px-2.5 text-xs text-[var(--ttx-text-main)] outline-none focus:ring-1 focus:ring-[var(--ttx-accent)]"
 						onblur={() => {
-							setTimeout(() => { isEditingTitle = false; }, 150);
+							setTimeout(() => {
+								isEditingTitle = false;
+							}, 150);
 						}}
 					/>
-					<button type="submit" class="btn btn-sm btn-ghost btn-square text-success">
+					<button
+						type="submit"
+						class="flex h-8 w-8 items-center justify-center rounded-lg text-emerald-500 hover:bg-emerald-500/10 transition-colors"
+					>
 						<Check size={16} />
 					</button>
 				</form>
 			{:else}
 				<button
-					class="group flex items-center gap-2 rounded-md px-2 py-1 transition-colors {isOwner ? 'hover:bg-base-200 cursor-pointer' : 'cursor-default'}"
-					onclick={() => { if (isOwner) isEditingTitle = true; }}
-					title={isOwner ? "Click to rename" : ""}
+					type="button"
+					class="group flex items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors {isOwner
+						? 'cursor-pointer hover:bg-[var(--ttx-bg-hover)]'
+						: 'cursor-default'}"
+					onclick={() => {
+						if (isOwner) isEditingTitle = true;
+					}}
+					title={isOwner ? 'Klik untuk ubah judul' : ''}
 				>
-					<span class="font-semibold text-base-content max-w-[200px] sm:max-w-md truncate">{title}</span>
+					<span
+						class="max-w-[150px] truncate text-xs font-semibold text-[var(--ttx-text-main)] sm:max-w-md sm:text-sm"
+					>
+						{title}
+					</span>
 					{#if !isOwner}
-						<span class="badge badge-sm badge-ghost text-xs">Read Only</span>
+						<span
+							class="rounded-md border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] px-2 py-0.5 text-[10px] font-medium text-[var(--ttx-text-dim)]"
+						>
+							Read Only
+						</span>
 					{:else}
-						<Edit2 size={14} class="opacity-0 group-hover:opacity-100 text-base-content/50 transition-opacity" />
+						<Edit2
+							size={13}
+							class="text-[var(--ttx-text-dim)] opacity-0 transition-opacity group-hover:opacity-100"
+						/>
 					{/if}
 				</button>
 			{/if}
 
 			<!-- Save Status -->
-			<div class="hidden sm:flex items-center gap-2 text-xs text-base-content/50 ml-4">
+			<div class="hidden items-center gap-2 text-xs text-[var(--ttx-text-dim)] sm:flex ml-2">
 				{#if saveStatus === 'saving'}
-					<span class="flex items-center gap-1.5"><span class="loading loading-spinner w-3 h-3 text-primary"></span> Saving...</span>
+					<span class="flex items-center gap-1.5">
+						<span
+							class="h-3 w-3 animate-spin rounded-full border-2 border-[var(--ttx-accent)] border-t-transparent"
+						></span>
+						Menyimpan...
+					</span>
 				{:else if saveStatus === 'pending'}
-					<span class="flex items-center gap-1.5 opacity-70">Unsaved changes...</span>
+					<span class="opacity-70">Perubahan belum disimpan...</span>
 				{:else if saveStatus === 'saved'}
-					<span class="flex items-center gap-1.5 text-success"><Check size={14} /> Saved</span>
+					<span class="flex items-center gap-1 text-emerald-500 font-medium">
+						<Check size={13} />
+						Tersimpan
+					</span>
 				{:else if saveStatus === 'error'}
-					<span class="text-error">Save failed</span>
+					<span class="text-rose-500 font-medium">Gagal menyimpan</span>
 				{:else}
-					<span class="flex items-center gap-1.5"><Clock size={14} /> Last edited: {formatDate(data.doc.updated_at)}</span>
+					<span class="flex items-center gap-1">
+						<Clock size={13} />
+						{formatDate(data.doc.updated_at)}
+					</span>
 				{/if}
 			</div>
 		</div>
 
-		<div class="flex items-center gap-1">
+		<!-- Action Controls -->
+		<div class="flex items-center gap-1.5 sm:gap-2">
 			<!-- Find button -->
 			<button
-				class="btn btn-sm btn-ghost gap-1.5 text-base-content/60 hover:text-base-content"
+				type="button"
+				class="flex h-8 items-center gap-1.5 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 text-xs font-semibold text-[var(--ttx-text-muted)] transition-colors hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)] active:scale-95"
 				onclick={openSearch}
-				title="Find & Replace (Ctrl+F)"
+				title="Cari & Ganti (Ctrl+F)"
 			>
-				<Search size={15} />
-				<span class="hidden sm:inline text-xs">Find</span>
+				<Search size={14} />
+				<span class="hidden sm:inline">Cari</span>
 			</button>
 
-			<div class="w-px h-5 bg-base-content/10 mx-1"></div>
+			<div class="mx-0.5 h-5 w-px bg-[var(--ttx-border-subtle)]"></div>
+
+			<!-- Theme Switcher -->
+			<ThemeSwitcher />
+
+			<div class="mx-0.5 h-5 w-px bg-[var(--ttx-border-subtle)]"></div>
 
 			{#if isOwner}
-				<!-- Share button -->
-				<div class="dropdown dropdown-end">
+				<!-- Share Popover -->
+				<div class="relative">
 					<button
-						tabindex="0"
-						class="btn btn-sm gap-1.5 {isPublic ? 'btn-success btn-outline' : 'btn-ghost text-base-content/60'}"
-						title="Share document"
+						type="button"
+						class="flex h-8 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold transition-colors active:scale-95 {isPublic
+							? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-500'
+							: 'border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)]'}"
+						onclick={() => (showShareDropdown = !showShareDropdown)}
+						title="Bagikan dokumen"
 					>
-						<span class="hidden sm:inline text-xs">{isPublic ? 'Shared' : 'Share'}</span>
+						<Share2 size={13} />
+						<span class="hidden sm:inline">{isPublic ? 'Dibagikan' : 'Bagikan'}</span>
 					</button>
-					<div tabindex="-1" class="dropdown-content z-[1] p-4 shadow-xl bg-base-100 rounded-box w-72 border border-base-content/10 mt-2">
-						<p class="font-semibold text-sm mb-1">Share Document</p>
-						<p class="text-xs text-base-content/50 mb-4">Allow others to read this document with the link.</p>
-						
-						<div class="flex items-center justify-between mb-4">
-							<span class="text-sm">Public Access</span>
-							<form method="POST" action="?/togglePublic" use:enhance={() => {
-								return async ({ update, result }) => {
-									if (result.type === 'success' && result.data) {
-										isPublic = result.data.isPublic as boolean;
-									}
-									await update({ reset: false });
-								};
-							}}>
-								<input type="checkbox" class="toggle toggle-success toggle-sm" checked={isPublic} onchange={(e) => e.currentTarget.form?.requestSubmit()} />
-							</form>
-						</div>
 
-						<div class="flex gap-2">
-							<input type="text" value="{typeof window !== 'undefined' ? window.location.href : ''}" class="input input-sm input-bordered flex-1 text-xs" readonly />
-							<button class="btn btn-sm btn-primary" onclick={copyLink}>
-								{isCopying ? 'Copied!' : 'Copy'}
-							</button>
+					{#if showShareDropdown}
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<div
+							class="fixed inset-0 z-30"
+							onclick={() => (showShareDropdown = false)}
+							onkeydown={() => {}}
+						></div>
+						<div
+							class="absolute right-0 top-full mt-2 z-40 w-72 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 text-[var(--ttx-text-main)] shadow-xl"
+						>
+							<p class="mb-1 text-sm font-semibold">Bagikan Dokumen</p>
+							<p class="mb-3 text-xs text-[var(--ttx-text-muted)]">
+								Izinkan siapa saja dengan tautan untuk membaca catatan ini.
+							</p>
+
+							<div class="mb-3 flex items-center justify-between">
+								<span class="text-xs font-medium">Akses Publik</span>
+								<form
+									method="POST"
+									action="?/togglePublic"
+									use:enhance={() => {
+										return async ({ update, result }) => {
+											if (result.type === 'success' && result.data) {
+												isPublic = result.data.isPublic as boolean;
+											}
+											await update({ reset: false });
+										};
+									}}
+								>
+									<input
+										type="checkbox"
+										class="h-4 w-4 cursor-pointer rounded accent-[var(--ttx-accent)]"
+										checked={isPublic}
+										onchange={(e) => e.currentTarget.form?.requestSubmit()}
+									/>
+								</form>
+							</div>
+
+							<div class="flex gap-1.5">
+								<input
+									type="text"
+									value={typeof window !== 'undefined' ? window.location.href : ''}
+									class="h-8 flex-1 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2 font-mono text-[11px] text-[var(--ttx-text-main)] outline-none"
+									readonly
+								/>
+								<button
+									type="button"
+									class="h-8 rounded-lg bg-[var(--ttx-accent)] px-3 text-xs font-semibold text-[var(--ttx-accent-contrast)] shadow-xs transition-colors hover:bg-[var(--ttx-accent-hover)] active:scale-95"
+									onclick={copyLink}
+								>
+									{isCopying ? 'Disalin!' : 'Salin'}
+								</button>
+							</div>
 						</div>
-					</div>
+					{/if}
 				</div>
 
-				<div class="w-px h-5 bg-base-content/10 mx-1"></div>
+				<div class="mx-0.5 h-5 w-px bg-[var(--ttx-border-subtle)]"></div>
 
 				<!-- Save button -->
-				<form method="POST" action="?/save" use:enhance={() => {
-					isSaving = true;
-					saveStatus = 'saving';
-					return async ({ update, result }) => {
-						isSaving = false;
-						if (result.type === 'success') {
-							saveStatus = 'saved';
-							setTimeout(() => { if (saveStatus === 'saved') saveStatus = 'idle'; }, 2000);
-						} else {
-							saveStatus = 'error';
-						}
-						await update({ reset: false });
-					};
-				}}>
+				<form
+					method="POST"
+					action="?/save"
+					use:enhance={() => {
+						isSaving = true;
+						saveStatus = 'saving';
+						return async ({ update, result }) => {
+							isSaving = false;
+							if (result.type === 'success') {
+								saveStatus = 'saved';
+								setTimeout(() => {
+									if (saveStatus === 'saved') saveStatus = 'idle';
+								}, 2000);
+							} else {
+								saveStatus = 'error';
+							}
+							await update({ reset: false });
+						};
+					}}
+				>
 					<input type="hidden" name="content" value={content} />
 					<button
 						type="submit"
-						class="btn btn-sm btn-primary gap-1.5"
+						class="flex h-8 items-center gap-1.5 rounded-lg bg-[var(--ttx-accent)] px-3 text-xs font-semibold text-[var(--ttx-accent-contrast)] shadow-xs transition-all hover:bg-[var(--ttx-accent-hover)] active:scale-95 disabled:opacity-40"
 						disabled={isSaving}
-						title="Save (Ctrl+S)"
+						title="Simpan (Ctrl+S)"
 					>
-						<Save size={15} />
-						<span class="hidden sm:inline text-xs">Save</span>
+						<Save size={14} />
+						<span class="hidden sm:inline">Simpan</span>
 					</button>
 				</form>
 
-				<!-- Delete with confirmation popover -->
-				<div class="dropdown dropdown-end">
+				<!-- Delete Popover -->
+				<div class="relative">
 					<button
-						tabindex="0"
-						class="btn btn-sm btn-ghost btn-square text-base-content/40 hover:text-error hover:bg-error/10 transition-colors"
-						title="Delete document"
+						type="button"
+						class="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--ttx-text-dim)] transition-colors hover:bg-rose-500/10 hover:text-rose-500"
+						onclick={() => (showDeleteDropdown = !showDeleteDropdown)}
+						title="Hapus dokumen"
 					>
-						<Trash2 size={15} />
+						<Trash2 size={14} />
 					</button>
-					<div tabindex="-1" class="dropdown-content z-[1] p-4 shadow-xl bg-base-100 rounded-box w-64 border border-base-content/10 mt-2">
-						<p class="font-semibold text-sm mb-1">Delete document?</p>
-						<p class="text-xs text-base-content/50 mb-4">This action cannot be undone.</p>
-						<div class="flex justify-end gap-2">
-							<button class="btn btn-xs btn-ghost" onclick={() => (document.activeElement as HTMLElement)?.blur()}>Cancel</button>
-							<form method="POST" action="?/delete" use:enhance>
-								<button type="submit" class="btn btn-xs btn-error">Delete</button>
-							</form>
+
+					{#if showDeleteDropdown}
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<div
+							class="fixed inset-0 z-30"
+							onclick={() => (showDeleteDropdown = false)}
+							onkeydown={() => {}}
+						></div>
+						<div
+							class="absolute right-0 top-full mt-2 z-40 w-64 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 text-[var(--ttx-text-main)] shadow-xl"
+						>
+							<p class="mb-1 text-sm font-semibold">Hapus dokumen?</p>
+							<p class="mb-4 text-xs text-[var(--ttx-text-muted)]">
+								Tindakan ini tidak dapat dibatalkan.
+							</p>
+							<div class="flex justify-end gap-2">
+								<button
+									type="button"
+									class="h-7 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 text-xs font-medium text-[var(--ttx-text-main)] transition-colors hover:bg-[var(--ttx-bg-hover)]"
+									onclick={() => (showDeleteDropdown = false)}
+								>
+									Batal
+								</button>
+								<form method="POST" action="?/delete" use:enhance>
+									<button
+										type="submit"
+										class="h-7 rounded-lg bg-rose-600 px-3 text-xs font-semibold text-white transition-colors hover:bg-rose-700"
+									>
+										Hapus
+									</button>
+								</form>
+							</div>
 						</div>
-					</div>
+					{/if}
 				</div>
 			{/if}
 		</div>
-	</div>
+	</header>
 
 	<!-- Find & Replace Custom UI -->
 	{#if showFindReplace}
-		<div class="flex flex-wrap items-center gap-2 border-b border-base-content/10 bg-base-200/30 px-4 py-2 shrink-0 text-sm z-10">
+		<div
+			class="relative z-20 flex flex-wrap items-center gap-2 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 py-2 text-xs shrink-0"
+		>
 			<!-- Find row -->
-			<div class="flex items-center gap-1.5 flex-wrap">
-				<div class="join">
-					<input 
+			<div class="flex flex-wrap items-center gap-1.5">
+				<div class="flex items-center">
+					<input
 						id="find-input"
-						type="text" 
-						bind:value={findText} 
-						placeholder="Find..." 
-						class="input input-sm input-bordered join-item w-40 sm:w-52 focus:outline-none"
-						onkeydown={(e) => { if(e.key === 'Enter') handleNextMatch(); }}
+						type="text"
+						bind:value={findText}
+						placeholder="Cari..."
+						class="h-8 w-40 sm:w-52 rounded-l-lg border border-r-0 border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none focus:border-[var(--ttx-accent)]"
+						onkeydown={(e) => {
+							if (e.key === 'Enter') handleNextMatch();
+						}}
 					/>
-					<button 
-						class="btn btn-sm join-item border border-base-content/20 {matchCase ? 'bg-primary text-primary-content' : 'bg-base-100'}"
-						title="Match Case"
+					<button
+						type="button"
+						class="h-8 px-2.5 rounded-r-lg border border-[var(--ttx-border-subtle)] font-serif font-bold text-xs transition-colors {matchCase
+							? 'bg-[var(--ttx-accent)] text-[var(--ttx-accent-contrast)] border-[var(--ttx-accent)]'
+							: 'bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:bg-[var(--ttx-bg-hover)]'}"
+						title="Cocokkan Huruf Besar/Kecil"
 						onclick={() => (matchCase = !matchCase)}
 					>
-						<span class="font-serif font-bold text-xs">Aa</span>
+						Aa
 					</button>
 				</div>
 
 				<!-- Prev / Next -->
-				<div class="join">
-					<button class="btn btn-sm btn-ghost join-item border border-base-content/20" onclick={handlePrevMatch} title="Previous match">
+				<div class="flex items-center">
+					<button
+						type="button"
+						class="flex h-8 w-8 items-center justify-center rounded-l-lg border border-r-0 border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] transition-colors hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)]"
+						onclick={handlePrevMatch}
+						title="Sebelumnya"
+					>
 						<ChevronUp size={14} />
 					</button>
-					<button class="btn btn-sm btn-ghost join-item border border-base-content/20" onclick={handleNextMatch} title="Next match">
+					<button
+						type="button"
+						class="flex h-8 w-8 items-center justify-center rounded-r-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] transition-colors hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)]"
+						onclick={handleNextMatch}
+						title="Berikutnya"
+					>
 						<ChevronDown size={14} />
 					</button>
 				</div>
 			</div>
 
-			<!-- Separator -->
-			<div class="w-px h-5 bg-base-content/15 hidden sm:block"></div>
+			<div class="mx-1 hidden h-5 w-px bg-[var(--ttx-border-subtle)] sm:block"></div>
 
 			<!-- Replace row -->
 			<div class="flex items-center gap-1.5">
-				<input 
-					type="text" 
-					bind:value={replaceText} 
-					placeholder="Replace with..." 
-					class="input input-sm input-bordered w-40 sm:w-52 focus:outline-none"
-					onkeydown={(e) => { if(e.key === 'Enter') handleReplace(); }}
+				<input
+					type="text"
+					bind:value={replaceText}
+					placeholder="Ganti dengan..."
+					class="h-8 w-40 sm:w-52 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none focus:border-[var(--ttx-accent)]"
+					onkeydown={(e) => {
+						if (e.key === 'Enter') handleReplace();
+					}}
 				/>
-				<button class="btn btn-sm btn-ghost border border-base-content/20" onclick={handleReplace} title="Replace current match">Replace</button>
-				<button class="btn btn-sm btn-primary btn-outline" onclick={handleReplaceAll} title="Replace all matches">All</button>
+				<button
+					type="button"
+					class="h-8 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-2.5 text-xs font-medium text-[var(--ttx-text-muted)] transition-colors hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)]"
+					onclick={handleReplace}
+					title="Ganti satu"
+				>
+					Ganti
+				</button>
+				<button
+					type="button"
+					class="h-8 rounded-lg border border-[var(--ttx-accent)] bg-[var(--ttx-accent-light)] px-2.5 text-xs font-semibold text-[var(--ttx-accent-text)] transition-colors hover:bg-[var(--ttx-accent)] hover:text-white"
+					onclick={handleReplaceAll}
+					title="Ganti semua"
+				>
+					Semua
+				</button>
 			</div>
 
 			<div class="flex-1"></div>
-			<button class="btn btn-sm btn-ghost btn-square" onclick={() => (showFindReplace = false)} title="Close (Esc)">
-				<X size={16} />
+			<button
+				type="button"
+				class="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--ttx-text-dim)] transition-colors hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)]"
+				onclick={() => (showFindReplace = false)}
+				title="Tutup (Esc)"
+			>
+				<X size={15} />
 			</button>
 		</div>
 	{/if}
 
 	<!-- CodeMirror Editor Container -->
-	<div class="flex-1 overflow-hidden bg-base-100 relative m-4 md:m-6 mt-4 border border-base-content/10 rounded-xl shadow-sm z-10" bind:this={editorContainer}>
+	<div
+		class="relative z-0 m-3 sm:m-4 md:m-6 mt-3 sm:mt-4 flex-1 overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs"
+		bind:this={editorContainer}
+	>
 		<!-- CodeMirror injects here -->
 	</div>
 
 	<!-- Status Bar -->
-	<div class="flex h-8 items-center justify-end border-t border-base-content/10 bg-base-200/50 px-4 shrink-0 text-xs text-base-content/50 gap-4">
-		<span>{wordCount} words</span>
-		<span>{charCount} chars</span>
-		<span>{lineCount} lines</span>
-		<span><kbd class="kbd kbd-xs">Ctrl</kbd> + <kbd class="kbd kbd-xs">F</kbd> to search</span>
-	</div>
+	<footer
+		class="flex h-8 shrink-0 items-center justify-end gap-4 border-t border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4 font-mono text-[11px] text-[var(--ttx-text-dim)]"
+	>
+		<span>{wordCount} kata</span>
+		<span>{charCount} karakter</span>
+		<span>{lineCount} baris</span>
+		<span>
+			<kbd
+				class="rounded border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-1.5 py-0.5 text-[10px] text-[var(--ttx-text-muted)]"
+			>
+				Ctrl
+			</kbd>
+			+
+			<kbd
+				class="rounded border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-1.5 py-0.5 text-[10px] text-[var(--ttx-text-muted)]"
+			>
+				F
+			</kbd>
+			cari
+		</span>
+	</footer>
 </div>
