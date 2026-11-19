@@ -151,6 +151,10 @@
 		const cut = lines.slice(0, n).join('\n');
 		navigator.clipboard.writeText(cut).catch(() => {});
 		text = lines.slice(n).join('\n');
+		if (ta) {
+			ta.scrollTop = 0;
+			textareaScrollTop = 0;
+		}
 		setTimeout(() => (cutting = false), 500);
 	}
 
@@ -187,7 +191,7 @@
 	};
 </script>
 
-<div class="flex h-full min-h-[520px] w-full flex-1 flex-col gap-3 sm:min-h-0 sm:gap-4">
+<div class="flex h-full min-h-0 w-full flex-1 flex-col gap-3 sm:gap-4">
 	<!-- HEADER BAR -->
 	<div
 		class="flex shrink-0 flex-col justify-between gap-3 border-b border-[var(--ttx-border-base)] pb-3 sm:flex-row sm:items-center"
@@ -376,7 +380,7 @@
 			action="?/save"
 			use:enhance={afterSave}
 			bind:this={saveFormEl}
-			class="flex h-full max-h-full min-h-[520px] flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs sm:min-h-0"
+			class="flex flex-1 min-h-0 h-full flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs"
 		>
 			<!-- WORKSPACE TOOLBAR -->
 			<div
@@ -491,7 +495,7 @@
 
 			<!-- MAIN EDITOR WITH SYNCED LINE-NUMBER GUTTER -->
 			<div
-				class="flex h-full min-h-[380px] flex-1 overflow-hidden bg-[var(--ttx-bg-card)] sm:min-h-0"
+				class="relative flex flex-1 min-h-0 w-full overflow-hidden bg-[var(--ttx-bg-card)]"
 			>
 				<!-- Gutter line numbers -->
 				<div
@@ -514,7 +518,7 @@
 					placeholder="Tulis atau paste catatan bersama di sini..."
 					onscroll={syncScroll}
 					style="line-height: 22px;"
-					class="h-full min-h-[380px] w-full flex-1 resize-none overflow-y-auto bg-transparent p-3.5 font-mono text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none sm:min-h-0 sm:p-4 sm:text-sm"
+					class="h-full w-full flex-1 resize-none overflow-x-auto overflow-y-auto bg-transparent p-3.5 font-mono text-xs whitespace-pre text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none sm:p-4 sm:text-sm"
 				></textarea>
 			</div>
 

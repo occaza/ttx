@@ -34,3 +34,15 @@ src/routes/(experimental)/
 
 # Tools archive (SvelteKit ignores _prefixed dirs, kept on disk only)
 src/routes/_tools/
+
+# IDE & Workspace
+.vscode/
+*.code-workspace
+
+# Temporary & Unrelated Documents
+PAKASIR.pdf
+WEBHOOK_SETUP.md
+all_icons.txt
+pnpm-workspace.yaml
+*.pdf
+
