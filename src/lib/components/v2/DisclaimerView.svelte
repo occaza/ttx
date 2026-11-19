@@ -6,16 +6,16 @@
 
 <div class="space-y-5 w-full">
 	<!-- HEADER -->
-	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b {isDark ? 'border-[#152037]' : 'border-slate-200'}">
+	<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[var(--ttx-border-base)]">
 		<div class="flex items-center gap-3">
-			<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-600 text-white shadow-md shadow-amber-500/20 shrink-0">
+			<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20 shrink-0">
 				<AlertCircle class="h-5 w-5" />
 			</div>
 			<div>
-				<h1 class="text-base sm:text-lg font-bold tracking-tight {isDark ? 'text-white' : 'text-slate-900'}">
+				<h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--ttx-text-main)]">
 					Penafian Tanggung Jawab (Disclaimer)
 				</h1>
-				<div class="flex items-center gap-2 text-xs {isDark ? 'text-slate-400' : 'text-slate-500'}">
+				<div class="flex items-center gap-2 text-xs text-[var(--ttx-text-muted)]">
 					<span class="flex items-center gap-1"><Calendar size={12} /> Terakhir diperbarui: Juli 2025</span>
 					<span>•</span>
 					<span>TEXY Workspace</span>
@@ -27,9 +27,7 @@
 			<button
 				type="button"
 				onclick={onBack}
-				class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all {isDark
-					? 'border-[#1e2e50] bg-[#101a2f] text-slate-300 hover:text-white'
-					: 'border-slate-200 bg-white text-slate-600 hover:text-slate-900 shadow-xs'}"
+				class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all shadow-xs"
 			>
 				<ArrowLeft size={13} />
 				<span>Kembali</span>
@@ -38,14 +36,14 @@
 	</div>
 
 	<!-- CONTENT CARD -->
-	<div class="rounded-2xl border p-5 sm:p-7 shadow-xs transition-colors {isDark ? 'border-[#152037] bg-[#0c1427]' : 'border-slate-200 bg-white'} space-y-6">
-		<div class="prose max-w-none text-xs sm:text-sm leading-relaxed {isDark ? 'prose-invert text-slate-300 prose-headings:text-white prose-headings:font-bold prose-a:text-blue-400' : 'text-slate-700 prose-headings:text-slate-900 prose-headings:font-bold prose-a:text-blue-600'}">
+	<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-5 sm:p-7 shadow-xs transition-colors space-y-6">
+		<div class="prose max-w-none text-xs sm:text-sm leading-relaxed text-[var(--ttx-text-muted)] prose-headings:text-[var(--ttx-text-main)] prose-headings:font-bold prose-a:text-[var(--ttx-accent-text)]">
 			<h3 class="text-base">1. Penggunaan Alat "Sebagaimana Adanya" (As-Is)</h3>
 			<p>
 				Seluruh alat, utilitas, dan layanan yang disediakan di <strong>TEXY Workspace</strong> ditujukan untuk kemudahan produktivitas dan disediakan dengan basis <em>"sebagaimana adanya" (as-is)</em> dan <em>"sebagaimana tersedia" (as-available)</em> tanpa jaminan kelengkapan, keakuratan, atau ketiadaan gangguan.
 			</p>
 
-			<hr class="{isDark ? 'border-[#1a253c]' : 'border-slate-200'}" />
+			<hr class="border-[var(--ttx-border-base)]" />
 
 			<h3 class="text-base">2. Batasan Tanggung Jawab atas Data</h3>
 			<p>

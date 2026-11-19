@@ -14,8 +14,19 @@
 		LogIn,
 		LogOut,
 		User,
-		ExternalLink
+		ExternalLink,
+		Palette
 	} from '@lucide/svelte';
+
+	type ColorTheme = 'slate' | 'teal' | 'burgundy' | 'purple' | 'cherry';
+
+	const COLOR_THEMES: { id: ColorTheme; label: string; swatch: string; swatchDark: string }[] = [
+		{ id: 'slate',    label: 'Slate',    swatch: '#3b82f6', swatchDark: '#60a5fa' },
+		{ id: 'teal',     label: 'Teal',     swatch: '#0d5c63', swatchDark: '#44a1a0' },
+		{ id: 'burgundy', label: 'Burgundy', swatch: '#6d001a', swatchDark: '#a03050' },
+		{ id: 'purple',   label: 'Purple',   swatch: '#6a2fb8', swatchDark: '#8855c8' },
+		{ id: 'cherry',   label: 'Cherry',   swatch: '#b4102d', swatchDark: '#c04058' }
+	];
 	import QRGeneratorView from '$lib/components/v2/QRGeneratorView.svelte';
 	import RemoveDuplicateLinesView from '$lib/components/v2/RemoveDuplicateLinesView.svelte';
 	import WordCounterView from '$lib/components/v2/WordCounterView.svelte';
@@ -42,6 +53,7 @@
 	import DataDeletionView from '$lib/components/v2/DataDeletionView.svelte';
 	import SharedNotepadView from '$lib/components/v2/SharedNotepadView.svelte';
 	import LuckySpinView from '$lib/components/v2/LuckySpinView.svelte';
+	import BaseConverterView from '$lib/components/v2/BaseConverterView.svelte';
 
 	let {
 		initialTool = null,
@@ -80,7 +92,8 @@
 		'/data-deletion': 'data-deletion',
 		'/shared-notepad': 'shared-notepad',
 		'/notepad': 'shared-notepad',
-		'/lucky-spin': 'lucky-spin'
+		'/lucky-spin': 'lucky-spin',
+		'/base-converter': 'base-converter'
 	};
 
 	let internalTool = $state<string | null>(initialTool);
@@ -163,6 +176,30 @@
 	let isDark = $state(getInitialTheme());
 	let user = $derived($page.data.user);
 
+	// ── Color theme ──
+	function getInitialColorTheme(): ColorTheme {
+		if (!browser) return 'teal';
+		const saved = localStorage.getItem('color-theme') as ColorTheme | null;
+		if (saved && COLOR_THEMES.some((t) => t.id === saved)) return saved;
+		return 'teal';
+	}
+
+	let colorTheme = $state<ColorTheme>(getInitialColorTheme());
+	let showThemeDropdown = $state(false);
+
+	function applyColorTheme(theme: ColorTheme) {
+		colorTheme = theme;
+		showThemeDropdown = false;
+		document.documentElement.setAttribute('data-color-theme', theme);
+		localStorage.setItem('color-theme', theme);
+	}
+
+	function applyFullTheme() {
+		const dark = isDark ? 'dark' : 'light';
+		document.documentElement.setAttribute('data-theme', dark);
+		document.documentElement.setAttribute('data-color-theme', colorTheme);
+	}
+
 	// Active open dropdown category (only one category open at a time)
 	let openCategory: string | null = $state(initCat.open);
 
@@ -238,6 +275,8 @@
 
 	onMount(() => {
 		isDark = getInitialTheme();
+		colorTheme = getInitialColorTheme();
+		applyFullTheme();
 
 		function handlePopState() {
 			const path = window.location.pathname;
@@ -264,9 +303,7 @@
 		const nextTheme = isDark ? 'dark' : 'light';
 		document.documentElement.setAttribute('data-theme', nextTheme);
 		localStorage.setItem('theme', nextTheme);
-	}
-
-	// Filtered tools based on search
+	}	// Filtered tools based on search
 	const filteredTools = $derived(
 		searchQuery.trim() === ''
 			? tools
@@ -448,8 +485,8 @@
 					class="flex items-center group text-left cursor-pointer select-none"
 					onclick={goHome}
 				>
-					<span class="text-xl sm:text-2xl font-black tracking-tight text-[var(--ttx-text-main)] group-hover:text-blue-500 transition-colors">
-						TEXY<span class="text-blue-500">.</span>
+					<span class="text-xl sm:text-2xl font-black tracking-tight text-[var(--ttx-text-main)] group-hover:text-[var(--ttx-accent)] transition-colors">
+						TEXY<span class="text-[var(--ttx-accent)]">.</span>
 					</span>
 				</button>
 			</div>
@@ -465,7 +502,7 @@
 						bind:value={searchQuery}
 						type="text"
 						placeholder="Search Tools"
-						class="w-full h-10 pl-10 pr-16 rounded-xl text-sm transition-all focus:outline-none focus:ring-1 focus:ring-blue-500/40 bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500 shadow-inner"
+						class="w-full h-10 pl-10 pr-16 rounded-xl text-sm transition-all focus:outline-none focus:ring-1 focus:ring-[var(--ttx-accent)]/40 bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-border-focus)] shadow-inner"
 					/>
 					<div class="absolute inset-y-0 right-0 pr-2.5 flex items-center gap-1.5">
 						{#if searchQuery}
@@ -491,7 +528,7 @@
 				<!-- Mobile Search Toggle Button -->
 				<button
 					type="button"
-					class="md:hidden h-9 w-9 flex items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] active:scale-95 transition-all {showMobileSearch ? 'border-blue-500 text-blue-400' : ''}"
+					class="md:hidden h-9 w-9 flex items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] active:scale-95 transition-all {showMobileSearch ? 'border-[var(--ttx-accent)] text-[var(--ttx-accent-text)]' : ''}"
 					onclick={() => (showMobileSearch = !showMobileSearch)}
 					aria-label="Search"
 				>
@@ -509,9 +546,57 @@
 					{#if isDark}
 						<Sun size={16} />
 					{:else}
-						<Moon size={16} class="text-slate-700" />
+						<Moon size={16} class="text-[var(--ttx-text-main)]" />
 					{/if}
 				</button>
+
+				<!-- Color Theme Selector -->
+				<div class="relative">
+					<button
+						type="button"
+						class="h-9 w-9 flex items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] hover:bg-[var(--ttx-bg-hover)] active:scale-95 transition-all"
+						onclick={() => (showThemeDropdown = !showThemeDropdown)}
+						title="Color theme"
+						aria-label="Select color theme"
+						aria-expanded={showThemeDropdown}
+					>
+						<span
+							class="w-4 h-4 rounded-full border-2 border-white shadow-sm transition-colors"
+							style:background-color={isDark
+								? COLOR_THEMES.find((t) => t.id === colorTheme)?.swatchDark
+								: COLOR_THEMES.find((t) => t.id === colorTheme)?.swatch}
+						></span>
+					</button>
+
+					{#if showThemeDropdown}
+						<!-- svelte-ignore a11y_no_static_element_interactions -->
+						<div
+							class="fixed inset-0 z-40"
+							onclick={() => (showThemeDropdown = false)}
+							onkeydown={() => {}}
+						></div>
+						<div
+							class="absolute right-0 top-full mt-2 z-50 flex flex-col gap-1 p-2 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xl min-w-[9rem]"
+						>
+							{#each COLOR_THEMES as t (t.id)}
+								<button
+									type="button"
+									class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors hover:bg-[var(--ttx-bg-hover)] {colorTheme === t.id ? 'bg-[var(--ttx-bg-active)] text-[var(--ttx-text-main)]' : 'text-[var(--ttx-text-muted)]'}"
+									onclick={() => applyColorTheme(t.id)}
+								>
+									<span
+										class="w-3.5 h-3.5 rounded-full border border-black/10 shadow-sm flex-shrink-0"
+										style:background-color={isDark ? t.swatchDark : t.swatch}
+									></span>
+									{t.label}
+									{#if colorTheme === t.id}
+										<span class="ml-auto text-[var(--ttx-accent)]">✓</span>
+									{/if}
+								</button>
+							{/each}
+						</div>
+					{/if}
+				</div>
 
 				<!-- Auth Buttons -->
 				{#if user}
@@ -537,7 +622,7 @@
 					<!-- Mobile Auth Icon Button -->
 					<a
 						href="/login"
-						class="flex sm:hidden h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-blue-400 hover:border-blue-500/40 active:scale-95 transition-all"
+						class="flex sm:hidden h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] hover:border-[var(--ttx-accent)]/40 active:scale-95 transition-all"
 						title="Sign In / Register"
 						aria-label="Sign In"
 					>
@@ -553,7 +638,7 @@
 					</a>
 					<a
 						href="/register"
-						class="hidden sm:inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-lg shadow-sm shadow-blue-500/30 hover:shadow-blue-500/50 transition-all"
+						class="hidden sm:inline-flex items-center justify-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 rounded-lg shadow-sm transition-all"
 					>
 						Sign Up
 					</a>
@@ -572,7 +657,7 @@
 						bind:value={searchQuery}
 						type="text"
 						placeholder="Cari alat (misal: qr, counter, regex)..."
-						class="w-full h-10 pl-9 pr-9 rounded-xl text-xs outline-none bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-blue-500 shadow-inner"
+						class="w-full h-10 pl-9 pr-9 rounded-xl text-xs outline-none bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:border-[var(--ttx-border-focus)] shadow-inner"
 					/>
 					{#if searchQuery}
 						<button
@@ -609,7 +694,7 @@
 			<!-- Mobile Drawer Header -->
 			<div class="lg:hidden flex items-center justify-between px-4 py-3.5 border-b border-[var(--ttx-border-base)] pt-[max(0.875rem,env(safe-area-inset-top))]">
 				<span class="text-base font-black tracking-tight text-[var(--ttx-text-main)]">
-					TEXY<span class="text-blue-500">.</span>
+					TEXY<span class="text-[var(--ttx-accent)]">.</span>
 				</span>
 				<button
 					type="button"
@@ -675,7 +760,7 @@
 										>
 											<span class="truncate">{item.title}</span>
 											{#if isItemActive}
-												<span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+												<span class="w-1.5 h-1.5 rounded-full bg-[var(--ttx-accent)] shrink-0"></span>
 											{/if}
 										</button>
 									{/each}
@@ -743,7 +828,7 @@
 					</a>
 					<a
 						href="/register"
-						class="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-500 shadow-sm transition-colors"
+						class="flex-1 py-2 text-center text-xs font-semibold rounded-lg bg-[var(--ttx-accent)] text-white hover:bg-[var(--ttx-accent-hover)] shadow-sm transition-colors"
 					>
 						Sign Up
 					</a>
@@ -814,6 +899,8 @@
 					<PageIdView {isDark} />
 				{:else if activeTool === 'lucky-spin'}
 					<LuckySpinView {isDark} />
+				{:else if activeTool === 'base-converter'}
+					<BaseConverterView {isDark} />
 				{:else if activeTool === 'shared-notepad' || activeTool === 'notepad'}
 					<SharedNotepadView {isDark} data={notepadData} />
 				{:else if activeTool === 'privacy-policy'}
@@ -827,16 +914,14 @@
 				{#if searchQuery}
 					<!-- Search results status banner -->
 					<div
-						class="mb-6 sm:mb-8 flex items-center justify-between rounded-xl border px-4 sm:px-5 py-3 text-xs sm:text-sm {isDark
-							? 'border-blue-900/40 bg-blue-950/20 text-blue-300'
-							: 'border-blue-200 bg-blue-50 text-blue-800'}"
+						class="mb-6 sm:mb-8 flex items-center justify-between rounded-xl border border-[var(--ttx-accent)]/30 bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] px-4 sm:px-5 py-3 text-xs sm:text-sm"
 					>
 						<span class="truncate mr-2">
-							Hasil: <strong class={isDark ? 'text-white' : 'text-slate-900'}>"{searchQuery}"</strong> ({filteredTools.length} alat)
+							Hasil: <strong class="text-[var(--ttx-text-main)]">"{searchQuery}"</strong> ({filteredTools.length} alat)
 						</span>
 						<button
 							type="button"
-							class="text-xs underline shrink-0 {isDark ? 'text-blue-400 hover:text-white' : 'text-blue-600 hover:text-blue-900'}"
+							class="text-xs underline shrink-0 text-[var(--ttx-accent-text)] hover:text-[var(--ttx-text-main)]"
 							onclick={() => (searchQuery = '')}
 						>
 							Reset
@@ -846,14 +931,12 @@
 
 				{#if filteredTools.length === 0}
 					<div class="text-center py-20">
-						<p class="text-sm sm:text-base {isDark ? 'text-slate-400' : 'text-slate-600'}">
+						<p class="text-sm sm:text-base text-[var(--ttx-text-muted)]">
 							Tidak ada alat yang cocok dengan kata kunci "{searchQuery}"
 						</p>
 						<button
 							type="button"
-							class="mt-4 px-4 py-2 text-xs font-semibold rounded-lg border transition-colors {isDark
-								? 'text-blue-400 hover:text-blue-300 border-blue-500/30 hover:bg-blue-500/10'
-								: 'text-blue-600 hover:text-blue-700 border-blue-300 hover:bg-blue-50'}"
+							class="mt-4 px-4 py-2 text-xs font-semibold rounded-lg border transition-colors border-[var(--ttx-accent)]/30 text-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-light)]"
 							onclick={() => (searchQuery = '')}
 						>
 							Reset Pencarian
@@ -882,8 +965,8 @@
 							<section id="category-popular-tools" class="scroll-mt-6">
 								<div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
 									<div class="flex items-center gap-2">
-										<div class="w-1.5 h-4 rounded-full bg-blue-500"></div>
-										<h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
+										<div class="w-1.5 h-4 rounded-full bg-[var(--ttx-accent)]"></div>
+										<h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 											Popular Tools
 										</h2>
 									</div>
@@ -915,7 +998,7 @@
 											</div>
 											<div class="shrink-0 flex items-center">
 												{#if isEmbedded}
-													<div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-blue-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+													<div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[var(--ttx-accent)] opacity-60 group-hover:opacity-100 transition-opacity"></div>
 												{/if}
 												<ChevronRight size={16} class="sm:hidden text-[var(--ttx-text-dim)] group-hover:text-[var(--ttx-text-main)] transition-colors" />
 											</div>
@@ -931,8 +1014,8 @@
 							<section id={categoryId} class="scroll-mt-6 pt-6 sm:pt-8 border-t border-[var(--ttx-border-base)]">
 								<div class="flex items-center justify-between gap-2 mb-3 sm:mb-4">
 									<div class="flex items-center gap-2">
-										<div class="w-1.5 h-4 rounded-full bg-blue-500"></div>
-										<h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider {isDark ? 'text-slate-200' : 'text-slate-800'}">
+										<div class="w-1.5 h-4 rounded-full bg-[var(--ttx-accent)]"></div>
+										<h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ttx-text-main)]">
 											{category}
 										</h2>
 									</div>
@@ -964,7 +1047,7 @@
 											</div>
 											<div class="shrink-0 flex items-center">
 												{#if isEmbedded}
-													<div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-blue-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+													<div class="hidden sm:block w-1.5 h-1.5 rounded-full bg-[var(--ttx-accent)] opacity-60 group-hover:opacity-100 transition-opacity"></div>
 												{/if}
 												<ChevronRight size={16} class="sm:hidden text-[var(--ttx-text-dim)] group-hover:text-[var(--ttx-text-main)] transition-colors" />
 											</div>

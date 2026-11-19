@@ -111,7 +111,7 @@
 				<h1 class="text-lg font-semibold text-[var(--ttx-text-main)]">Masuk</h1>
 				<p class="mt-1 text-xs text-[var(--ttx-text-muted)]">
 					Belum punya akun?
-					<a href="/register" class="text-blue-500 hover:underline">Daftar sekarang</a>
+					<a href="/register" class="text-[var(--ttx-accent-text)] hover:underline">Daftar sekarang</a>
 				</p>
 
 				{#if errorMsg}
@@ -132,7 +132,7 @@
 							type="email"
 							bind:value={email}
 							placeholder="nama@email.com"
-							class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-colors focus:border-blue-500 focus:outline-none"
+							class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-3 text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-colors focus:border-[var(--ttx-border-focus)] focus:outline-none"
 							required
 						/>
 					</div>
@@ -144,7 +144,7 @@
 							</label>
 							<a
 								href="/forgot-password"
-								class="text-xs text-[var(--ttx-text-muted)] hover:text-blue-500 hover:underline"
+								class="text-xs text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] hover:underline"
 							>
 								Lupa password?
 							</a>
@@ -155,7 +155,7 @@
 								type={showPassword ? 'text' : 'password'}
 								bind:value={password}
 								placeholder="••••••••"
-								class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] pr-16 pl-3 text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-colors focus:border-blue-500 focus:outline-none"
+								class="h-10 w-full rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] pr-16 pl-3 text-sm text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-colors focus:border-[var(--ttx-border-focus)] focus:outline-none"
 								required
 							/>
 							<button
@@ -170,7 +170,7 @@
 
 					<button
 						type="submit"
-						class="h-10 w-full cursor-pointer rounded-lg bg-blue-600 text-xs font-medium text-white transition-colors hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50"
+						class="h-10 w-full cursor-pointer rounded-lg bg-[var(--ttx-accent)] text-xs font-medium text-white transition-colors hover:bg-[var(--ttx-accent-hover)] active:scale-[0.99] disabled:opacity-50"
 						disabled={loading || googleLoading}
 					>
 						{loading ? 'Memproses...' : 'Masuk'}

@@ -1,66 +1,371 @@
 /* ==========================================================================
    TEXY Design Tokens & Theme Configuration
-   Ubah variabel di bawah untuk mengganti skema warna seluruh workspace
+   Color themes: slate, teal (default), burgundy, purple, cherry
+   Each theme has light + dark variants.
+
+   STRUCTURE:
+   1. :root — teal fallback defaults (no data-color-theme set)
+   2. [data-theme='dark'] — teal dark fallback
+   3. Named themes come AFTER so they override :root via cascade order.
+      (All selectors have equal specificity 0,1,0 — last wins.)
    ========================================================================== */
 
+/* ── FALLBACK: Teal (when no data-color-theme is set) ── */
 :root {
-	/* LIGHT THEME — Palet: Soft White #F4F6FA, Royal Blue #4A78E0, Steel Gray #5A6473 */
-	--ttx-bg-root: #F4F6FA;
+	--ttx-bg-root: #faf9f7;
 	--ttx-bg-header: #ffffff;
-	--ttx-bg-sidebar: #EEF1F7;
-	--ttx-bg-workspace: #E8ECF4;
+	--ttx-bg-sidebar: #f5f1eb;
+	--ttx-bg-workspace: #f6f3ee;
 	--ttx-bg-card: #ffffff;
-	--ttx-bg-card-subtle: #F4F6FA;
-	--ttx-bg-input: #EEF1F7;
-	--ttx-bg-hover: #E2E7F2;
-	--ttx-bg-active: rgba(74, 120, 224, 0.10);
+	--ttx-bg-card-subtle: #f8f5f0;
+	--ttx-bg-input: #f0ebe4;
+	--ttx-bg-hover: #ebe4dc;
+	--ttx-bg-active: rgba(13, 92, 99, 0.12);
 
-	--ttx-border-base: #D5DCEd;
-	--ttx-border-subtle: #C4CDE0;
-	--ttx-border-focus: #4A78E0;
+	--ttx-border-base: #e4ded7;
+	--ttx-border-subtle: #d6cdc4;
+	--ttx-border-focus: #0d5c63;
 
-	--ttx-text-main: #1E2535;
-	--ttx-text-muted: #5A6473;
-	--ttx-text-dim: #8A96A8;
+	--ttx-text-main: #0d5c63;
+	--ttx-text-muted: #2d6368;
+	--ttx-text-dim: #5f8084;
 
-	--ttx-accent: #4A78E0;
-	--ttx-accent-hover: #3A62C4;
-	--ttx-accent-light: rgba(74, 120, 224, 0.10);
-	--ttx-accent-text: #3A62C4;
+	--ttx-accent: #0d5c63;
+	--ttx-accent-hover: #147179;
+	--ttx-accent-light: rgba(68, 161, 160, 0.15);
+	--ttx-accent-text: #0d5c63;
 
-	--ttx-hatch: rgba(74, 120, 224, 0.05);
-	--ttx-scrollbar: rgba(90, 100, 115, 0.30);
-	--ttx-scrollbar-hover: rgba(90, 100, 115, 0.55);
+	--ttx-hatch: rgba(13, 92, 99, 0.05);
+	--ttx-scrollbar: rgba(13, 92, 99, 0.22);
+	--ttx-scrollbar-hover: rgba(13, 92, 99, 0.45);
 }
 
-[data-theme='dark'],
-:root[data-theme='dark'] {
-	/* DARK THEME — Palet: Deep Navy + Royal Blue #4A78E0 + Steel Gray #5A6473 */
-	--ttx-bg-root: #0D1220;
-	--ttx-bg-header: #101828;
-	--ttx-bg-sidebar: #090F1C;
-	--ttx-bg-workspace: #080E1A;
-	--ttx-bg-card: #111928;
-	--ttx-bg-card-subtle: #0D1220;
-	--ttx-bg-input: #16213A;
-	--ttx-bg-hover: #1C2B44;
-	--ttx-bg-active: rgba(74, 120, 224, 0.15);
+[data-theme='dark'] {
+	--ttx-bg-root: #071c1f;
+	--ttx-bg-header: #0b262a;
+	--ttx-bg-sidebar: #06181b;
+	--ttx-bg-workspace: #051417;
+	--ttx-bg-card: #0c2b30;
+	--ttx-bg-card-subtle: #082024;
+	--ttx-bg-input: #092327;
+	--ttx-bg-hover: #12383f;
+	--ttx-bg-active: rgba(120, 205, 215, 0.18);
 
-	--ttx-border-base: #1A2640;
-	--ttx-border-subtle: #223050;
-	--ttx-border-focus: #4A78E0;
+	--ttx-border-base: #143d43;
+	--ttx-border-subtle: #1c5058;
+	--ttx-border-focus: #78cdd7;
 
-	--ttx-text-main: #F4F6FA;
-	--ttx-text-muted: #8A96A8;
-	--ttx-text-dim: #5A6473;
+	--ttx-text-main: #f5e8dd;
+	--ttx-text-muted: #b4dbde;
+	--ttx-text-dim: #6d9fa4;
 
-	--ttx-accent: #4A78E0;
-	--ttx-accent-hover: #6B8FE8;
-	--ttx-accent-light: rgba(74, 120, 224, 0.15);
-	--ttx-accent-text: #7B9CE0;
+	--ttx-accent: #44a1a0;
+	--ttx-accent-hover: #78cdd7;
+	--ttx-accent-light: rgba(120, 205, 215, 0.16);
+	--ttx-accent-text: #78cdd7;
 
-	--ttx-hatch: rgba(255, 255, 255, 0.04);
-	--ttx-scrollbar: rgba(138, 150, 168, 0.25);
-	--ttx-scrollbar-hover: rgba(138, 150, 168, 0.50);
+	--ttx-hatch: rgba(120, 205, 215, 0.07);
+	--ttx-scrollbar: rgba(68, 161, 160, 0.35);
+	--ttx-scrollbar-hover: rgba(120, 205, 215, 0.65);
 }
 
+/* ══════════════════════════════════════════════
+   Named themes — override :root via CSS order.
+   All have specificity (0,1,0), same as :root.
+   Being declared AFTER :root means they win.
+   ══════════════════════════════════════════════ */
+
+/* ── SLATE (web standard — white/slate/blue) ── */
+[data-color-theme='slate'] {
+	--ttx-bg-root: #f8fafc;
+	--ttx-bg-header: #ffffff;
+	--ttx-bg-sidebar: #f1f5f9;
+	--ttx-bg-workspace: #f4f7fa;
+	--ttx-bg-card: #ffffff;
+	--ttx-bg-card-subtle: #f8fafc;
+	--ttx-bg-input: #eef2f7;
+	--ttx-bg-hover: #e4eaf2;
+	--ttx-bg-active: rgba(59, 130, 246, 0.10);
+
+	--ttx-border-base: #e2e8f0;
+	--ttx-border-subtle: #cbd5e1;
+	--ttx-border-focus: #3b82f6;
+
+	--ttx-text-main: #1e293b;
+	--ttx-text-muted: #475569;
+	--ttx-text-dim: #94a3b8;
+
+	--ttx-accent: #3b82f6;
+	--ttx-accent-hover: #2563eb;
+	--ttx-accent-light: rgba(59, 130, 246, 0.12);
+	--ttx-accent-text: #2563eb;
+
+	--ttx-hatch: rgba(59, 130, 246, 0.04);
+	--ttx-scrollbar: rgba(100, 116, 139, 0.25);
+	--ttx-scrollbar-hover: rgba(100, 116, 139, 0.50);
+}
+
+[data-color-theme='slate'][data-theme='dark'] {
+	--ttx-bg-root: #0f172a;
+	--ttx-bg-header: #1e293b;
+	--ttx-bg-sidebar: #0a1020;
+	--ttx-bg-workspace: #080e1a;
+	--ttx-bg-card: #1e293b;
+	--ttx-bg-card-subtle: #162032;
+	--ttx-bg-input: #1a2540;
+	--ttx-bg-hover: #263450;
+	--ttx-bg-active: rgba(96, 165, 250, 0.16);
+
+	--ttx-border-base: #1e3a5f;
+	--ttx-border-subtle: #2d4a70;
+	--ttx-border-focus: #60a5fa;
+
+	--ttx-text-main: #f1f5f9;
+	--ttx-text-muted: #94a3b8;
+	--ttx-text-dim: #475569;
+
+	--ttx-accent: #3b82f6;
+	--ttx-accent-hover: #60a5fa;
+	--ttx-accent-light: rgba(96, 165, 250, 0.16);
+	--ttx-accent-text: #60a5fa;
+
+	--ttx-hatch: rgba(96, 165, 250, 0.06);
+	--ttx-scrollbar: rgba(71, 85, 105, 0.40);
+	--ttx-scrollbar-hover: rgba(100, 116, 139, 0.65);
+}
+
+/* ── TEAL ── */
+[data-color-theme='teal'] {
+	--ttx-bg-root: #faf9f7;
+	--ttx-bg-header: #ffffff;
+	--ttx-bg-sidebar: #f5f1eb;
+	--ttx-bg-workspace: #f6f3ee;
+	--ttx-bg-card: #ffffff;
+	--ttx-bg-card-subtle: #f8f5f0;
+	--ttx-bg-input: #f0ebe4;
+	--ttx-bg-hover: #ebe4dc;
+	--ttx-bg-active: rgba(13, 92, 99, 0.12);
+
+	--ttx-border-base: #e4ded7;
+	--ttx-border-subtle: #d6cdc4;
+	--ttx-border-focus: #0d5c63;
+
+	--ttx-text-main: #0d5c63;
+	--ttx-text-muted: #2d6368;
+	--ttx-text-dim: #5f8084;
+
+	--ttx-accent: #0d5c63;
+	--ttx-accent-hover: #147179;
+	--ttx-accent-light: rgba(68, 161, 160, 0.15);
+	--ttx-accent-text: #0d5c63;
+
+	--ttx-hatch: rgba(13, 92, 99, 0.05);
+	--ttx-scrollbar: rgba(13, 92, 99, 0.22);
+	--ttx-scrollbar-hover: rgba(13, 92, 99, 0.45);
+}
+
+[data-color-theme='teal'][data-theme='dark'] {
+	--ttx-bg-root: #071c1f;
+	--ttx-bg-header: #0b262a;
+	--ttx-bg-sidebar: #06181b;
+	--ttx-bg-workspace: #051417;
+	--ttx-bg-card: #0c2b30;
+	--ttx-bg-card-subtle: #082024;
+	--ttx-bg-input: #092327;
+	--ttx-bg-hover: #12383f;
+	--ttx-bg-active: rgba(120, 205, 215, 0.18);
+
+	--ttx-border-base: #143d43;
+	--ttx-border-subtle: #1c5058;
+	--ttx-border-focus: #78cdd7;
+
+	--ttx-text-main: #f5e8dd;
+	--ttx-text-muted: #b4dbde;
+	--ttx-text-dim: #6d9fa4;
+
+	--ttx-accent: #44a1a0;
+	--ttx-accent-hover: #78cdd7;
+	--ttx-accent-light: rgba(120, 205, 215, 0.16);
+	--ttx-accent-text: #78cdd7;
+
+	--ttx-hatch: rgba(120, 205, 215, 0.07);
+	--ttx-scrollbar: rgba(68, 161, 160, 0.35);
+	--ttx-scrollbar-hover: rgba(120, 205, 215, 0.65);
+}
+
+/* ── BURGUNDY ── */
+[data-color-theme='burgundy'] {
+	--ttx-bg-root: #faf8f8;
+	--ttx-bg-header: #ffffff;
+	--ttx-bg-sidebar: #f5f0f0;
+	--ttx-bg-workspace: #f7f2f2;
+	--ttx-bg-card: #ffffff;
+	--ttx-bg-card-subtle: #f9f4f4;
+	--ttx-bg-input: #ede6e6;
+	--ttx-bg-hover: #e5dcdc;
+	--ttx-bg-active: rgba(109, 0, 26, 0.10);
+
+	--ttx-border-base: #e3d8d8;
+	--ttx-border-subtle: #d4c8c8;
+	--ttx-border-focus: #6d001a;
+
+	--ttx-text-main: #6d001a;
+	--ttx-text-muted: #8a2535;
+	--ttx-text-dim: #a05060;
+
+	--ttx-accent: #6d001a;
+	--ttx-accent-hover: #8a001f;
+	--ttx-accent-light: rgba(109, 0, 26, 0.12);
+	--ttx-accent-text: #6d001a;
+
+	--ttx-hatch: rgba(109, 0, 26, 0.04);
+	--ttx-scrollbar: rgba(109, 0, 26, 0.20);
+	--ttx-scrollbar-hover: rgba(109, 0, 26, 0.40);
+}
+
+[data-color-theme='burgundy'][data-theme='dark'] {
+	--ttx-bg-root: #1a0208;
+	--ttx-bg-header: #22060f;
+	--ttx-bg-sidebar: #160106;
+	--ttx-bg-workspace: #130105;
+	--ttx-bg-card: #2a0810;
+	--ttx-bg-card-subtle: #200510;
+	--ttx-bg-input: #250710;
+	--ttx-bg-hover: #38101e;
+	--ttx-bg-active: rgba(180, 50, 80, 0.18);
+
+	--ttx-border-base: #3d0a18;
+	--ttx-border-subtle: #5a1025;
+	--ttx-border-focus: #c45070;
+
+	--ttx-text-main: #f5e8dd;
+	--ttx-text-muted: #d4a0a8;
+	--ttx-text-dim: #9a606a;
+
+	--ttx-accent: #a03050;
+	--ttx-accent-hover: #c45070;
+	--ttx-accent-light: rgba(180, 50, 80, 0.16);
+	--ttx-accent-text: #c45070;
+
+	--ttx-hatch: rgba(180, 50, 80, 0.07);
+	--ttx-scrollbar: rgba(140, 30, 60, 0.35);
+	--ttx-scrollbar-hover: rgba(180, 60, 90, 0.65);
+}
+
+/* ── PURPLE ── */
+[data-color-theme='purple'] {
+	--ttx-bg-root: #f8f7fb;
+	--ttx-bg-header: #ffffff;
+	--ttx-bg-sidebar: #f2f0f8;
+	--ttx-bg-workspace: #f4f2f9;
+	--ttx-bg-card: #ffffff;
+	--ttx-bg-card-subtle: #f6f4fb;
+	--ttx-bg-input: #eae6f5;
+	--ttx-bg-hover: #e0daf0;
+	--ttx-bg-active: rgba(131, 61, 222, 0.10);
+
+	--ttx-border-base: #ddd8f0;
+	--ttx-border-subtle: #cdc6e8;
+	--ttx-border-focus: #6a2fb8;
+
+	--ttx-text-main: #4a1a9e;
+	--ttx-text-muted: #6a35b0;
+	--ttx-text-dim: #9070c0;
+
+	--ttx-accent: #6a2fb8;
+	--ttx-accent-hover: #7a3fd0;
+	--ttx-accent-light: rgba(106, 47, 184, 0.12);
+	--ttx-accent-text: #6a2fb8;
+
+	--ttx-hatch: rgba(106, 47, 184, 0.04);
+	--ttx-scrollbar: rgba(106, 47, 184, 0.20);
+	--ttx-scrollbar-hover: rgba(106, 47, 184, 0.40);
+}
+
+[data-color-theme='purple'][data-theme='dark'] {
+	--ttx-bg-root: #0e0820;
+	--ttx-bg-header: #140e2a;
+	--ttx-bg-sidebar: #0a061a;
+	--ttx-bg-workspace: #080518;
+	--ttx-bg-card: #1a1030;
+	--ttx-bg-card-subtle: #140c28;
+	--ttx-bg-input: #160e2c;
+	--ttx-bg-hover: #251840;
+	--ttx-bg-active: rgba(133, 86, 203, 0.20);
+
+	--ttx-border-base: #2a1850;
+	--ttx-border-subtle: #3d2568;
+	--ttx-border-focus: #b085e0;
+
+	--ttx-text-main: #e8d8f5;
+	--ttx-text-muted: #b090d0;
+	--ttx-text-dim: #7850a0;
+
+	--ttx-accent: #8855c8;
+	--ttx-accent-hover: #b085e0;
+	--ttx-accent-light: rgba(133, 86, 203, 0.18);
+	--ttx-accent-text: #b085e0;
+
+	--ttx-hatch: rgba(133, 86, 203, 0.07);
+	--ttx-scrollbar: rgba(100, 60, 180, 0.35);
+	--ttx-scrollbar-hover: rgba(140, 90, 210, 0.65);
+}
+
+/* ── CHERRY ── */
+[data-color-theme='cherry'] {
+	--ttx-bg-root: #fdf8f5;
+	--ttx-bg-header: #ffffff;
+	--ttx-bg-sidebar: #f7f0eb;
+	--ttx-bg-workspace: #f9f2ed;
+	--ttx-bg-card: #ffffff;
+	--ttx-bg-card-subtle: #fbf4ef;
+	--ttx-bg-input: #ede2d8;
+	--ttx-bg-hover: #e5d6c8;
+	--ttx-bg-active: rgba(180, 16, 45, 0.10);
+
+	--ttx-border-base: #e5d8ce;
+	--ttx-border-subtle: #d4c4b8;
+	--ttx-border-focus: #b4102d;
+
+	--ttx-text-main: #8a0d22;
+	--ttx-text-muted: #a03040;
+	--ttx-text-dim: #9a7060;
+
+	--ttx-accent: #b4102d;
+	--ttx-accent-hover: #cc1535;
+	--ttx-accent-light: rgba(180, 16, 45, 0.12);
+	--ttx-accent-text: #b4102d;
+
+	--ttx-hatch: rgba(180, 16, 45, 0.04);
+	--ttx-scrollbar: rgba(180, 16, 45, 0.20);
+	--ttx-scrollbar-hover: rgba(180, 16, 45, 0.40);
+}
+
+[data-color-theme='cherry'][data-theme='dark'] {
+	--ttx-bg-root: #1c0608;
+	--ttx-bg-header: #240a0d;
+	--ttx-bg-sidebar: #170406;
+	--ttx-bg-workspace: #140305;
+	--ttx-bg-card: #2c0a10;
+	--ttx-bg-card-subtle: #22060c;
+	--ttx-bg-input: #26080e;
+	--ttx-bg-hover: #3c1018;
+	--ttx-bg-active: rgba(200, 60, 80, 0.18);
+
+	--ttx-border-base: #3e0c14;
+	--ttx-border-subtle: #5a1520;
+	--ttx-border-focus: #e06070;
+
+	--ttx-text-main: #f5e8dd;
+	--ttx-text-muted: #d4a090;
+	--ttx-text-dim: #a06560;
+
+	--ttx-accent: #c04058;
+	--ttx-accent-hover: #e06070;
+	--ttx-accent-light: rgba(200, 60, 80, 0.16);
+	--ttx-accent-text: #e06070;
+
+	--ttx-hatch: rgba(200, 60, 80, 0.07);
+	--ttx-scrollbar: rgba(160, 40, 60, 0.35);
+	--ttx-scrollbar-hover: rgba(200, 70, 90, 0.65);
+}

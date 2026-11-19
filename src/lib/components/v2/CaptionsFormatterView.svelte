@@ -68,7 +68,7 @@ Klik link di bio untuk belanja sekarang.`);
 		<!-- Left Sidebar: Panduan & Info -->
 		<div class="flex w-full flex-col gap-4 rounded-xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-4 lg:w-72 lg:shrink-0">
 			<div class="flex items-center gap-2">
-				<Info size={14} class="text-blue-400" />
+				<Info size={14} class="text-[var(--ttx-accent-text)]" />
 				<p class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
 					Cara Kerja
 				</p>
@@ -76,15 +76,15 @@ Klik link di bio untuk belanja sekarang.`);
 
 			<ol class="space-y-2.5 text-xs text-[var(--ttx-text-muted)]">
 				<li class="flex items-start gap-2">
-					<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold bg-blue-600/30 text-blue-300">1</span>
+					<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">1</span>
 					<span>Ketik atau tempel teks caption Anda di editor.</span>
 				</li>
 				<li class="flex items-start gap-2">
-					<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold bg-blue-600/30 text-blue-300">2</span>
+					<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">2</span>
 					<span>Klik <strong>Format IG</strong> untuk menyisipkan karakter tak terlihat.</span>
 				</li>
 				<li class="flex items-start gap-2">
-					<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold bg-blue-600/30 text-blue-300">3</span>
+					<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">3</span>
 					<span>Klik <strong>Copy ke IG</strong> dan tempel langsung di Instagram.</span>
 				</li>
 			</ol>

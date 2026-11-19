@@ -375,11 +375,11 @@ lemon`;
 			<div class="flex flex-col flex-1 min-h-[260px] lg:min-h-0 border-b lg:border-b-0 lg:border-r border-[var(--ttx-border-base)]">
 				<div class="flex h-9 shrink-0 items-center justify-between border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-4">
 					<div class="flex items-center gap-2">
-						<FileText size={14} class="text-blue-400" />
+						<FileText size={14} class="text-[var(--ttx-accent-text)]" />
 						<span class="text-[10px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 							{nameA}
 						</span>
-						<span class="rounded-md bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-400">
+						<span class="rounded-md bg-[var(--ttx-accent-light)] px-2 py-0.5 text-[11px] font-medium text-[var(--ttx-accent-text)]">
 							{textA.split(/\r?\n/).filter((l) => (ignoreEmpty ? l.trim() !== '' : true)).length} baris
 						</span>
 					</div>

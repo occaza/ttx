@@ -243,7 +243,7 @@ END:VCARD`;
 		<!-- Stats strip -->
 		<div class="grid grid-cols-3 divide-x divide-[var(--ttx-border-base)] border-b border-[var(--ttx-border-base)]">
 			<div class="flex items-center gap-3 px-4 py-3">
-				<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400">
+				<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]">
 					<Users size={18} />
 				</div>
 				<div>

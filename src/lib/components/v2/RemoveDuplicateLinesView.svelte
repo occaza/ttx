@@ -151,7 +151,7 @@ Click "Remove Duplicate Lines" and duplicate lines will be reduced to one.`;
 					<h1 class="text-base sm:text-lg font-bold tracking-tight text-[var(--ttx-text-main)]">
 						Remove Duplicate Lines
 					</h1>
-					<span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+					<span class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold rounded-full bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] border border-[var(--ttx-accent)]/20">
 						Client-Side Fast
 					</span>
 				</div>

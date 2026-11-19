@@ -139,7 +139,7 @@
 				<h1 class="text-lg font-semibold text-[var(--ttx-text-main)]">Buat Akun</h1>
 				<p class="text-xs text-[var(--ttx-text-muted)] mt-1">
 					Sudah punya akun?
-					<a href="/login" class="text-blue-500 hover:underline">Masuk di sini</a>
+					<a href="/login" class="text-[var(--ttx-accent-text)] hover:underline">Masuk di sini</a>
 				</p>
 
 				{#if errorMsg}
@@ -165,7 +165,7 @@
 								type="text"
 								bind:value={first_name}
 								placeholder="Nama depan"
-								class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+								class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 								required
 							/>
 						</div>
@@ -179,7 +179,7 @@
 								type="text"
 								bind:value={last_name}
 								placeholder="Nama belakang"
-								class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+								class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 								required
 							/>
 						</div>
@@ -194,7 +194,7 @@
 							type="text"
 							bind:value={username}
 							placeholder="username"
-							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 							required
 						/>
 					</div>
@@ -208,7 +208,7 @@
 							type="email"
 							bind:value={email}
 							placeholder="nama@email.com"
-							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 							required
 						/>
 					</div>
@@ -222,7 +222,7 @@
 							type="tel"
 							bind:value={phone}
 							placeholder="08xxxxxxxxxx"
-							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+							class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 							required
 						/>
 					</div>
@@ -238,7 +238,7 @@
 									type={showPassword ? 'text' : 'password'}
 									bind:value={password}
 									placeholder="••••••••"
-									class="w-full h-10 pl-3 pr-14 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+									class="w-full h-10 pl-3 pr-14 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 									required
 								/>
 								<button
@@ -261,7 +261,7 @@
 									type={showConfirmPassword ? 'text' : 'password'}
 									bind:value={confirmPassword}
 									placeholder="••••••••"
-									class="w-full h-10 pl-3 pr-14 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+									class="w-full h-10 pl-3 pr-14 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 									required
 								/>
 								<button
@@ -277,7 +277,7 @@
 
 					<button
 						type="submit"
-						class="w-full h-10 rounded-lg text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer mt-2"
+						class="w-full h-10 rounded-lg text-xs font-medium text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer mt-2"
 						disabled={loading}
 					>
 						{loading ? 'Memproses...' : 'Daftar Sekarang'}

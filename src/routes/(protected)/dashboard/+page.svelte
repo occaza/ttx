@@ -177,7 +177,7 @@
 							{/if}
 							<a
 								href="/notepad2"
-								class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-sm shadow-blue-500/30 hover:shadow-blue-500/50 active:scale-95 transition-all"
+								class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm active:scale-95 transition-all"
 							>
 								<Plus size={14} />
 								<span>Buka Editor</span>
@@ -207,7 +207,7 @@
 							</div>
 							<div class="w-full bg-[var(--ttx-bg-input)] rounded-full h-2 overflow-hidden border border-[var(--ttx-border-subtle)]">
 								<div
-									class="h-full rounded-full transition-all duration-300 {docCount >= docLimit ? 'bg-rose-500' : 'bg-blue-600'}"
+									class="h-full rounded-full transition-all duration-300 {docCount >= docLimit ? 'bg-rose-500' : 'bg-[var(--ttx-accent)]'}"
 									style="width: {docQuotaPercent}%"
 								></div>
 							</div>
@@ -230,7 +230,7 @@
 							<p class="text-xs text-[var(--ttx-text-dim)] mt-1">Mulai buat dan simpan catatan cloud pertama Anda di Notepad Pro.</p>
 							<a
 								href="/notepad2"
-								class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-sm transition-all"
+								class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm transition-all"
 							>
 								<Plus size={14} />
 								<span>Buat Dokumen Sekarang</span>

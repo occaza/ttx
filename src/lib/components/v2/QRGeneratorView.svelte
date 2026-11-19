@@ -978,7 +978,7 @@
 			</div>
 
 			<!-- QR Display Box -->
-			<div class="w-full min-h-[280px] sm:min-h-[310px] rounded-2xl border flex items-center justify-center p-4 overflow-hidden shadow-inner border-[var(--ttx-border-subtle)] {previewBgMode === 'dark' ? 'bg-[#050a14]' : previewBgMode === 'checker' ? 'bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f8fafc_0%_50%)] bg-[size:14px_14px]' : 'bg-white'}">
+			<div class="w-full min-h-[280px] sm:min-h-[310px] rounded-2xl border flex items-center justify-center p-4 overflow-hidden shadow-inner border-[var(--ttx-border-subtle)] {previewBgMode === 'dark' ? 'bg-[var(--ttx-bg-workspace)]' : previewBgMode === 'checker' ? 'bg-[repeating-conic-gradient(#cbd5e1_0%_25%,#f8fafc_0%_50%)] bg-[size:14px_14px]' : 'bg-white'}">
 				{#if qrSvg && isInputValid}
 					<div class="w-full h-full flex items-center justify-center [&>svg]:max-w-full [&>svg]:max-h-[290px] [&>svg]:w-auto [&>svg]:h-auto [&>svg]:block transition-transform duration-200 hover:scale-[1.02]">
 						{@html qrSvg}

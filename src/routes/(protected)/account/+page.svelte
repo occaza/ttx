@@ -239,7 +239,7 @@
 							<div class="flex justify-end pt-4 border-t border-[var(--ttx-border-base)]">
 								<button
 									type="submit"
-									class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 rounded-xl shadow-sm shadow-blue-500/30 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+									class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-95 rounded-xl shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
 									disabled={profileLoading}
 								>
 									{#if profileLoading}

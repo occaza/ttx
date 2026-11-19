@@ -975,7 +975,7 @@
 				<button
 					type="button"
 					onclick={() => (showWinnerModal = false)}
-					class="flex-1 py-2 px-3 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-sm transition-colors"
+					class="flex-1 py-2 px-3 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm transition-colors"
 				>
 					Tutup
 				</button>

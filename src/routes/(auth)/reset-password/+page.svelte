@@ -130,7 +130,7 @@
 									type={showPassword ? 'text' : 'password'}
 									bind:value={password}
 									placeholder="Minimal 6 karakter"
-									class="w-full h-10 pl-3 pr-16 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+									class="w-full h-10 pl-3 pr-16 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 									required
 								/>
 								<button
@@ -153,7 +153,7 @@
 									type={showConfirmPassword ? 'text' : 'password'}
 									bind:value={confirmPassword}
 									placeholder="Ulangi password baru"
-									class="w-full h-10 pl-3 pr-16 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+									class="w-full h-10 pl-3 pr-16 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 									required
 								/>
 								<button
@@ -168,7 +168,7 @@
 
 						<button
 							type="submit"
-							class="w-full h-10 rounded-lg text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer mt-2"
+							class="w-full h-10 rounded-lg text-xs font-medium text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer mt-2"
 							disabled={loading}
 						>
 							{loading ? 'Menyimpan...' : 'Simpan Password'}
@@ -177,7 +177,7 @@
 				{/if}
 
 				<div class="mt-5 pt-4 border-t border-[var(--ttx-border-base)] text-xs text-center">
-					<a href="/login" class="text-blue-500 hover:underline">
+					<a href="/login" class="text-[var(--ttx-accent-text)] hover:underline">
 						Kembali ke halaman masuk
 					</a>
 				</div>

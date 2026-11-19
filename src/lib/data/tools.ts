@@ -2,7 +2,8 @@ import {
     Copy, TextCursor, Split, Shuffle,
     List, FileCode, Type,
     Smile, SeparatorHorizontal, Table, Map,
-    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode, NotebookPen, FerrisWheel
+    ArrowDown, ChartBar, Lock, BookOpen, Scissors, FileText, Percent, Regex, QrCode, NotebookPen, FerrisWheel,
+    Binary
 } from '@lucide/svelte';
 
 export const tools = [
@@ -18,12 +19,13 @@ export const tools = [
     { title: 'Extract Lines', desc: 'Potong dan ambil jumlah baris spesifik dari teks.', href: '/slice-lines', icon: Scissors, category: 'Text Operations' },
     { title: 'Sort Lines', desc: 'Urutkan baris teks secara alfabetis.', href: '/sort-lines', icon: ArrowDown, category: 'Text Operations' },
 
+    { title: 'Base Converter (Hex, Bin, Dec)', desc: 'Konversi angka dan string realtime antar Hex, Biner, Desimal, Oktal, dan Base64.', href: '/base-converter', icon: Binary, category: 'Data & Parsing' },
     { title: 'Word Counter & Stats', desc: 'Hitung kata, karakter, dan statistik teks.', href: '/word-counter', icon: ChartBar, category: 'Data & Parsing' },
     { title: 'Line Counter', desc: 'Hitung jumlah baris dalam dokumen.', href: '/lines-counter', icon: List, category: 'Data & Parsing' },
-    { title: 'Multi Counter & Tally', desc: 'Penghitung traffic, item, atau pengunjung dengan multi-kategori.', href: '/multi-counter', icon: List, category: 'Data & Parsing' },
     { title: 'File Comparation', desc: 'Bandingkan dua file dan temukan perbedaannya.', href: '/files-comparation', icon: FileCode, category: 'Data & Parsing' },
     { title: 'CSV/VCard Parser', desc: 'Ekstrak data dari file VCard atau CSV.', href: '/csv-parser', icon: Table, category: 'Data & Parsing' },
 
+    { title: 'Multi Counter & Tally', desc: 'Penghitung traffic, item, atau pengunjung dengan multi-kategori.', href: '/multi-counter', icon: List, category: 'General Utilities' },
     { title: 'Shared Notepad', desc: 'Catatan online bersama dengan tautan unik dan enkripsi.', href: '/notepad', icon: NotebookPen, category: 'General Utilities' },
     { title: 'QR Code Generator', desc: 'Buat kode QR kustom untuk URL, teks, dan Wi-Fi.', href: '/qr-generator', icon: QrCode, category: 'General Utilities' },
     { title: 'Emoji Browser', desc: 'Cari dan salin emoji dengan mudah.', href: '/emoji-picker', icon: Smile, category: 'General Utilities' },

@@ -102,7 +102,7 @@
 						<p>{successMsg}</p>
 						<a
 							href="/login"
-							class="inline-block text-xs text-blue-500 hover:underline"
+							class="inline-block text-xs text-[var(--ttx-accent-text)] hover:underline"
 						>
 							Kembali ke halaman masuk →
 						</a>
@@ -118,14 +118,14 @@
 								type="email"
 								bind:value={email}
 								placeholder="nama@email.com"
-								class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-blue-500 transition-colors"
+								class="w-full h-10 px-3 rounded-lg text-sm bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-border-focus)] transition-colors"
 								required
 							/>
 						</div>
 
 						<button
 							type="submit"
-							class="w-full h-10 rounded-lg text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer"
+							class="w-full h-10 rounded-lg text-xs font-medium text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] active:scale-[0.99] disabled:opacity-50 transition-colors cursor-pointer"
 							disabled={loading}
 						>
 							{loading ? 'Mengirim...' : 'Kirim Tautan Reset'}
@@ -135,7 +135,7 @@
 
 				<div class="mt-5 pt-4 border-t border-[var(--ttx-border-base)] text-xs text-center text-[var(--ttx-text-muted)]">
 					Ingat password Anda?
-					<a href="/login" class="text-blue-500 hover:underline">Masuk di sini</a>
+					<a href="/login" class="text-[var(--ttx-accent-text)] hover:underline">Masuk di sini</a>
 				</div>
 			</div>
 		</div>
