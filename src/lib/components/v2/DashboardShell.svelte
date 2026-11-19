@@ -109,7 +109,6 @@
 		'/csv-parser': 'csv-parser',
 		'/emoji-picker': 'emoji-picker',
 		'/pageid': 'pageid',
-		'/markdown-preview': 'markdown-editor',
 		'/privacy-policy': 'privacy-policy',
 		'/disclaimer': 'disclaimer',
 		'/data-deletion': 'data-deletion',
@@ -862,7 +861,7 @@
 		<!-- MAIN SCROLL CONTAINER: spans from sidebar to screen edge with scrollbar on the far right -->
 		<div
 			bind:this={mainScrollContainer}
-			class="flex-1 flex items-start min-w-0 w-full lg:h-full {activeTool === 'shared-notepad' || activeTool === 'notepad' ? 'h-full min-h-0 overflow-hidden' : 'min-h-full overflow-y-auto'} overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
+			class="flex-1 flex items-start min-w-0 w-full lg:h-full {activeTool === 'shared-notepad' || activeTool === 'notepad' || activeTool === 'markdown-editor' ? 'h-full min-h-0 overflow-hidden' : 'min-h-full overflow-y-auto'} overflow-x-hidden custom-scrollbar transition-colors duration-200 bg-[var(--ttx-bg-workspace)]"
 			style="--scrollbar-thumb: var(--ttx-scrollbar); --scrollbar-thumb-hover: var(--ttx-scrollbar-hover);"
 		>
 			<!-- LEFT DIAGONAL STRIPED GUTTER (Sticky, stays locked full height while scrolling) -->
@@ -874,7 +873,7 @@
 
 			<!-- MAIN CONTENT CARDS -->
 			<div
-				class="flex-1 min-w-0 w-full flex flex-col {activeTool === 'shared-notepad' || activeTool === 'notepad' ? 'h-full min-h-0 overflow-hidden px-3.5 py-4 sm:px-8 sm:py-6 lg:px-10' : 'min-h-full px-3.5 py-4 pb-12 sm:px-8 sm:py-6 sm:pb-8 lg:px-10'}"
+				class="flex-1 min-w-0 w-full flex flex-col {activeTool === 'shared-notepad' || activeTool === 'notepad' || activeTool === 'markdown-editor' ? 'h-full min-h-0 overflow-hidden px-3.5 py-4 sm:px-8 sm:py-6 lg:px-10' : 'min-h-full px-3.5 py-4 pb-12 sm:px-8 sm:py-6 sm:pb-8 lg:px-10'}"
 			>
 			{#if activeTool}
 				<!-- IN-PAGE TOOL PANEL -->

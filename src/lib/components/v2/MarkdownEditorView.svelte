@@ -169,9 +169,9 @@ greet("World");
 	}
 </script>
 
-<div class="flex flex-col gap-4 flex-1">
+<div class="flex h-full min-h-0 w-full flex-1 flex-col gap-3 sm:gap-4 overflow-hidden">
 	<!-- Header -->
-	<div class="flex items-center justify-between">
+	<div class="flex shrink-0 items-center justify-between">
 		<div class="flex items-center gap-3">
 			<div
 				class="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)]"
@@ -204,7 +204,7 @@ greet("World");
 					onclick={copyMarkdown}
 					class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all {copied
 						? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-						: 'bg-[var(--ttx-accent)] text-white hover:bg-[var(--ttx-accent-hover)] active:scale-95'}"
+						: 'bg-[var(--ttx-accent)] text-[var(--ttx-accent-contrast)] hover:bg-[var(--ttx-accent-hover)] active:scale-95'}"
 				>
 					{#if copied}
 						<Check size={13} /> Tersalin!
@@ -218,11 +218,11 @@ greet("World");
 
 	<!-- Main Card Container -->
 	<div
-		class="flex flex-1 flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs"
+		class="flex flex-1 min-h-0 h-full flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs"
 	>
 		<!-- Formatting Toolbar -->
 		<div
-			class="flex flex-wrap items-center gap-1 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-2"
+			class="flex shrink-0 flex-wrap items-center gap-1 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] p-2"
 		>
 			<button
 				type="button"
@@ -349,7 +349,7 @@ greet("World");
 
 		<!-- Mobile Tabs Bar -->
 		<div
-			class="flex border-b border-[var(--ttx-border-base)] text-xs font-semibold sm:hidden bg-[var(--ttx-bg-card-subtle)]"
+			class="flex shrink-0 border-b border-[var(--ttx-border-base)] text-xs font-semibold sm:hidden bg-[var(--ttx-bg-card-subtle)]"
 		>
 			<button
 				type="button"
@@ -372,31 +372,30 @@ greet("World");
 		</div>
 
 		<!-- Split View: Editor & Live Preview -->
-		<div class="grid min-h-[460px] flex-1 grid-cols-1 sm:grid-cols-2">
+		<div class="grid min-h-0 flex-1 h-full grid-cols-1 sm:grid-cols-2 overflow-hidden">
 			<!-- Editor Pane -->
 			<div
-				class="flex flex-col sm:border-r border-[var(--ttx-border-base)] {activeTab === 'editor' ? 'flex' : 'hidden sm:flex'}"
+				class="flex flex-col h-full min-h-0 overflow-hidden sm:border-r border-[var(--ttx-border-base)] {activeTab === 'editor' ? 'flex' : 'hidden sm:flex'}"
 			>
 				<textarea
 					bind:this={textareaEl}
 					bind:value={input}
 					onscroll={syncScrollFromEditor}
 					placeholder="Ketik Markdown di sini..."
-					rows={20}
-					class="w-full flex-1 resize-none p-4 font-mono text-xs leading-relaxed outline-none sm:text-sm bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)]"
+					class="w-full h-full flex-1 min-h-0 resize-none p-4 font-mono text-xs leading-relaxed outline-none sm:text-sm bg-[var(--ttx-bg-card)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] overflow-y-auto custom-scrollbar"
 				></textarea>
 			</div>
 
 			<!-- Preview Pane -->
 			<div
-				class="flex flex-col overflow-hidden bg-[var(--ttx-bg-card-subtle)] {activeTab === 'preview'
+				class="flex flex-col h-full min-h-0 overflow-hidden bg-[var(--ttx-bg-card-subtle)] {activeTab === 'preview'
 					? 'flex'
 					: 'hidden sm:flex'}"
 			>
 				<div
 					bind:this={previewEl}
 					onscroll={syncScrollFromPreview}
-					class="flex-1 overflow-y-auto p-5 sm:p-6"
+					class="flex-1 min-h-0 h-full overflow-y-auto p-5 sm:p-6 custom-scrollbar"
 				>
 					{#if !input || !compiledHtml}
 						<div
