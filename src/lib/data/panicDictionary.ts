@@ -355,14 +355,380 @@ export const PANIC_DATABASE: PanicSensorDef[] = [
 	},
 	{
 		code: '0x4000',
-		name: 'Thermalmonitord Bitmask 0x4000',
+		name: 'Thermalmonitord Bitmask 0x4000 (Desimal: 16384)',
 		component: 'Fleksibel Koil Wireless Charging / NFC',
 		location: 'Housing Belakang iPhone',
 		severity: 'high',
 		symptoms: ['Restart setelah 3-5 menit', 'Wireless charging tidak responsif'],
 		description:
-			'Sensor suhu pada modul wireless charging belakang tidak terbaca.',
+			'Sensor suhu pada modul wireless charging belakang tidak terbaca oleh Watchdog.',
 		troubleshooting: ['Periksa fleksibel wireless charging di bagian belakang baterai.']
+	},
+	{
+		code: 'mic3',
+		name: 'Microphone 3 (Front / Earpiece Microphone)',
+		component: 'Fleksibel Sensor Depan / Speaker Atas (Earpiece Assembly)',
+		location: 'Bagian atas layar iPhone (modul earpiece, proximity, dan flood illuminator)',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit (Watchdog timeout)',
+			'Suara rekaman kamera depan tidak ada / bisu',
+			'Panggilan suara di mode speaker mati atau tersendat'
+		],
+		description:
+			'Watchdog gagal membaca sinyal sensor suhu pada Microfon 3 yang menempel pada fleksibel earpiece sensor depan atas.',
+		troubleshooting: [
+			'Lepas konektor fleksibel sensor atas, lalu tes nyalakan apakah restart 3 menit berhenti.',
+			'Ganti fleksibel speaker atas / earpiece dengan sparepart baru (hati-hati memindahkan sensor TrueDepth jika ingin Face ID tetap aktif).',
+			'Periksa korosi atau air di sekitar lubang speaker earpiece atas.'
+		],
+		modelsNote: 'iPhone X, XR, XS, 11 series, 12 series, 13 series, 14 series.'
+	},
+	{
+		code: 'als',
+		name: 'Ambient Light Sensor (ALS)',
+		component: 'Sensor Cahaya / Fleksibel Earpiece Atas',
+		location: 'Kaca depan bagian atas dekat lubang earpiece',
+		severity: 'high',
+		symptoms: [
+			'True Tone hilang atau tidak aktif',
+			'Kecerahan otomatis (Auto Brightness) tidak bekerja',
+			'Restart berkala pada beberapa versi iOS'
+		],
+		description:
+			'Sensor pengukur intensitas cahaya sekitar (ALS) tidak merespons jalur data I2C/SPI ke prosesor.',
+		troubleshooting: [
+			'Periksa fleksibel earpiece dari robekan fisik saat penggantian LCD.',
+			'Cek korosi di sekitar sensor ALS.',
+			'Jika ganti fleksibel, pindahkan eprom IC sensor lama atau gunakan programmer untuk mempertahankan fitur True Tone.'
+		],
+		modelsNote: 'iPhone 8 sampai iPhone 15 series.'
+	},
+	{
+		code: 'gyro',
+		name: 'Gyroscope / IMU Sensor',
+		component: 'IC Gyroscope & Accelerometer (IMU)',
+		location: 'Motherboard (Layer bawah / sub-board pada board sandwich)',
+		severity: 'critical',
+		symptoms: [
+			'Kompas tidak berputar, auto-rotate layar mati',
+			'Kamera goyang atau video OIS freeze',
+			'Restart tepat 3 menit dengan log AOP PANIC atau sensor array bitmask 0x400'
+		],
+		description:
+			'Sensor gyro mendeteksi rotasi fisik dan getaran. Sering rusak atau jalur solderan di bawah IC retak setelah iPhone jatuh keras.',
+		troubleshooting: [
+			'Buka aplikasi Kompas atau Level bawaan iOS untuk memastikan sensor freeze.',
+			'Pada iPhone model sandwich (X-15), retak interposer sering memutus jalur sinyal gyro di board bawah.',
+			'Reball atau ganti IC Gyroscope di motherboard oleh teknisi micro-soldering.'
+		],
+		modelsNote: 'Umum pada iPhone X hingga 14 Pro Max akibat benturan.'
+	},
+	{
+		code: 'smc',
+		name: 'SMC Panic - Assertion Failed / BSC Failure',
+		component: 'System Management Controller & Bus Sensor',
+		location: 'CPU SMC Core & Rangkaian Sensor Array',
+		severity: 'critical',
+		symptoms: [
+			'iPhone restart otomatis setiap 3 menit persis (180 detik)',
+			'Kipas mac atau sensor suhu baterai tidak terbaca di iOS diagnostics',
+			'Log mencantumkan: "SMC PANIC - ASSERTION FAILED" atau "SMC BSC failure"'
+		],
+		description:
+			'SMC pada SoC CPU gagal menerima data verifikasi hardware dari salah satu modul peripheral dalam rentang batas waktu aman.',
+		troubleshooting: [
+			'Periksa nilai Sensor Array pada baris log panic (contoh 0x800, 0x40000, 2048, dsb.) untuk menentukan sparepart yang rusak.',
+			'Lepas semua fleksibel non-esensial (kamera, speaker atas, wireless coil) lalu tes boot minimal.'
+		],
+		modelsNote: 'Dominan di iPhone 12, 13, 14, 15, dan 16 series.'
+	},
+	{
+		code: 'magsafe',
+		name: 'MagSafe / Wireless Charging Coil & Sensor',
+		component: 'Fleksibel Koil MagSafe & NFC Belakang',
+		location: 'Tengah housing belakang iPhone (di balik kaca belakang)',
+		severity: 'high',
+		symptoms: [
+			'Restart 3 menit setelah servis ganti kaca belakang (backglass)',
+			'Pengisian daya nirkabel lambat atau tidak terdeteksi',
+			'NFC Apple Pay tidak merespons'
+		],
+		description:
+			'Sensor suhu NTC pada koil MagSafe terputus atau terbakar saat proses pemanasan laser ganti kaca belakang.',
+		troubleshooting: [
+			'Ganti 1 set fleksibel koil nirkabel MagSafe/NFC di housing belakang.',
+			'Pastikan soket fleksibel koil terpasang kuat ke motherboard.'
+		],
+		modelsNote: 'iPhone 12, 13, 14, 15 series.'
+	},
+	{
+		code: '0x800',
+		name: 'Sensor Array 0x800 (Desimal: 2048)',
+		component: 'Fleksibel Charging Port / Barometer Bawah',
+		location: 'Konektor Bawah iPhone 13 Series',
+		severity: 'critical',
+		symptoms: [
+			'Restart tepat 3 menit (180 detik) pada iPhone 13 / 13 mini / 13 Pro / 13 Pro Max',
+			'Log menunjukkan: "S.sensor array 0 - 5 is 0x800" atau angka desimal "2048"'
+		],
+		description:
+			'Nilai bitmask 0x800 (desimal 2048) pada iPhone 13 series adalah penanda putusnya komunikasi dengan sensor barometer/mic di fleksibel dock charging bawah.',
+		troubleshooting: [
+			'Ganti fleksibel charging port bawah dengan kualitas original.',
+			'Ukur jalur I2C sensor charging port pada konektor FPC jika fleksibel baru masih memicu restart.'
+		],
+		modelsNote: 'Khusus iPhone 13 Series (13, 13 Mini, 13 Pro, 13 Pro Max).'
+	},
+	{
+		code: '0x400',
+		name: 'Sensor Array 0x400 (Desimal: 1024)',
+		component: 'Sensor Gyroscope (Motherboard Bawah)',
+		location: 'Motherboard Layer Bawah iPhone 13 Series',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit pada iPhone 13 series',
+			'Log panic: "S.sensor array 0 - 5 is 0x400" atau "1024"',
+			'Auto rotasi layar atau kompas tidak berfungsi'
+		],
+		description:
+			'Bitmask 0x400 (desimal 1024) mengindikasikan hilangnya jalur komunikasi ke IC Gyroscope di layer motherboard bawah (sering terjadi pasca jatuh keras yang menyebabkan interposer retak).',
+		troubleshooting: [
+			'Pisahkan kedua layer motherboard (sandwich split) dan periksa pad interposer yang retak/lepas.',
+			'Reballing interposer atau ganti IC Gyroscope.'
+		],
+		modelsNote: 'iPhone 13 Series.'
+	},
+	{
+		code: '0x10000',
+		name: 'Sensor Array 0x10000 (Desimal: 65536)',
+		component: 'Fleksibel Sensor Depan (Earpiece / Proximity / Face ID)',
+		location: 'Modul Speaker Earpiece Atas Layar',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit pada iPhone 13 series',
+			'Log panic: "S.sensor array 0 - 5 is 0x10000" atau angka desimal "65536"',
+			'Ear speaker mati atau True Tone nonaktif'
+		],
+		description:
+			'Bitmask 0x10000 (desimal 65536) menandakan putusnya sensor pada fleksibel earpiece speaker atas.',
+		troubleshooting: [
+			'Cabut fleksibel sensor depan dan nyalakan perangkat. Jika restart berhenti, ganti fleksibel earpiece depan.',
+			'Pindahkan sensor flood illuminator jika ingin mempertahankan Face ID.'
+		],
+		modelsNote: 'iPhone 13 Series.'
+	},
+	{
+		code: '0x100000',
+		name: 'Sensor Array 0x100000 (Desimal: 1048576)',
+		component: 'Fleksibel Charging Port / Dock Flex Bawah',
+		location: 'Konektor Port Charger Bawah iPhone 14 / 14 Plus',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit pada iPhone 14 atau iPhone 14 Plus',
+			'Log panic: "S.sensor array 0 - 5 is 0x100000" atau desimal "1048576"'
+		],
+		description:
+			'Pada iPhone 14 & 14 Plus, bitmask 0x100000 merepresentasikan sensor suhu & tekanan udara pada fleksibel charging port bawah.',
+		troubleshooting: [
+			'Ganti fleksibel port charger bawah dengan unit original.',
+			'Bersihkan konektor FPC di mesin dari sisa debu atau korosi.'
+		],
+		modelsNote: 'iPhone 14 & iPhone 14 Plus.'
+	},
+	{
+		code: '0x200000',
+		name: 'Sensor Array 0x200000 (Desimal: 2097152)',
+		component: 'Fleksibel Earpiece / Sensor Atas',
+		location: 'Modul Speaker Earpiece Layar iPhone 14 / 14 Plus',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit pada iPhone 14 atau iPhone 14 Plus',
+			'Log panic: "S.sensor array 0 - 5 is 0x200000" atau desimal "2097152"'
+		],
+		description:
+			'Bitmask 0x200000 pada iPhone 14 & 14 Plus menandakan hilangnya komunikasi dengan sensor pada fleksibel earpiece speaker atas.',
+		troubleshooting: ['Ganti atau perbaiki fleksibel speaker earpiece atas.']
+	},
+	{
+		code: '0x400000',
+		name: 'Sensor Array 0x400000 (Desimal: 4194304)',
+		component: 'Fleksibel Koil Wireless MagSafe / NFC Belakang',
+		location: 'Kaca Belakang iPhone 14 / 14 Plus',
+		severity: 'high',
+		symptoms: [
+			'Restart 3 menit setelah pergantian housing / backdoor',
+			'Log panic: "S.sensor array 0 - 5 is 0x400000" atau desimal "4194304"'
+		],
+		description:
+			'Koil MagSafe dan sensor NTC belakang tidak terdeteksi oleh SMC.',
+		troubleshooting: ['Ganti modul koil wireless MagSafe belakang.']
+	},
+	{
+		code: '0x500000',
+		name: 'Sensor Array 0x500000 (Desimal: 5242880)',
+		component: 'Jalur Sensor Baterai (BMS / Gas Gauge)',
+		location: 'Konektor Baterai & Rangkaian Daya',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit pada iPhone 14 / 14 Plus',
+			'Log panic: "S.sensor array 0 - 5 is 0x500000" atau desimal "5242880"',
+			'Persentase baterai loncat atau indikator servis baterai tanda tanya'
+		],
+		description:
+			'Kombinasi sensor array baterai dan pengisian daya tidak merespons.',
+		troubleshooting: [
+			'Coba gunakan baterai original lain untuk testing.',
+			'Periksa pin tengah (BSI / SWI) pada soket baterai motherboard.'
+		]
+	},
+	{
+		code: '0x41',
+		name: 'Sensor Array 0x41 (Desimal: 65)',
+		component: 'Jalur Data Baterai / Gas Gauge BMS',
+		location: 'Konektor Baterai iPhone 14 Pro / 14 Pro Max',
+		severity: 'critical',
+		symptoms: [
+			'Restart 3 menit pada iPhone 14 Pro / 14 Pro Max',
+			'Log panic: "0x41" atau angka desimal "65"',
+			'Kesehatan baterai tidak dapat dibaca'
+		],
+		description:
+			'SMC gagal berkomunikasi dengan IC Gas Gauge pada modul BMS baterai.',
+		troubleshooting: [
+			'Ganti baterai atau solder ulang fleksibel BMS baterai.',
+			'Cek resistor pull-up jalur SWI di sekitar soket baterai.'
+		],
+		modelsNote: 'iPhone 14 Pro & 14 Pro Max.'
+	},
+	{
+		code: '0x20',
+		name: 'Bitmask 0x20 (Desimal: 32)',
+		component: 'Sirkuit Charging / IC Tristar / Hydra / USB PMIC',
+		location: 'Motherboard Rangkaian Pengisian Daya',
+		severity: 'high',
+		symptoms: ['Restart acak', 'Ponsel panas saat dicas', 'Baterai lambat terisi'],
+		description:
+			'Indikasi kegagalan komunikasi sirkuit proteksi USB/Charging controller.',
+		troubleshooting: ['Periksa IC pengontrol USB/Charger (Tigris/Hydra/Kraken).']
+	},
+	{
+		code: '0x40',
+		name: 'Bitmask 0x40 (Desimal: 64)',
+		component: 'IC Gas Gauge / Monitoring Kapasitas Baterai',
+		location: 'Modul Baterai / Motherboard',
+		severity: 'critical',
+		symptoms: ['Restart 3 menit', 'Persentase baterai stuck di 1% atau 100%'],
+		description:
+			'SMC tidak menerima data voltase dan persentase arus real-time dari IC Gas Gauge.',
+		troubleshooting: ['Ganti unit baterai atau perbaiki pin data konektor baterai.']
+	},
+	{
+		code: '0xa1',
+		name: 'Bitmask 0xa1 (Desimal: 161)',
+		component: 'Thermal Sensor Baterai & Jalur Data',
+		location: 'Konektor Baterai',
+		severity: 'critical',
+		symptoms: ['Restart 3 menit', 'Notifikasi suhu perangkat terlalu panas meski dingin'],
+		description:
+			'Sensor NTC suhu internal baterai mengirimkan nilai di luar ambang batas wajar atau terputus.',
+		troubleshooting: ['Ganti baterai dengan yang original atau OEM bersertifikasi.']
+	},
+	{
+		code: '0x1000',
+		name: 'Bitmask 0x1000 (Desimal: 4096)',
+		component: 'Sensor Proximity / Earpiece Flex',
+		location: 'Bagian Atas Layar',
+		severity: 'high',
+		symptoms: ['Layar tidak mati saat ditelepon ke telinga', 'Restart berkala'],
+		description:
+			'Sensor jarak (Proximity Sensor) pada fleksibel earpiece gagal merespons.',
+		troubleshooting: ['Ganti atau posisikan ulang sensor proximity di housing depan.']
+	},
+	{
+		code: '0x1800',
+		name: 'Bitmask 0x1800 (Desimal: 6144)',
+		component: 'Kombinasi Charging Port & Barometer',
+		location: 'Bagian Bawah iPhone',
+		severity: 'critical',
+		symptoms: ['Restart 3 menit konsisten'],
+		description:
+			'Kedua sensor utama pada fleksibel dock bawah (mic dan barometer) putus secara bersamaan.',
+		troubleshooting: ['Ganti 1 set fleksibel charging port bawah.']
+	},
+	{
+		code: 'DCP PANIC',
+		name: 'Display Coprocessor (DCP) Panic',
+		component: 'Modul Layar Display / IC Coprocessor Layar',
+		location: 'Layar OLED/LCD & Sirkuit T-CON Motherboard',
+		severity: 'critical',
+		symptoms: [
+			'Layar mendadak blank hitam / green screen lalu restart',
+			'Ponsel bergetar tapi tidak ada tampilan gambar',
+			'Log mencatat: "DCP PANIC" atau "dcp_thread"'
+		],
+		description:
+			'Display Coprocessor mendeteksi hilangnya transmisi data video MIPI ke panel layar atau kegagalan clock display driver.',
+		troubleshooting: [
+			'Coba pasang layar LCD/OLED pengetesan lain yang normal.',
+			'Periksa soket FPC layar di motherboard dari pin korosi atau gosong.',
+			'Jika layar normal tetap DCP panic, periksa jalur voltase display (VPP / VDD) di motherboard.'
+		],
+		modelsNote: 'iPhone 12, 13, 14, 15 series (terutama layar OLED 120Hz ProMotion).'
+	},
+	{
+		code: 'AppleBCMWLAN',
+		name: 'Wi-Fi & Bluetooth Controller Failure',
+		component: 'IC Modul Wi-Fi / Bluetooth',
+		location: 'Motherboard (Layer Bawah)',
+		severity: 'critical',
+		symptoms: [
+			'Tombol Wi-Fi di menu Settings berwarna abu-abu (greyed out)',
+			'Bluetooth tidak bisa aktif atau mencari perangkat',
+			'Restart acak setiap beberapa menit'
+		],
+		description:
+			'Kernel panik akibat driver Broadcom Wi-Fi (AppleBCMWLAN) kehilangan respons dari chip Wi-Fi.',
+		troubleshooting: [
+			'Cek apakah alamat Wi-Fi Address di Settings > General > About berstatus N/A.',
+			'Pada iPhone sandwich, reballing interposer atau ganti/unlock IC Wi-Fi baru.'
+		],
+		modelsNote: 'iPhone 7, 8, X, XR, 11, 12, 13 series.'
+	},
+	{
+		code: 'AppleSPU',
+		name: 'Sensor Processing Unit (SPU) Panic',
+		component: 'Sensor Hub Coprocessor',
+		location: 'Motherboard SPU Controller',
+		severity: 'critical',
+		symptoms: [
+			'Semua sensor gerak dan orientasi tidak merespons',
+			'Ponsel terasa panas di bagian prosesor sebelum restart'
+		],
+		description:
+			'Coprocessor SPU yang mengelola kompas, gyro, dan barometer mengalami failure.',
+		troubleshooting: [
+			'Lepas modul kamera belakang dan sensor atas untuk memastikan tidak ada sensor eksternal yang menarik jalur I2C ke ground (short).',
+			'Periksa tegangan kerja regulator daya SPU.'
+		]
+	},
+	{
+		code: 'AppleNANDFTL',
+		name: 'NAND Flash Translation Layer Panic',
+		component: 'Penyimpanan Memori Internal (NAND Flash Storage)',
+		location: 'IC NAND Storage pada Motherboard',
+		severity: 'critical',
+		symptoms: [
+			'iPhone sering stuck logo Apple (bootloop)',
+			'Error 4013 atau Error 9 saat restore lewat iTunes/3uTools',
+			'Penyimpanan penuh tiba-tiba sebelum crash'
+		],
+		description:
+			'Driver sistem file FTL mendeteksi blok memori rusak permanen (bad block) atau kegagalan controller penyimpanan NAND.',
+		troubleshooting: [
+			'Coba restore penuh via DFU mode.',
+			'Jika restore gagal di 19% atau error 4013, angkat dan program ulang (reflash) atau ganti IC NAND flash menggunakan box programmer JCID/iRepair.'
+		]
 	}
 ];
 
@@ -466,6 +832,36 @@ export function parsePanicLog(text: string): ParsedPanicResult {
 			) {
 				missingSensors.push(clean);
 			}
+		}
+	}
+
+	// Extract modern SMC Sensor Array (Hex or Decimal)
+	// Example: "S.sensor array 0 - 5 is 0x800" or "Sensor Array: 2048"
+	const DECIMAL_TO_HEX_MAP: Record<string, string> = {
+		'2048': '0x800',
+		'1024': '0x400',
+		'65536': '0x10000',
+		'262144': '0x40000',
+		'1048576': '0x100000',
+		'2097152': '0x200000',
+		'4194304': '0x400000',
+		'5242880': '0x500000',
+		'65': '0x41',
+		'4096': '0x1000',
+		'16384': '0x4000',
+		'32': '0x20',
+		'64': '0x40',
+		'161': '0xa1',
+		'6144': '0x1800'
+	};
+
+	const sensorArrayMatch = (panicString + '\n' + text).match(/sensor\s*array\s*(?:\d+\s*-\s*\d+)?\s*(?:is|:|=)\s*([0-9a-fx]+)/i);
+	if (sensorArrayMatch) {
+		const val = sensorArrayMatch[1].trim().toLowerCase();
+		evidenceLines.push(sensorArrayMatch[0].trim());
+		const mappedHex = DECIMAL_TO_HEX_MAP[val] || (val.startsWith('0x') ? val : '0x' + parseInt(val, 10).toString(16));
+		if (mappedHex && !missingSensors.includes(mappedHex)) {
+			missingSensors.push(mappedHex);
 		}
 	}
 
