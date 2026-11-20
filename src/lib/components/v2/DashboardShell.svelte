@@ -598,24 +598,33 @@
 							onkeydown={() => {}}
 						></div>
 						<div
-							class="absolute right-0 top-full mt-2 z-50 flex max-h-80 min-w-[10rem] overflow-y-auto flex-col gap-1 p-2 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xl"
+							class="absolute right-0 top-full mt-2 z-50 w-[19.5rem] sm:w-[22rem] max-w-[calc(100vw-1.5rem)] rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-2 shadow-2xl animate-fade-in"
 						>
-							{#each COLOR_THEMES as t (t.id)}
-								<button
-									type="button"
-									class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors hover:bg-[var(--ttx-bg-hover)] {colorTheme === t.id ? 'bg-[var(--ttx-bg-active)] text-[var(--ttx-text-main)]' : 'text-[var(--ttx-text-muted)]'}"
-									onclick={() => applyColorTheme(t.id)}
-								>
-									<span
-										class="w-3.5 h-3.5 rounded-full border border-black/10 shadow-sm flex-shrink-0"
-										style:background-color={isDark ? t.swatchDark : t.swatch}
-									></span>
-									{t.label}
-									{#if colorTheme === t.id}
-										<span class="ml-auto text-[var(--ttx-accent)]">✓</span>
-									{/if}
-								</button>
-							{/each}
+							<div class="px-2.5 py-1.5 mb-1.5 flex items-center justify-between border-b border-[var(--ttx-border-subtle)]">
+								<span class="text-[11px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">Tema Warna</span>
+								<span class="text-[10px] font-mono text-[var(--ttx-text-dim)]">{COLOR_THEMES.length} Pilihan</span>
+							</div>
+							<div class="grid grid-cols-2 gap-1.5 max-h-72 overflow-y-auto custom-scrollbar p-0.5">
+								{#each COLOR_THEMES as t (t.id)}
+									<button
+										type="button"
+										class="flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium transition-all hover:bg-[var(--ttx-bg-hover)] text-left {colorTheme ===
+										t.id
+											? 'bg-[var(--ttx-bg-active)] text-[var(--ttx-text-main)] font-semibold shadow-xs ring-1 ring-[var(--ttx-accent)]/30'
+											: 'text-[var(--ttx-text-muted)]'}"
+										onclick={() => applyColorTheme(t.id)}
+									>
+										<span
+											class="h-3.5 w-3.5 shrink-0 rounded-full border border-black/15 shadow-xs transition-transform {colorTheme === t.id ? 'scale-110 ring-2 ring-[var(--ttx-accent)]/40' : ''}"
+											style:background-color={isDark ? t.swatchDark : t.swatch}
+										></span>
+										<span class="truncate whitespace-nowrap">{t.label}</span>
+										{#if colorTheme === t.id}
+											<span class="ml-auto text-[var(--ttx-accent)] text-[11px] font-bold shrink-0">✓</span>
+										{/if}
+									</button>
+								{/each}
+							</div>
 						</div>
 					{/if}
 				</div>
