@@ -15,7 +15,8 @@
 		LogOut,
 		User,
 		ExternalLink,
-		Palette
+		Palette,
+		Activity
 	} from '@lucide/svelte';
 
 	type ColorTheme =
@@ -77,6 +78,7 @@
 	import SharedNotepadView from '$lib/components/v2/SharedNotepadView.svelte';
 	import LuckySpinView from '$lib/components/v2/LuckySpinView.svelte';
 	import BaseConverterView from '$lib/components/v2/BaseConverterView.svelte';
+	import PanicAnalyzerView from '$lib/components/v2/PanicAnalyzerView.svelte';
 
 	let {
 		initialTool = null,
@@ -115,7 +117,9 @@
 		'/shared-notepad': 'shared-notepad',
 		'/notepad': 'shared-notepad',
 		'/lucky-spin': 'lucky-spin',
-		'/base-converter': 'base-converter'
+		'/base-converter': 'base-converter',
+		'/panic-analyzer': 'panic-analyzer',
+		'/panic-full': 'panic-analyzer'
 	};
 
 	let internalTool = $state<string | null>(initialTool);
@@ -379,6 +383,7 @@
 		if (activeTool === 'disclaimer') return 'Disclaimer - TEXY Workspace';
 		if (activeTool === 'data-deletion') return 'Penghapusan Data - TEXY Workspace';
 		if (activeTool === 'shared-notepad' || activeTool === 'notepad') return 'Shared Notepad - TEXY Workspace';
+		if (activeTool === 'panic-analyzer' || activeTool === 'panic-full') return 'Panic Full Analyzer (iOS) - TEXY Workspace';
 		const current = tools.find((t) => t.href.split('?')[0].replace('/', '') === activeTool);
 		if (current) {
 			return `${current.title} - TEXY Workspace`;
@@ -805,6 +810,19 @@
 					<p class="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
 						Quick Links
 					</p>
+					<button
+						type="button"
+						onclick={() => { isSidebarOpen = false; openTool('/panic-analyzer'); }}
+						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors {activeTool === 'panic-analyzer' || activeTool === 'panic-full'
+							? 'bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] font-semibold'
+							: 'text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]'}"
+					>
+						<span class="flex items-center gap-2">
+							<Activity size={14} class="text-[var(--ttx-accent-text)] shrink-0" />
+							<span class="truncate">Panic Full Analyzer</span>
+						</span>
+						<span class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] border border-[var(--ttx-accent)]/20">iOS</span>
+					</button>
 					<a
 						href="/notepad2"
 						class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)]"
@@ -932,6 +950,8 @@
 					<LuckySpinView {isDark} />
 				{:else if activeTool === 'base-converter'}
 					<BaseConverterView {isDark} />
+				{:else if activeTool === 'panic-analyzer' || activeTool === 'panic-full'}
+					<PanicAnalyzerView {isDark} />
 				{:else if activeTool === 'shared-notepad' || activeTool === 'notepad'}
 					<SharedNotepadView {isDark} data={notepadData} />
 				{:else if activeTool === 'privacy-policy'}

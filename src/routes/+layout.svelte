@@ -22,6 +22,7 @@
 	let hideGlobalNav = $derived(
 		Boolean($page.error) ||
 		$page.url.pathname === '/' ||
+		Boolean($page.params.tool) ||
 		$page.url.pathname.startsWith('/v2') ||
 		$page.url.pathname.startsWith('/notepad') ||
 		$page.url.pathname.startsWith('/notepad2') ||
@@ -32,6 +33,8 @@
 		$page.url.pathname.startsWith('/privacy-policy') ||
 		$page.url.pathname.startsWith('/disclaimer') ||
 		$page.url.pathname.startsWith('/data-deletion') ||
+		$page.url.pathname.startsWith('/panic-analyzer') ||
+		$page.url.pathname.startsWith('/panic-full') ||
 		standaloneToolPaths.has($page.url.pathname)
 	);
 	$effect(() => {
