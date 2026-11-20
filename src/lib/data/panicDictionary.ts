@@ -729,6 +729,28 @@ export const PANIC_DATABASE: PanicSensorDef[] = [
 			'Coba restore penuh via DFU mode.',
 			'Jika restore gagal di 19% atau error 4013, angkat dan program ulang (reflash) atau ganti IC NAND flash menggunakan box programmer JCID/iRepair.'
 		]
+	},
+	{
+		code: 'AppleSocHot',
+		name: 'AppleSocHot: Hot Hot Hot (Overheat / Thermal Panic)',
+		component: 'Sensor Termal SoC CPU & Jalur Daya PMIC',
+		location: 'Motherboard (Area CPU A-Series & Power Management IC)',
+		severity: 'critical',
+		symptoms: [
+			'Ponsel mendadak mati dan restart dengan log: "AppleSocHot: Hot Hot Hot"',
+			'Bodi iPhone terasa sangat panas di area prosesor bahkan saat tidak menjalankan aplikasi berat',
+			'Baterai cepat terkuras drastis dalam hitungan menit',
+			'Peringatan suhu iPhone terlalu panas (Temperature Warning) muncul berulang'
+		],
+		description:
+			'Kernel panik fatal yang dipicu oleh sirkuit proteksi suhu internal prosesor (System on Chip). Terjadi ketika sensor termal internal CPU mendeteksi panas ekstrem atau korsleting (short circuit) tegangan pada jalur power rails antara PMIC dan CPU.',
+		troubleshooting: [
+			'Uji konsumsi arus motherboard menggunakan DC Power Supply untuk mendeteksi adanya kebocoran arus sebelum tombol power ditekan.',
+			'Gunakan Thermal Camera untuk melihat kapasitor atau IC yang memanas secara abnormal di sekitar area CPU/PMIC.',
+			'Pada model motherboard sandwich (iPhone X ke atas), pisahkan layer board untuk memeriksa timah interposer yang saling menempel atau short ke ground akibat benturan/jatuh keras.',
+			'Periksa jalur VDD_MAIN dan jalur tegangan inti prosesor (CPU Core rails).'
+		],
+		modelsNote: 'Dapat terjadi di seluruh seri iPhone & iPad (terutama pasca jatuh keras atau terkena cairan).'
 	}
 ];
 

@@ -850,7 +850,7 @@ Debugger message: panic
 					<div>
 						<span class="text-[10px] font-bold text-[var(--ttx-text-dim)] uppercase">Kode Populer:</span>
 						<div class="flex flex-wrap gap-1 mt-1.5">
-							{#each ['mic1', 'prs0', 'mic2', 'mic3', 'tg0b', '0x800', '0x10000', '0x40000', '0x100000', 'smc', 'DCP PANIC', 'ans2'] as tag}
+							{#each ['mic1', 'prs0', 'mic2', 'mic3', 'tg0b', '0x800', '0x10000', '0x40000', '0x100000', 'smc', 'DCP PANIC', 'AppleSocHot'] as tag}
 								<button
 									type="button"
 									onclick={() => {
