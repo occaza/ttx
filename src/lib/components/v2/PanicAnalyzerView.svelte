@@ -815,7 +815,7 @@ Debugger message: panic
 						</div>
 
 						<pre
-							class="w-full p-3 rounded-xl bg-[var(--ttx-bg-input)] font-mono text-[11px] leading-relaxed text-[var(--ttx-text-main)] border border-[var(--ttx-border-subtle)] overflow-x-auto custom-scrollbar whitespace-pre-wrap">{parsedResult.panicString || parsedResult.debuggerMessage}</pre>
+							class="w-full p-3 rounded-xl bg-[var(--ttx-bg-input)] font-mono text-[11px] leading-relaxed text-[var(--ttx-text-main)] border border-[var(--ttx-border-subtle)] overflow-auto custom-scrollbar whitespace-pre-wrap max-h-48">{parsedResult.panicString || parsedResult.debuggerMessage}</pre>
 					</div>
 				</div>
 			{/if}
