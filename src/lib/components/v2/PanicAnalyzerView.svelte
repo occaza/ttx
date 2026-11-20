@@ -798,12 +798,12 @@ Debugger message: panic
 
 					<!-- Panic String Evidence Box -->
 					<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-4 shadow-xs">
-						<div class="flex items-center justify-between mb-2">
-							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-dim)]">
+						<div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+							<span class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-dim)] shrink-0">
 								Cuplikan Baris Panic (Evidence)
 							</span>
 							{#if parsedResult.missingSensors.length > 0}
-								<div class="flex items-center gap-1">
+								<div class="flex flex-wrap items-center gap-1.5">
 									<span class="text-[11px] text-[var(--ttx-text-muted)] font-medium">Missing:</span>
 									{#each parsedResult.missingSensors as ms}
 										<span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
@@ -815,7 +815,7 @@ Debugger message: panic
 						</div>
 
 						<pre
-							class="w-full p-3 rounded-xl bg-[var(--ttx-bg-input)] font-mono text-[11px] leading-relaxed text-[var(--ttx-text-main)] border border-[var(--ttx-border-subtle)] overflow-auto custom-scrollbar whitespace-pre-wrap max-h-48">{parsedResult.panicString || parsedResult.debuggerMessage}</pre>
+							class="w-full p-3 rounded-xl bg-[var(--ttx-bg-input)] font-mono text-[11px] leading-relaxed text-[var(--ttx-text-main)] border border-[var(--ttx-border-subtle)] overflow-auto custom-scrollbar whitespace-pre-wrap max-h-48 break-words break-all">{parsedResult.panicString || parsedResult.debuggerMessage}</pre>
 					</div>
 				</div>
 			{/if}

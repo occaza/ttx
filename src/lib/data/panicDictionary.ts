@@ -448,14 +448,22 @@ export function parsePanicLog(text: string): ParsedPanicResult {
 		/wdt timeout|watchdog|thermalmonitord|userspace watchdog timeout/i.test(fullSearchText);
 
 	// Extract missing sensors (e.g., "Missing sensor(s): mic1, prs0")
+	// Handle raw text as well as escaped JSON strings (\\n, \\r, etc.)
 	const missingSensors: string[] = [];
-	const missingMatch = text.match(/missing\s*sensor\(s\)\s*:\s*([^\n\r"]+)/i);
+	const missingMatch = (panicString + '\n' + text).match(/missing\s*sensor\(s\)\s*:\s*([^\r\n\\"]+)/i);
 	if (missingMatch) {
-		evidenceLines.push(missingMatch[0].trim());
-		const parts = missingMatch[1].split(/[\s,]+/);
+		const rawSensors = missingMatch[1].replace(/\\n.*$/i, '').trim();
+		evidenceLines.push(`Missing sensor(s): ${rawSensors}`);
+		const parts = rawSensors.split(/[\s,]+/);
 		for (const p of parts) {
-			const clean = p.trim().toLowerCase();
-			if (clean && !missingSensors.includes(clean)) {
+			const clean = p.replace(/[^a-z0-9_-]/gi, '').trim().toLowerCase();
+			if (
+				clean &&
+				clean.length >= 2 &&
+				clean.length <= 15 &&
+				!['service', 'total', 'checkins', 'seconds', 'last', 'from', 'none'].includes(clean) &&
+				!missingSensors.includes(clean)
+			) {
 				missingSensors.push(clean);
 			}
 		}
