@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { tools } from '$lib/data/tools';
+	import { handleLogout } from '$lib/utils/auth';
 	import {
 		Search,
 		Sun,
@@ -646,10 +647,7 @@
 					<button
 						type="button"
 						class="h-9 w-9 flex items-center justify-center text-[var(--ttx-text-muted)] hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors"
-						onclick={async () => {
-							await fetch('/logout', { method: 'POST' });
-							window.location.href = '/login';
-						}}
+						onclick={handleLogout}
 						title="Sign Out"
 					>
 						<LogOut size={15} />

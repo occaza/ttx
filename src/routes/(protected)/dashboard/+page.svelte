@@ -1,8 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { createBrowserClient } from '@supabase/ssr';
-	import type { SupabaseClient } from '@supabase/supabase-js';
-	import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 	import {
 		FileText,
 		Plus,
@@ -10,35 +6,64 @@
 		ArrowRight,
 		Wrench,
 		Crown,
-		FilePen,
 		ChevronLeft,
 		ChevronRight,
 		Search,
 		Sparkles,
 		LayoutDashboard,
-		ExternalLink
+		ExternalLink,
+		Check,
+		Copy,
+		ArrowUpRight,
+		NotebookPen,
+		SlidersHorizontal
 	} from '@lucide/svelte';
 
 	let { data } = $props();
 
-	let supabase = $state<SupabaseClient | null>(null);
-
 	let profile = $derived(data.profile);
 	let docs = $derived(data.docs ?? []);
-	let docLimit = $derived(data.docLimit);
-	let isPro = $derived(data.isPro);
+	let docLimit = $derived(data.docLimit ?? 4);
+	let isPro = $derived(data.isPro ?? false);
 
 	let searchQuery = $state('');
+	let sortBy = $state<'newest' | 'oldest' | 'az'>('newest');
 	let currentPage = $state(1);
 	const pageSize = 5;
 
-	let filteredDocs = $derived(
-		searchQuery.trim() === ''
-			? docs
+	// State for copy link feedback
+	let copiedSlug = $state<string | null>(null);
+	let copyTimer: any = null;
+
+	function copyDocLink(slug: string, event: MouseEvent) {
+		event.preventDefault();
+		event.stopPropagation();
+		const url = `${window.location.origin}/notepad2/${slug}`;
+		navigator.clipboard.writeText(url);
+		copiedSlug = slug;
+		clearTimeout(copyTimer);
+		copyTimer = setTimeout(() => {
+			copiedSlug = null;
+		}, 2000);
+	}
+
+	let filteredDocs = $derived.by(() => {
+		let list = searchQuery.trim() === ''
+			? [...docs]
 			: docs.filter((d) =>
-					(d.title || 'Untitled').toLowerCase().includes(searchQuery.toLowerCase())
-			  )
-	);
+					(d.title || 'Untitled Document').toLowerCase().includes(searchQuery.toLowerCase())
+			  );
+
+		if (sortBy === 'newest') {
+			list.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+		} else if (sortBy === 'oldest') {
+			list.sort((a, b) => new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime());
+		} else if (sortBy === 'az') {
+			list.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+		}
+
+		return list;
+	});
 
 	let totalPages = $derived(Math.max(1, Math.ceil(filteredDocs.length / pageSize)));
 
@@ -52,15 +77,20 @@
 		}
 	});
 
-	let displayName = $derived(
+	let greetingName = $derived(
 		profile?.first_name ||
 			profile?.username ||
 			data.user?.user_metadata?.full_name?.split(' ')[0] ||
 			data.user?.email?.split('@')[0] ||
-			'User'
+			'Pengguna'
 	);
 
-	let initials = $derived(displayName.slice(0, 2).toUpperCase());
+	let initials = $derived(
+		(profile?.first_name
+			? `${profile.first_name[0]}${profile.last_name ? profile.last_name[0] : ''}`
+			: greetingName.slice(0, 2)
+		).toUpperCase()
+	);
 
 	let docCount = $derived(docs.length);
 	let docQuotaPercent = $derived(isPro ? 100 : Math.min((docCount / docLimit) * 100, 100));
@@ -73,16 +103,29 @@
 		{ href: '/percentage-calculator', label: 'Kalkulator Persen' }
 	];
 
-	onMount(async () => {
-		supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
-	});
-
 	function formatDate(dateStr: string) {
-		return new Date(dateStr).toLocaleDateString('id-ID', {
+		const date = new Date(dateStr);
+		return date.toLocaleDateString('id-ID', {
 			day: 'numeric',
 			month: 'short',
 			year: 'numeric'
 		});
+	}
+
+	function formatRelativeTime(dateStr: string) {
+		const date = new Date(dateStr);
+		const diffMs = Date.now() - date.getTime();
+		const diffSec = Math.floor(diffMs / 1000);
+		const diffMin = Math.floor(diffSec / 60);
+		const diffHours = Math.floor(diffMin / 60);
+		const diffDays = Math.floor(diffHours / 24);
+
+		if (diffSec < 60) return 'Baru saja';
+		if (diffMin < 60) return `${diffMin} menit yang lalu`;
+		if (diffHours < 24) return `${diffHours} jam yang lalu`;
+		if (diffDays === 1) return 'Kemarin';
+		if (diffDays < 7) return `${diffDays} hari yang lalu`;
+		return formatDate(dateStr);
 	}
 </script>
 
@@ -91,117 +134,145 @@
 </svelte:head>
 
 <div class="relative min-h-[calc(100vh-4rem)] bg-[var(--ttx-bg-workspace)] text-[var(--ttx-text-main)] font-sans transition-colors duration-200">
-	<!-- Subtle diagonal pattern background matching workspace -->
+	<!-- Background subtle pattern -->
 	<div
-		class="absolute inset-0 pointer-events-none opacity-40"
+		class="absolute inset-0 pointer-events-none opacity-30"
 		style="background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, var(--ttx-hatch) 10px, var(--ttx-hatch) 11.5px);"
 		aria-hidden="true"
 	></div>
 
-	<div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-		<!-- HEADER: USER INFO & QUICK ACTIONS -->
-		<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs mb-8 transition-colors">
-			<div class="flex items-center gap-4">
-				<div class="w-14 h-14 rounded-2xl bg-[var(--ttx-accent-light)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-accent-text)] font-bold text-lg flex items-center justify-center shadow-xs shrink-0">
+	<div class="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+		<!-- 1. HEADER PROFILE & QUICK ACTIONS -->
+		<section
+			class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-6 sm:p-7 rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs transition-colors"
+			aria-label="Ringkasan Profil Pengguna"
+		>
+			<div class="flex items-center gap-4 min-w-0">
+				<!-- Avatar with Initials -->
+				<div
+					class="w-14 h-14 rounded-2xl bg-[var(--ttx-accent)]/15 border border-[var(--ttx-border-subtle)] text-[var(--ttx-accent)] font-bold text-lg flex items-center justify-center shadow-xs shrink-0"
+				>
 					{initials}
 				</div>
-				<div>
+
+				<!-- Identity Text -->
+				<div class="min-w-0">
 					<div class="flex items-center gap-2.5 flex-wrap">
-						<h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--ttx-text-main)]">
-							Halo, {displayName}
+						<h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--ttx-text-main)] truncate">
+							Selamat datang, {greetingName}
 						</h1>
 						{#if isPro}
-							<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400">
+							<span
+								class="inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-semibold rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400"
+							>
 								<Crown size={12} />
-								Pro
+								<span>Pro Member</span>
 							</span>
 						{:else}
-							<span class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-muted)]">
+							<span
+								class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-muted)]"
+							>
 								Free Tier
 							</span>
 						{/if}
 					</div>
-					<p class="text-xs text-[var(--ttx-text-muted)] mt-1">{data.user?.email}</p>
+					<p class="text-xs text-[var(--ttx-text-dim)] truncate mt-1">
+						{data.user?.email}
+					</p>
 				</div>
 			</div>
 
-			<div class="flex items-center gap-2.5">
+			<!-- Action Buttons -->
+			<div class="flex items-center gap-2.5 shrink-0 self-start sm:self-center">
 				<a
-					href="/"
-					class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all"
+					href="/notepad2"
+					class="inline-flex items-center gap-2 h-9 px-4 text-xs font-semibold rounded-xl text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ttx-accent)]"
 				>
-					<LayoutDashboard size={14} />
-					<span>Buka Workspace</span>
+					<Plus size={14} />
+					<span>Catatan Baru</span>
 				</a>
 				<a
 					href="/account"
-					class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all"
+					class="inline-flex items-center gap-1.5 h-9 px-3.5 text-xs font-semibold rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ttx-accent)]"
 				>
 					<Settings size={14} />
 					<span>Pengaturan</span>
 				</a>
 			</div>
-		</div>
+		</section>
 
-		<!-- WORKSPACE GRID -->
+		<!-- 2. MAIN WORKSPACE CONTENT: DOCUMENTS & SIDEBAR -->
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-			<!-- MAIN COLUMN: DOCUMENTS (2 COLS) -->
-			<div class="lg:col-span-2 flex flex-col gap-5">
-				<!-- Document List Container -->
-				<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-5 sm:p-6 shadow-xs flex flex-col gap-5 transition-colors">
-					<!-- Header Bar -->
+			<!-- LEFT COLUMN: DOCUMENTS LIST (2 COLS) -->
+			<div class="lg:col-span-2 space-y-5">
+				<section
+					class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-5 sm:p-6 shadow-xs space-y-5 transition-colors"
+					aria-label="Daftar Dokumen Notepad"
+				>
+					<!-- Toolbar: Title, Search, and Sort -->
 					<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-						<div class="flex items-center gap-2">
-							<FilePen size={17} class="text-[var(--ttx-accent-text)]" />
-							<h2 class="text-xs font-bold uppercase tracking-wider text-[var(--ttx-text-muted)]">
-								Dokumen Saya
-							</h2>
-							{#if docs.length > 0}
-								<span class="px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-muted)]">
-									{docs.length}
-								</span>
-							{/if}
+						<div class="flex items-center gap-2.5">
+							<div class="h-8 w-8 rounded-lg bg-[var(--ttx-accent)]/15 text-[var(--ttx-accent)] flex items-center justify-center">
+								<NotebookPen size={16} />
+							</div>
+							<div>
+								<div class="flex items-center gap-2">
+									<h2 class="text-sm font-bold text-[var(--ttx-text-main)]">Dokumen Saya</h2>
+									<span class="px-2 py-0.5 text-[11px] font-mono font-semibold rounded-md bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-muted)]">
+										{docCount}
+									</span>
+								</div>
+								<p class="text-[11px] text-[var(--ttx-text-dim)]">Catatan teks cloud tersinkronisasi</p>
+							</div>
 						</div>
 
-						<div class="flex items-center gap-2.5">
-							{#if docs.length > pageSize}
-								<div class="relative">
-									<Search size={14} class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)]" />
-									<input
-										type="search"
-										bind:value={searchQuery}
-										placeholder="Cari dokumen..."
-										class="w-40 sm:w-48 h-9 pl-8 pr-3 text-xs rounded-xl bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
-									/>
-								</div>
-							{/if}
-							<a
-								href="/notepad2"
-								class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-[var(--ttx-accent-contrast)] bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm active:scale-95 transition-all"
-							>
-								<Plus size={14} />
-								<span>Buka Editor</span>
-							</a>
+						<!-- Search and Filter Controls -->
+						<div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+							<div class="relative flex-1 sm:flex-initial">
+								<Search size={14} class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)] pointer-events-none" />
+								<input
+									type="search"
+									bind:value={searchQuery}
+									placeholder="Cari dokumen..."
+									class="w-full sm:w-44 h-8 pl-8 pr-3 text-xs rounded-lg bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all"
+								/>
+							</div>
+
+							<!-- Sort Select -->
+							<div class="relative">
+								<select
+									bind:value={sortBy}
+									class="h-8 pl-2.5 pr-7 text-xs rounded-lg bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-main)] focus:outline-none focus:border-[var(--ttx-accent)] transition-all appearance-none cursor-pointer"
+									aria-label="Urutkan dokumen"
+								>
+									<option value="newest">Terbaru</option>
+									<option value="oldest">Terlama</option>
+									<option value="az">Nama (A-Z)</option>
+								</select>
+								<SlidersHorizontal
+									size={12}
+									class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--ttx-text-dim)] pointer-events-none"
+								/>
+							</div>
 						</div>
 					</div>
 
-					<!-- Storage Quota Status -->
+					<!-- Storage Quota Status Bar -->
 					{#if isPro}
-						<div class="flex items-center justify-between rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
-							<div class="flex items-center gap-2.5">
-								<Crown size={16} class="text-amber-400 shrink-0" />
-								<span class="text-xs font-semibold text-amber-300">Paket Pro Aktif</span>
-								<span class="text-xs text-[var(--ttx-text-muted)] hidden sm:inline">• Kuota dokumen cloud tak terbatas</span>
+						<div class="flex items-center justify-between rounded-xl border border-amber-500/25 bg-amber-500/10 px-4 py-2.5">
+							<div class="flex items-center gap-2 text-xs font-medium text-amber-300">
+								<Crown size={15} class="text-amber-400 shrink-0" />
+								<span>Paket Pro Aktif: Penyimpanan cloud tanpa batas</span>
 							</div>
-							<span class="font-mono text-xs font-bold text-amber-400 px-2 py-1 rounded-md bg-amber-500/20 border border-amber-500/30">
+							<span class="text-xs font-mono font-bold text-amber-400">
 								{docCount} Dokumen
 							</span>
 						</div>
 					{:else}
-						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] p-4">
-							<div class="flex items-center justify-between mb-2">
-								<span class="text-xs font-medium text-[var(--ttx-text-muted)]">Penyimpanan Dokumen Cloud</span>
-								<span class="text-xs font-mono font-bold {docCount >= docLimit ? 'text-rose-400' : 'text-[var(--ttx-text-main)]'}">
+						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] p-3.5 space-y-2">
+							<div class="flex items-center justify-between text-xs">
+								<span class="font-medium text-[var(--ttx-text-muted)]">Kuota Penyimpanan Cloud</span>
+								<span class="font-mono font-bold {docCount >= docLimit ? 'text-rose-400' : 'text-[var(--ttx-text-main)]'}">
 									{docCount} / {docLimit} Dokumen
 								</span>
 							</div>
@@ -211,63 +282,98 @@
 									style="width: {docQuotaPercent}%"
 								></div>
 							</div>
-							<div class="flex items-center justify-between mt-2 text-[11px]">
+							<div class="flex items-center justify-between text-[11px] pt-0.5">
 								{#if docCount >= docLimit}
-									<p class="text-rose-400 font-medium">Kuota penuh. Tingkatkan ke Pro untuk menambah dokumen baru.</p>
+									<span class="text-rose-400 font-medium">Batas tercapai. Upgrade ke Pro untuk dokumen baru.</span>
 								{:else}
-									<p class="text-[var(--ttx-text-dim)]">{docLimit - docCount} slot dokumen tersisa pada plan Free.</p>
+									<span class="text-[var(--ttx-text-dim)]">Tersisa {docLimit - docCount} slot dokumen pada plan Free.</span>
 								{/if}
-								<a href="/pricing" class="text-[var(--ttx-accent-text)] hover:underline font-semibold">Tingkatkan Plan</a>
+								<a href="/pricing" class="font-semibold text-[var(--ttx-accent-text)] hover:underline">
+									Tingkatkan Kuota
+								</a>
 							</div>
 						</div>
 					{/if}
 
-					<!-- Document List Content -->
+					<!-- Document Items List -->
 					{#if docs.length === 0}
-						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] p-12 text-center">
-							<FileText size={36} class="mx-auto mb-3 text-[var(--ttx-text-dim)]" strokeWidth={1.5} />
-							<p class="text-sm font-medium text-[var(--ttx-text-muted)]">Belum ada dokumen tersimpan.</p>
-							<p class="text-xs text-[var(--ttx-text-dim)] mt-1">Mulai buat dan simpan catatan cloud pertama Anda di Notepad Pro.</p>
+						<div class="rounded-xl border border-dashed border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)]/50 p-10 text-center space-y-3">
+							<div class="h-12 w-12 rounded-xl bg-[var(--ttx-bg-input)] text-[var(--ttx-text-dim)] flex items-center justify-center mx-auto">
+								<FileText size={24} strokeWidth={1.5} />
+							</div>
+							<div>
+								<p class="text-sm font-semibold text-[var(--ttx-text-main)]">Belum ada dokumen tersimpan</p>
+								<p class="text-xs text-[var(--ttx-text-dim)] mt-0.5">
+									Mulai buat dokumen cloud pertama Anda di Notepad Workspace.
+								</p>
+							</div>
 							<a
 								href="/notepad2"
-								class="inline-flex items-center gap-1.5 mt-4 px-4 py-2 text-xs font-semibold text-[var(--ttx-accent-contrast)] bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-sm transition-all"
+								class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-[var(--ttx-accent)] hover:bg-[var(--ttx-accent-hover)] rounded-xl shadow-xs transition-all"
 							>
 								<Plus size={14} />
 								<span>Buat Dokumen Sekarang</span>
 							</a>
 						</div>
 					{:else if filteredDocs.length === 0}
-						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] p-8 text-center">
-							<p class="text-sm text-[var(--ttx-text-muted)]">Tidak ditemukan dokumen dengan judul "{searchQuery}".</p>
+						<div class="rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] p-8 text-center text-xs text-[var(--ttx-text-dim)]">
+							Tidak ditemukan dokumen yang cocok dengan kata kunci "{searchQuery}".
 						</div>
 					{:else}
-						<div class="flex flex-col gap-2.5">
+						<div class="space-y-2">
 							{#each paginatedDocs as doc (doc.id)}
-								<a
-									href="/notepad2/{doc.slug}"
-									class="group flex items-center justify-between rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] px-4 py-3 hover:border-[var(--ttx-accent)] hover:bg-[var(--ttx-bg-hover)] transition-all"
+								<div
+									class="group flex items-center justify-between rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] p-3.5 hover:border-[var(--ttx-accent)] hover:bg-[var(--ttx-bg-hover)] transition-all"
 								>
-									<div class="flex items-center gap-3.5 min-w-0">
-										<div class="p-2 rounded-lg bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-accent-text)] group-hover:scale-105 transition-transform shrink-0">
+									<!-- Document Info & Link -->
+									<a href="/notepad2/{doc.slug}" class="flex items-center gap-3 min-w-0 flex-1">
+										<div class="h-9 w-9 rounded-lg bg-[var(--ttx-bg-input)] border border-[var(--ttx-border-subtle)] text-[var(--ttx-accent-text)] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
 											<FileText size={16} />
 										</div>
-										<div class="min-w-0">
-											<p class="text-sm font-medium text-[var(--ttx-text-main)] truncate group-hover:text-[var(--ttx-accent-text)] transition-colors">
+										<div class="min-w-0 flex-1">
+											<p class="text-xs font-semibold text-[var(--ttx-text-main)] truncate group-hover:text-[var(--ttx-accent-text)] transition-colors">
 												{doc.title || 'Untitled Document'}
 											</p>
-											<p class="text-[11px] text-[var(--ttx-text-dim)]">
-												Terakhir diedit: {formatDate(doc.updated_at)}
-											</p>
+											<div class="flex items-center gap-2 text-[11px] text-[var(--ttx-text-dim)] mt-0.5">
+												<span>Diedit {formatRelativeTime(doc.updated_at)}</span>
+												<span>•</span>
+												<span class="font-mono text-[10px]">/{doc.slug}</span>
+											</div>
 										</div>
+									</a>
+
+									<!-- Quick Actions: Copy Link & Open Arrow -->
+									<div class="flex items-center gap-1.5 shrink-0 ml-3">
+										<button
+											type="button"
+											class="h-8 w-8 flex items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-colors cursor-pointer"
+											onclick={(e) => copyDocLink(doc.slug, e)}
+											title="Salin tautan dokumen"
+											aria-label="Salin tautan dokumen"
+										>
+											{#if copiedSlug === doc.slug}
+												<Check size={14} class="text-emerald-400" />
+											{:else}
+												<Copy size={14} />
+											{/if}
+										</button>
+
+										<a
+											href="/notepad2/{doc.slug}"
+											class="h-8 w-8 flex items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-dim)] hover:text-[var(--ttx-accent-text)] hover:bg-[var(--ttx-bg-hover)] transition-colors"
+											title="Buka dokumen di editor"
+											aria-label="Buka dokumen di editor"
+										>
+											<ArrowUpRight size={14} />
+										</a>
 									</div>
-									<ArrowRight size={14} class="shrink-0 text-[var(--ttx-text-dim)] group-hover:text-[var(--ttx-accent-text)] group-hover:translate-x-1 transition-all" />
-								</a>
+								</div>
 							{/each}
 						</div>
 
 						<!-- Pagination Bar -->
 						{#if totalPages > 1}
-							<div class="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-[var(--ttx-border-base)] text-xs text-[var(--ttx-text-muted)] gap-3">
+							<div class="flex flex-col sm:flex-row sm:items-center justify-between pt-3 border-t border-[var(--ttx-border-base)] text-xs text-[var(--ttx-text-dim)] gap-3">
 								<span>
 									Menampilkan {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, filteredDocs.length)} dari {filteredDocs.length} dokumen
 								</span>
@@ -295,7 +401,7 @@
 							</div>
 						{/if}
 					{/if}
-				</div>
+				</section>
 			</div>
 
 			<!-- SIDEBAR COLUMN: QUICK TOOLS & SUBSCRIPTION -->

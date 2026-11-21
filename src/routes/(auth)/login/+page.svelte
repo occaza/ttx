@@ -25,6 +25,12 @@
 
 	onMount(() => {
 		isDark = getInitialTheme();
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const err = urlParams.get('error') || urlParams.get('error_description');
+		if (err) {
+			errorMsg = err;
+		}
 	});
 
 	function toggleTheme() {
@@ -40,10 +46,13 @@
 		if (provider === 'google') googleLoading = true;
 		errorMsg = '';
 
+		let next = new URLSearchParams(window.location.search).get('next') || '/dashboard';
+		if (next.startsWith('/login') || next.startsWith('/register')) next = '/dashboard';
+
 		const { error } = await supabase.auth.signInWithOAuth({
 			provider,
 			options: {
-				redirectTo: `${window.location.origin}/auth/callback`
+				redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
 			}
 		});
 
@@ -72,7 +81,9 @@
 			errorMsg = error.message;
 			loading = false;
 		} else {
-			goto('/dashboard');
+			let next = new URLSearchParams(window.location.search).get('next') || '/dashboard';
+			if (next.startsWith('/login') || next.startsWith('/register')) next = '/dashboard';
+			window.location.href = next;
 		}
 	}
 </script>

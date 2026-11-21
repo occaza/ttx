@@ -87,14 +87,17 @@
 
 		const user = data?.user;
 		if (user) {
-			const { error: profileError } = await supabase.from('profiles').insert([
+			const { error: profileError } = await supabase.from('profiles').upsert([
 				{
 					id: user.id,
 					name: `${first_name} ${last_name}`.trim(),
+					first_name,
+					last_name,
+					username,
 					phone,
 					email
 				}
-			]);
+			], { onConflict: 'id' });
 
 			if (profileError) {
 				console.error('Gagal simpan profil:', profileError.message);

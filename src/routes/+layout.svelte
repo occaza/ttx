@@ -46,12 +46,11 @@
 		const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 		const {
 			data: { subscription }
-		} = supabase.auth.onAuthStateChange((event, _session) => {
+		} = supabase.auth.onAuthStateChange((event, newSession) => {
 			if (
 				event === 'SIGNED_OUT' ||
 				event === 'SIGNED_IN' ||
-				event === 'TOKEN_REFRESHED' ||
-				event === 'INITIAL_SESSION'
+				(event === 'TOKEN_REFRESHED' && newSession?.expires_at !== data.session?.expires_at)
 			) {
 				invalidate('supabase:auth');
 			}
@@ -104,11 +103,11 @@
 	<meta name="theme-color" content="#0ea5e9" />
 </svelte:head>
 
-<div class="flex min-h-screen flex-col bg-base-100">
+<div class="flex min-h-screen flex-col bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
 	{#if !hideGlobalNav}
 		<Nav />
 	{/if}
-	<main class="flex-1 {hideGlobalNav ? '' : 'pt-16'}">
+	<main class="flex-1">
 		{@render children?.()}
 	</main>
 	{#if !hideGlobalNav}

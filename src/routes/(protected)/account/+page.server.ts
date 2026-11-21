@@ -57,8 +57,18 @@ export const actions: Actions = {
 
 		const { error } = await supabaseAdmin
 			.from('profiles')
-			.update({ first_name, last_name, username: username || null, phone: phone || null })
-			.eq('id', user.id);
+			.upsert(
+				{
+					id: user.id,
+					email: user.email,
+					name: `${first_name} ${last_name}`.trim(),
+					first_name,
+					last_name,
+					username: username || null,
+					phone: phone || null
+				},
+				{ onConflict: 'id' }
+			);
 
 		if (error) {
 			console.error('Update profile error:', error);

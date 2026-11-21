@@ -12,77 +12,52 @@ const supabase: Handle = async ({ event, resolve }) => {
 				cookiesToSet.forEach(({ name, value, options }) => {
 					event.cookies.set(name, value, {
 						...options,
-						path: '/',
-						// ✅ Tambahkan maxAge untuk kontrol expiry (1 hari = 86400 detik)
-						maxAge: 60 * 60 * 24, // 24 jam
-						sameSite: 'lax',
-						secure: process.env.NODE_ENV === 'production',
-						httpOnly: true
+						path: '/'
 					});
 				});
 			}
 		}
 	});
 
+	let safeSessionPromise: Promise<{ session: any; user: any }> | null = null;
+
 	event.locals.safeGetSession = async () => {
-		const {
-			data: { session }
-		} = await event.locals.supabase.auth.getSession();
-
-		if (!session) {
-			return { session: null, user: null };
+		if (safeSessionPromise) {
+			return safeSessionPromise;
 		}
 
-		// ✅ Verifikasi dengan getUser() untuk keamanan
-		const {
-			data: { user },
-			error
-		} = await event.locals.supabase.auth.getUser();
-
-		if (error) {
-			return { session: null, user: null };
-		}
-
-		// ✅ Hapus session yang expired
-		// Cek apakah session sudah kadaluarsa (tambah buffer 5 menit)
-		const expiresAt = session.expires_at;
-		const now = Math.floor(Date.now() / 1000);
-
-		let finalSession = session;
-		let finalUser = user;
-
-		if (expiresAt && now > expiresAt - 300) {
-			// Session akan expired dalam 5 menit, refresh dulu
+		safeSessionPromise = (async () => {
 			const {
-				data: { session: refreshedSession }
-			} = await event.locals.supabase.auth.refreshSession();
-			if (refreshedSession) {
-				finalSession = refreshedSession;
+				data: { session }
+			} = await event.locals.supabase.auth.getSession();
+
+			if (!session) {
+				return { session: null, user: null };
 			}
-		}
 
-		// Hindari Supabase warning "Using the user object as returned from getSession()"
-		// SvelteKit serializer akan memicu getter pada finalSession.user
-		// Kita override session menjadi plain object menggunakan user yang tervalidasi
-		if (!finalUser) {
-			return { session: null, user: null };
-		}
+			// Verifikasi dengan getUser() untuk keamanan (sekaligus menangani auto-refresh token di @supabase/ssr)
+			const {
+				data: { user },
+				error
+			} = await event.locals.supabase.auth.getUser();
 
-		const safeSessionObj = {
-			access_token: finalSession.access_token,
-			refresh_token: finalSession.refresh_token,
-			expires_in: finalSession.expires_in,
-			expires_at: finalSession.expires_at,
-			token_type: finalSession.token_type,
-			user: finalUser
-		} satisfies import('@supabase/supabase-js').Session;
+			if (error || !user) {
+				return { session: null, user: null };
+			}
 
-		return { session: safeSessionObj, user: finalUser };
+			return { session, user };
+		})();
+
+		return safeSessionPromise;
 	};
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {
-			return name === 'content-range' || name === 'x-supabase-api-version';
+			return (
+				name === 'content-range' ||
+				name.startsWith('x-supabase-api-') ||
+				name.toLowerCase() === 'sb-access-token'
+			);
 		}
 	});
 };

@@ -24,9 +24,16 @@
 	}
 
 	let isDark = $state(true);
+	let sessionChecked = $state(false);
+	let hasSession = $state(true);
 
-	onMount(() => {
+	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
+
+	onMount(async () => {
 		isDark = getInitialTheme();
+		const { data } = await supabase.auth.getSession();
+		hasSession = Boolean(data?.session);
+		sessionChecked = true;
 	});
 
 	function toggleTheme() {
@@ -35,8 +42,6 @@
 		document.documentElement.setAttribute('data-theme', nextTheme);
 		localStorage.setItem('theme', nextTheme);
 	}
-
-	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY);
 
 	async function handleUpdatePassword(e: SubmitEvent) {
 		e.preventDefault();
@@ -70,8 +75,8 @@
 		} else {
 			successMsg = 'Password berhasil diubah. Mengalihkan ke dashboard...';
 			setTimeout(() => {
-				goto('/dashboard');
-			}, 2000);
+				window.location.href = '/dashboard';
+			}, 1500);
 		}
 	}
 </script>
@@ -117,6 +122,13 @@
 				{#if successMsg}
 					<div class="mt-4 p-3 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs">
 						{successMsg}
+					</div>
+				{:else if sessionChecked && !hasSession}
+					<div class="mt-4 p-3 rounded-lg border border-amber-500/20 bg-amber-500/10 text-amber-300 text-xs space-y-2">
+						<p>Sesi atur ulang password tidak ditemukan atau sudah kadaluarsa.</p>
+						<a href="/forgot-password" class="inline-block text-[var(--ttx-accent-text)] underline font-medium">
+							Minta tautan reset baru →
+						</a>
 					</div>
 				{:else}
 					<form onsubmit={handleUpdatePassword} class="mt-5 space-y-4">

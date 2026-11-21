@@ -4,19 +4,10 @@ import type { PageServerLoad } from './$types';
 
 const FREE_DOC_LIMIT = 4;
 
-export const load: PageServerLoad = async ({ locals: { supabase, safeGetSession } }) => {
-	const { session } = await safeGetSession();
+export const load: PageServerLoad = async ({ locals: { safeGetSession } }) => {
+	const { session, user } = await safeGetSession();
 
-	if (!session) {
-		throw redirect(303, '/login');
-	}
-
-	const {
-		data: { user },
-		error
-	} = await supabase.auth.getUser();
-
-	if (error || !user) {
+	if (!session || !user) {
 		throw redirect(303, '/login');
 	}
 

@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
 	import { Home, FileText, Plus, LogOut, ChevronLeft, ChevronRight, Settings } from '@lucide/svelte';
+	import { handleLogout } from '$lib/utils/auth';
 
 	let { data, children } = $props();
 
@@ -117,10 +118,7 @@
 						<button 
 							class="flex h-8 w-8 items-center justify-center rounded-xl text-[var(--ttx-text-muted)] hover:text-rose-400 hover:bg-rose-500/10 transition-colors" 
 							title="Logout"
-							onclick={async () => {
-								await fetch('/logout', { method: 'POST' });
-								window.location.href = '/login';
-							}}
+							onclick={handleLogout}
 						>
 							<LogOut size={14} />
 						</button>
