@@ -4,7 +4,7 @@
 	import { createBrowserClient } from '@supabase/ssr';
 	import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 	import Turnstile from '$lib/components/Turnstile.svelte';
-	import { ArrowLeft, Mail, Lock, Eye, EyeOff, AlertCircle, Sun, Moon, Loader2 } from '@lucide/svelte';
+	import { ArrowLeft, Eye, EyeOff, AlertCircle, Sun, Moon, Loader2 } from '@lucide/svelte';
 
 	let email = $state('');
 	let password = $state('');
@@ -117,71 +117,67 @@
 	<title>Masuk - TEXY</title>
 </svelte:head>
 
-<div class="relative flex min-h-[100dvh] w-full flex-col justify-between bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)] transition-colors selection:bg-[var(--ttx-accent)] selection:text-[var(--ttx-accent-contrast)]">
-	<!-- Background subtle glow -->
-	<div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,var(--ttx-accent-light),transparent_60%)] opacity-40"></div>
-
-	<!-- Top Navigation -->
-	<header class="relative z-10 mx-auto flex w-full max-w-5xl items-center justify-between px-4 sm:px-6 py-4">
+<div class="min-h-[100dvh] w-full flex flex-col justify-between bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)] transition-colors">
+	<!-- Top Bar -->
+	<header class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between text-xs">
 		<a
 			href="/"
-			class="group inline-flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-semibold text-[var(--ttx-text-muted)] transition-colors hover:bg-[var(--ttx-bg-card)] hover:text-[var(--ttx-text-main)]"
+			class="group inline-flex items-center gap-1.5 text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] transition-colors"
 		>
-			<ArrowLeft size={15} class="transition-transform group-hover:-translate-x-0.5" />
-			<span>Kembali ke Beranda</span>
+			<ArrowLeft size={14} class="transition-transform group-hover:-translate-x-0.5" />
+			<span>Beranda</span>
 		</a>
 
 		<button
 			type="button"
-			class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card)] text-[var(--ttx-text-muted)] transition-all hover:bg-[var(--ttx-bg-hover)] hover:text-[var(--ttx-text-main)] active:scale-95 shadow-xs"
+			class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--ttx-border-subtle)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all"
 			onclick={toggleTheme}
 			aria-label="Ganti tema"
-			title={isDark ? 'Beralih ke Mode Terang' : 'Beralih ke Mode Gelap'}
 		>
 			{#if isDark}
-				<Sun size={15} class="text-amber-400" />
+				<Sun size={14} class="text-amber-400" />
 			{:else}
-				<Moon size={15} class="text-slate-600" />
+				<Moon size={14} class="text-slate-600" />
 			{/if}
 		</button>
 	</header>
 
-	<!-- Main Card Section -->
-	<main class="relative z-10 flex flex-1 items-center justify-center px-4 py-8 sm:py-12">
-		<div class="w-full max-w-[420px]">
-			<!-- Brand header -->
-			<div class="mb-6 text-center">
-				<a href="/" class="inline-flex items-center gap-1.5 font-black text-xl tracking-tight text-[var(--ttx-text-main)]">
+	<!-- Main Auth Container -->
+	<main class="flex-1 flex items-center justify-center px-4 py-8">
+		<div class="w-full max-w-[380px]">
+			<!-- Header inside flow -->
+			<div class="text-center mb-6">
+				<a href="/" class="inline-flex items-center gap-1.5 font-black text-lg tracking-tight text-[var(--ttx-text-main)]">
 					<span>TEXY</span>
-					<span class="h-2 w-2 rounded-full bg-[var(--ttx-accent)]"></span>
+					<span class="h-1.5 w-1.5 rounded-full bg-[var(--ttx-accent)]"></span>
 				</a>
-				<h1 class="mt-3 text-xl sm:text-2xl font-bold tracking-tight text-[var(--ttx-text-main)]">
-					Selamat Datang Kembali
+				<h1 class="text-xl font-bold tracking-tight text-[var(--ttx-text-main)] mt-2">
+					Masuk ke Akun
 				</h1>
-				<p class="mt-1 text-xs text-[var(--ttx-text-muted)]">
-					Masuk untuk mengelola catatan dan alat tersimpan Anda.
+				<p class="text-xs text-[var(--ttx-text-muted)] mt-1">
+					Akses seluruh dokumen dan preferensi Anda.
 				</p>
 			</div>
 
-			<!-- Card -->
-			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-6 sm:p-8 shadow-xl backdrop-blur-xs transition-all">
+			<!-- Card Container -->
+			<div class="rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] p-6 sm:p-7 shadow-xs space-y-4">
 				{#if errorMsg}
-					<div class="mb-5 flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-400 animate-fade-in">
-						<AlertCircle size={16} class="shrink-0 mt-0.5 text-rose-400" />
-						<div class="min-w-0 flex-1 leading-relaxed">{errorMsg}</div>
+					<div class="flex items-start gap-2 p-3 rounded-xl border border-rose-500/25 bg-rose-500/10 text-xs text-rose-400 animate-fade-in leading-relaxed">
+						<AlertCircle size={15} class="shrink-0 mt-0.5" />
+						<span class="flex-1">{errorMsg}</span>
 					</div>
 				{/if}
 
-				<!-- Google OAuth Button -->
+				<!-- Google OAuth -->
 				<button
 					type="button"
-					class="relative flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] px-4 text-xs font-semibold text-[var(--ttx-text-main)] transition-all hover:bg-[var(--ttx-bg-hover)] hover:border-[var(--ttx-border-base)] active:scale-[0.99] shadow-xs disabled:opacity-50"
+					class="w-full h-10 flex items-center justify-center gap-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] hover:bg-[var(--ttx-bg-hover)] text-xs font-medium text-[var(--ttx-text-main)] transition-colors cursor-pointer disabled:opacity-50"
 					onclick={() => handleOAuthLogin('google')}
 					disabled={googleLoading || loading}
 				>
 					{#if googleLoading}
-						<Loader2 size={16} class="animate-spin text-[var(--ttx-accent)]" />
-						<span>Menghubungkan ke Google...</span>
+						<Loader2 size={15} class="animate-spin text-[var(--ttx-accent)]" />
+						<span>Menghubungkan...</span>
 					{:else}
 						<svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
 							<path
@@ -206,111 +202,104 @@
 				</button>
 
 				<!-- Divider -->
-				<div class="relative my-5 flex items-center justify-center">
-					<div class="w-full border-t border-[var(--ttx-border-base)]"></div>
-					<span class="relative bg-[var(--ttx-bg-card)] px-3 text-[11px] font-medium uppercase tracking-wider text-[var(--ttx-text-dim)]">
-						atau email
+				<div class="relative flex items-center justify-center my-3">
+					<div class="w-full border-t border-[var(--ttx-border-subtle)]"></div>
+					<span class="absolute bg-[var(--ttx-bg-card)] px-2.5 text-[11px] text-[var(--ttx-text-dim)]">
+						atau
 					</span>
 				</div>
 
-				<!-- Email & Password Form -->
-				<form onsubmit={handleLogin} class="space-y-4">
+				<!-- Form -->
+				<form onsubmit={handleLogin} class="space-y-3.5">
 					<div>
-						<label for="email" class="mb-1.5 block text-xs font-semibold text-[var(--ttx-text-main)]">
+						<label for="email" class="block text-xs font-medium text-[var(--ttx-text-main)] mb-1">
 							Email
 						</label>
-						<div class="relative">
-							<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[var(--ttx-text-dim)]">
-								<Mail size={16} />
-							</div>
-							<input
-								id="email"
-								type="email"
-								bind:value={email}
-								placeholder="nama@email.com"
-								class="h-11 w-full rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] pl-10 pr-3.5 text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-all focus:border-[var(--ttx-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--ttx-accent)]/30"
-								required
-							/>
-						</div>
+						<input
+							id="email"
+							type="email"
+							bind:value={email}
+							placeholder="nama@email.com"
+							class="w-full h-10 px-3 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none focus:border-[var(--ttx-accent)] transition-colors"
+							required
+						/>
 					</div>
 
 					<div>
-						<div class="mb-1.5 flex items-center justify-between">
-							<label for="password" class="block text-xs font-semibold text-[var(--ttx-text-main)]">
+						<div class="flex items-center justify-between mb-1">
+							<label for="password" class="text-xs font-medium text-[var(--ttx-text-main)]">
 								Password
 							</label>
 							<a
 								href="/forgot-password"
-								class="text-[11px] font-medium text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] transition-colors"
+								class="text-[11px] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-accent-text)] transition-colors"
 							>
 								Lupa password?
 							</a>
 						</div>
 						<div class="relative">
-							<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[var(--ttx-text-dim)]">
-								<Lock size={16} />
-							</div>
 							<input
 								id="password"
 								type={showPassword ? 'text' : 'password'}
 								bind:value={password}
 								placeholder="••••••••"
-								class="h-11 w-full rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] pl-10 pr-11 text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] transition-all focus:border-[var(--ttx-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--ttx-accent)]/30"
+								class="w-full h-10 pl-3 pr-10 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-xs text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none focus:border-[var(--ttx-accent)] transition-colors"
 								required
 							/>
 							<button
 								type="button"
-								class="absolute inset-y-0 right-0 flex items-center px-3.5 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)] transition-colors focus:outline-none"
+								class="absolute inset-y-0 right-0 flex items-center pr-3 text-[var(--ttx-text-dim)] hover:text-[var(--ttx-text-main)] transition-colors cursor-pointer"
 								onclick={() => (showPassword = !showPassword)}
 								aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
-								title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
 							>
 								{#if showPassword}
-									<EyeOff size={16} />
+									<EyeOff size={15} />
 								{:else}
-									<Eye size={16} />
+									<Eye size={15} />
 								{/if}
 							</button>
 						</div>
 					</div>
 
-					<!-- Turnstile Bot Protection Widget -->
-					<Turnstile
-						bind:this={turnstileRef}
-						action="login"
-						theme={isDark ? 'dark' : 'light'}
-						onSuccess={(token) => (turnstileToken = token)}
-						onError={() => (turnstileToken = '')}
-						onExpire={() => (turnstileToken = '')}
-					/>
+					<!-- Turnstile Widget -->
+					<div class="pt-1">
+						<Turnstile
+							bind:this={turnstileRef}
+							action="login"
+							theme={isDark ? 'dark' : 'light'}
+							onSuccess={(token) => (turnstileToken = token)}
+							onError={() => (turnstileToken = '')}
+							onExpire={() => (turnstileToken = '')}
+						/>
+					</div>
 
 					<button
 						type="submit"
-						class="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--ttx-accent)] text-xs font-bold text-[var(--ttx-accent-contrast)] shadow-xs transition-all hover:bg-[var(--ttx-accent-hover)] active:scale-[0.99] disabled:opacity-50"
+						class="w-full h-10 rounded-xl bg-[var(--ttx-accent)] text-xs font-semibold text-[var(--ttx-accent-contrast)] hover:bg-[var(--ttx-accent-hover)] active:scale-[0.99] transition-all cursor-pointer shadow-xs disabled:opacity-50 flex items-center justify-center gap-2"
 						disabled={loading || googleLoading}
 					>
 						{#if loading}
-							<Loader2 size={16} class="animate-spin" />
+							<Loader2 size={15} class="animate-spin" />
 							<span>Memproses...</span>
 						{:else}
-							<span>Masuk ke Akun</span>
+							<span>Masuk</span>
 						{/if}
 					</button>
 				</form>
-
-				<!-- Switch to Register -->
-				<div class="mt-6 pt-5 border-t border-[var(--ttx-border-base)] text-center text-xs text-[var(--ttx-text-muted)]">
-					Belum punya akun?
-					<a href="/register" class="font-bold text-[var(--ttx-accent-text)] hover:underline ml-1">
-						Daftar sekarang
-					</a>
-				</div>
 			</div>
+
+			<!-- Footer link -->
+			<p class="text-center text-xs text-[var(--ttx-text-muted)] mt-5">
+				Belum punya akun?
+				<a href="/register" class="font-semibold text-[var(--ttx-accent-text)] hover:underline ml-1">
+					Daftar sekarang
+				</a>
+			</p>
 		</div>
 	</main>
 
 	<!-- Footer -->
-	<footer class="relative z-10 py-5 text-center text-[11px] text-[var(--ttx-text-dim)]">
-		&copy; {new Date().getFullYear()} TEXY Workspace. Hak cipta dilindungi.
+	<footer class="py-4 text-center text-[11px] text-[var(--ttx-text-dim)]">
+		&copy; {new Date().getFullYear()} TEXY
 	</footer>
 </div>
