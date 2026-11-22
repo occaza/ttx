@@ -28,7 +28,7 @@
 	<title>Notepad v2 - TEXY Workspace</title>
 </svelte:head>
 
-<div class="flex h-screen bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]" style="height: 100vh">
+<div class="flex h-screen bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]" style="height: 100vh; height: 100dvh">
 	<!-- Sidebar -->
 	<aside
 		class="relative flex flex-col border-r border-[var(--ttx-border-base)] bg-[var(--ttx-bg-sidebar)] transition-all duration-300 shrink-0 {isSidebarOpen

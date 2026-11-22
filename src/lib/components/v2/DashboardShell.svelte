@@ -125,6 +125,9 @@
 
 	let internalTool = $state<string | null>(initialTool);
 	let activeTool = $derived(internalTool);
+	let isFullEditor = $derived(
+		activeTool === 'shared-notepad' || activeTool === 'notepad' || activeTool === 'markdown-editor'
+	);
 
 	// Popular tools definition
 	const POPULAR_TOOL_HREFS = [
@@ -488,7 +491,7 @@
 	}
 </style>
 
-<div class="ttx-dashboard flex flex-col min-h-screen lg:h-[100dvh] w-full max-w-full lg:overflow-hidden transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
+<div class="ttx-dashboard flex flex-col {isFullEditor ? 'h-[100dvh] overflow-hidden' : 'min-h-screen lg:h-[100dvh] lg:overflow-hidden'} w-full max-w-full transition-colors duration-200 bg-[var(--ttx-bg-root)] text-[var(--ttx-text-main)]">
 	<!-- TOP NAVIGATION BAR -->
 	<header class="sticky top-0 lg:static shrink-0 border-b z-40 transition-colors duration-200 bg-[var(--ttx-bg-header)] border-[var(--ttx-border-base)] shadow-xs pt-[env(safe-area-inset-top,0px)]">
 		<div class="h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6 gap-2">
@@ -708,7 +711,7 @@
 	</header>
 
 	<!-- MAIN WORKSPACE CONTAINER -->
-	<div class="flex-1 flex min-h-0 lg:overflow-hidden relative">
+	<div class="flex-1 flex min-h-0 {isFullEditor ? 'overflow-hidden' : 'lg:overflow-hidden'} relative">
 		<!-- Mobile Sidebar Backdrop -->
 		{#if isSidebarOpen}
 			<button
@@ -898,7 +901,7 @@
 
 			<!-- MAIN CONTENT CARDS -->
 			<div
-				class="flex-1 min-w-0 w-full flex flex-col {activeTool === 'shared-notepad' || activeTool === 'notepad' || activeTool === 'markdown-editor' ? 'h-full min-h-0 overflow-hidden px-3.5 py-4 sm:px-8 sm:py-6 lg:px-10' : 'min-h-full px-3.5 py-4 pb-12 sm:px-8 sm:py-6 sm:pb-8 lg:px-10'}"
+				class="flex-1 min-w-0 w-full flex flex-col {isFullEditor ? 'h-full min-h-0 overflow-hidden px-2.5 py-2.5 sm:px-8 sm:py-6 lg:px-10' : 'min-h-full px-3.5 py-4 pb-12 sm:px-8 sm:py-6 sm:pb-8 lg:px-10'}"
 			>
 			{#if activeTool}
 				<!-- IN-PAGE TOOL PANEL -->

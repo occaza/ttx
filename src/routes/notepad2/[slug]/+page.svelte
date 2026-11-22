@@ -317,7 +317,7 @@
 
 <svelte:window onkeydown={handleKeyDown} />
 
-<div class="relative flex h-full flex-col bg-[var(--ttx-bg-workspace)]" style="height: 100vh">
+<div class="relative flex h-full flex-col bg-[var(--ttx-bg-workspace)]" style="height: 100vh; height: 100dvh">
 	<!-- Grid Background Pattern -->
 	<div
 		class="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,var(--ttx-border-subtle)_1px,transparent_1px),linear-gradient(to_bottom,var(--ttx-border-subtle)_1px,transparent_1px)] bg-[size:32px_32px] opacity-25"

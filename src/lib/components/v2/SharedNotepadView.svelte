@@ -191,31 +191,31 @@
 	};
 </script>
 
-<div class="flex h-full min-h-0 w-full flex-1 flex-col gap-3 sm:gap-4">
+<div class="flex h-full min-h-0 w-full flex-1 flex-col gap-2.5 sm:gap-4">
 	<!-- HEADER BAR -->
 	<div
-		class="flex shrink-0 flex-col justify-between gap-3 border-b border-[var(--ttx-border-base)] pb-3 sm:flex-row sm:items-center"
+		class="flex shrink-0 flex-col justify-between gap-2.5 border-b border-[var(--ttx-border-base)] pb-2.5 sm:flex-row sm:items-center sm:gap-3 sm:pb-3"
 	>
-		<div class="flex items-center gap-3">
+		<div class="flex items-center gap-2.5 sm:gap-3">
 			<div
-				class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] shadow-xs"
+				class="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] text-[var(--ttx-accent-text)] shadow-xs"
 			>
-				<NotebookPen class="h-5 w-5" />
+				<NotebookPen class="h-4 w-4 sm:h-5 sm:w-5" />
 			</div>
 			<div>
-				<div class="flex flex-wrap items-center gap-2">
-					<h1 class="text-base font-bold tracking-tight text-[var(--ttx-text-main)] sm:text-lg">
+				<div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+					<h1 class="text-sm font-bold tracking-tight text-[var(--ttx-text-main)] sm:text-lg">
 						Shared Notepad
 					</h1>
 					{#if data?.slug}
 						<span
-							class="inline-flex items-center gap-1 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] px-2.5 py-0.5 font-mono text-xs font-bold text-[var(--ttx-accent-text)]"
+							class="inline-flex items-center gap-1 rounded-lg border border-[var(--ttx-border-subtle)] bg-[var(--ttx-accent-light)] px-2 py-0.5 font-mono text-[11px] sm:text-xs font-bold text-[var(--ttx-accent-text)]"
 						>
 							{data.slug}
 						</span>
 					{/if}
 				</div>
-				<p class="text-xs text-[var(--ttx-text-muted)]">
+				<p class="hidden sm:block text-xs text-[var(--ttx-text-muted)]">
 					Catatan kolaborasi realtime dengan tautan unik, terenkripsi aman, dan bebas batas waktu.
 				</p>
 			</div>
@@ -496,12 +496,13 @@
 			<!-- MAIN EDITOR WITH SYNCED LINE-NUMBER GUTTER -->
 			<div
 				class="relative flex flex-1 min-h-0 w-full overflow-hidden bg-[var(--ttx-bg-card)]"
+				style="height: 100%; min-height: 0;"
 			>
 				<!-- Gutter line numbers -->
 				<div
-					class="h-full max-h-full w-9 shrink-0 overflow-hidden border-r border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] font-mono text-xs text-[var(--ttx-text-dim)] select-none sm:w-12"
+					class="h-full max-h-full w-9 shrink-0 overflow-hidden border-r border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-card-subtle)] font-mono text-xs text-[var(--ttx-text-dim)] select-none sm:w-12 pointer-events-none"
 				>
-					<div class="pt-3.5 sm:pt-4" style="transform: translateY({-textareaScrollTop}px);">
+					<div class="pt-3.5 sm:pt-4" style="transform: translateY({-textareaScrollTop}px); will-change: transform;">
 						{#each Array(lineCount) as _, i}
 							<div class="pr-2 text-right sm:pr-3" style="height: 22px; line-height: 22px;">
 								{i + 1}
@@ -517,7 +518,7 @@
 					name="text"
 					placeholder="Tulis atau paste catatan bersama di sini..."
 					onscroll={syncScroll}
-					style="line-height: 22px;"
+					style="line-height: 22px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; touch-action: pan-x pan-y;"
 					class="h-full w-full flex-1 resize-none overflow-x-auto overflow-y-auto bg-transparent p-3.5 font-mono text-xs whitespace-pre text-[var(--ttx-text-main)] placeholder-[var(--ttx-text-dim)] outline-none sm:p-4 sm:text-sm"
 				></textarea>
 			</div>
