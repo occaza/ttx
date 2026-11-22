@@ -99,20 +99,22 @@ interface RateLimitEntry {
 	resetAt: number;
 }
 const rateLimitStore = new Map<string, RateLimitEntry>();
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1_000; // 15 menit
 
-function checkRateLimit(key: string): { allowed: boolean; waitSeconds?: number } {
+function checkRateLimit(
+	key: string,
+	max: number = 5,
+	windowMs: number = 60_000
+): { allowed: boolean; waitSeconds?: number } {
 	const now = Date.now();
 	const entry = rateLimitStore.get(key);
 
 	if (!entry || now > entry.resetAt) {
-		rateLimitStore.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+		rateLimitStore.set(key, { count: 1, resetAt: now + windowMs });
 		return { allowed: true };
 	}
 
 	entry.count++;
-	if (entry.count > RATE_LIMIT_MAX) {
+	if (entry.count > max) {
 		return { allowed: false, waitSeconds: Math.ceil((entry.resetAt - now) / 1000) };
 	}
 
@@ -178,7 +180,7 @@ export async function load({ params, cookies }) {
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
 export const actions = {
-	save: async ({ request, params, cookies }) => {
+	save: async ({ request, params, cookies, getClientAddress }) => {
 		const slug = params.slug;
 
 		if (!isValidSlug(slug)) {
@@ -186,6 +188,20 @@ export const actions = {
 		}
 
 		const formData = await request.formData();
+
+		// Anti-bot Honeypot: bot otomatis isi field tersembunyi
+		const honeypot = formData.get('_hp');
+		if (honeypot) {
+			return { success: true };
+		}
+
+		// Anti-spam Rate Limiting: max 45 simpan per menit per IP
+		const clientIp = getClientAddress();
+		const saveLimit = checkRateLimit(`save_${clientIp}`, 45, 60_000);
+		if (!saveLimit.allowed) {
+			throw error(429, `Terlalu banyak permintaan penyimpanan. Harap tunggu ${saveLimit.waitSeconds || 30} detik.`);
+		}
+
 		const rawText = (formData.get('text') || '').toString().trim();
 		const password = (formData.get('password') || '').toString();
 
@@ -339,10 +355,10 @@ export const actions = {
 			return { success: false, error: 'Password tidak boleh kosong' };
 		}
 
-		// Rate limit berdasarkan IP + slug
+		// Rate limit berdasarkan IP + slug (maksimal 5x coba per 15 menit)
 		const clientIP = getClientAddress();
 		const rateLimitKey = `unlock:${clientIP}:${slug}`;
-		const rl = checkRateLimit(rateLimitKey);
+		const rl = checkRateLimit(rateLimitKey, 5, 15 * 60 * 1000);
 		if (!rl.allowed) {
 			return {
 				success: false,

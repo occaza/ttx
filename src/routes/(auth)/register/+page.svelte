@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { createBrowserClient } from '@supabase/ssr';
 	import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+	import Turnstile from '$lib/components/Turnstile.svelte';
 
 	let email = $state('');
 	let password = $state('');
@@ -19,6 +20,8 @@
 	let loading = $state(false);
 	let errorMsg = $state('');
 	let successMsg = $state('');
+	let turnstileToken = $state('');
+	let turnstileRef: Turnstile | undefined = $state();
 
 	function getInitialTheme(): boolean {
 		if (!browser) return true;
@@ -64,6 +67,27 @@
 		loading = true;
 		errorMsg = '';
 		successMsg = '';
+
+		// Verifikasi Turnstile Bot Protection
+		try {
+			const verifyRes = await fetch('/api/turnstile-verify', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ token: turnstileToken })
+			});
+			const verifyData = await verifyRes.json();
+			if (!verifyData.success) {
+				errorMsg = verifyData.error || 'Verifikasi keamanan bot gagal. Silakan coba lagi.';
+				loading = false;
+				turnstileRef?.reset();
+				return;
+			}
+		} catch (err: any) {
+			errorMsg = 'Gagal menghubungi server verifikasi bot.';
+			loading = false;
+			turnstileRef?.reset();
+			return;
+		}
 
 		const { data, error } = await supabase.auth.signUp({
 			email,
@@ -277,6 +301,15 @@
 							</div>
 						</div>
 					</div>
+
+					<Turnstile
+						bind:this={turnstileRef}
+						action="register"
+						theme={isDark ? 'dark' : 'light'}
+						onSuccess={(token) => (turnstileToken = token)}
+						onError={() => (turnstileToken = '')}
+						onExpire={() => (turnstileToken = '')}
+					/>
 
 					<button
 						type="submit"

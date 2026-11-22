@@ -382,6 +382,17 @@
 			bind:this={saveFormEl}
 			class="flex flex-1 min-h-0 h-full flex-col overflow-hidden rounded-2xl border border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card)] shadow-xs"
 		>
+			<!-- Anti-bot honeypot field (hidden from real users, caught if filled by bots) -->
+			<input
+				type="text"
+				name="_hp"
+				tabindex="-1"
+				autocomplete="off"
+				aria-hidden="true"
+				class="hidden absolute opacity-0 pointer-events-none w-0 h-0"
+				style="display:none;"
+			/>
+
 			<!-- WORKSPACE TOOLBAR -->
 			<div
 				class="flex shrink-0 flex-col justify-between gap-2.5 border-b border-[var(--ttx-border-base)] bg-[var(--ttx-bg-card-subtle)] px-3.5 py-2.5 sm:h-11 sm:flex-row sm:items-center sm:px-4 sm:py-0"
