@@ -183,12 +183,8 @@
 	<main class="flex-1 flex items-center justify-center px-4 py-8">
 		<div class="w-full max-w-[440px]">
 			<!-- Header -->
-			<div class="text-center mb-6">
-				<a href="/" class="inline-flex items-center gap-1.5 font-black text-lg tracking-tight text-[var(--ttx-text-main)]">
-					<span>TEXY</span>
-					<span class="h-1.5 w-1.5 rounded-full bg-[var(--ttx-accent)]"></span>
-				</a>
-				<h1 class="text-xl font-bold tracking-tight text-[var(--ttx-text-main)] mt-2">
+			<div class="text-center mb-5">
+				<h1 class="text-xl font-bold tracking-tight text-[var(--ttx-text-main)]">
 					Buat Akun Baru
 				</h1>
 				<p class="text-xs text-[var(--ttx-text-muted)] mt-1">
