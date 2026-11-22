@@ -211,7 +211,7 @@
 				<div class="relative user-menu-container">
 					<button
 						type="button"
-						class="flex items-center gap-2 h-9 pl-1.5 pr-2.5 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] hover:bg-[var(--ttx-bg-hover)] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ttx-accent)]"
+						class="flex items-center justify-center h-9 w-9 rounded-xl border border-[var(--ttx-border-subtle)] bg-[var(--ttx-bg-input)] text-[var(--ttx-text-muted)] hover:text-[var(--ttx-text-main)] hover:bg-[var(--ttx-bg-hover)] transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ttx-accent)]"
 						onclick={(e) => {
 							e.stopPropagation();
 							toolsMenuOpen = false;
@@ -222,20 +222,7 @@
 						aria-controls="user-dropdown-menu"
 						aria-label="Menu akun pengguna"
 					>
-						<!-- Avatar Initials Circle -->
-						<div
-							class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-[var(--ttx-accent)]/20 text-[var(--ttx-accent)] text-[11px] font-bold tracking-tight"
-						>
-							{initials}
-						</div>
-						<span class="hidden lg:inline-block max-w-[100px] truncate text-xs font-medium text-[var(--ttx-text-main)]">
-							{displayName}
-						</span>
-						<ChevronDown
-							size={12}
-							class="text-[var(--ttx-text-dim)] transition-transform duration-200 {userMenuOpen ? 'rotate-180' : ''}"
-							aria-hidden="true"
-						/>
+						<User size={16} />
 					</button>
 
 					<!-- User Dropdown Popover -->

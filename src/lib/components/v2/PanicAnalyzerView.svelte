@@ -42,6 +42,8 @@
 
 	let { isDark = true }: { isDark?: boolean } = $props();
 
+	let disclaimerExpanded = $state(false);
+
 	const isOwner = $derived(
 		$page.data.profile?.role === 'owner' ||
 		$page.data.user?.app_metadata?.role === 'owner' ||
@@ -478,9 +480,20 @@ Debugger message: panic
 		class="flex items-start gap-3 p-3.5 rounded-xl border border-amber-500/25 bg-amber-500/10 text-xs text-[var(--ttx-text-muted)] shadow-xs"
 	>
 		<AlertCircle size={17} class="text-amber-400 shrink-0 mt-0.5" />
-		<div class="leading-relaxed">
-			<strong class="text-[var(--ttx-text-main)] font-semibold">Pemberitahuan & Disclaimer:</strong>
-			Hasil analisa dan solusi yang disarankan di sini merupakan panduan referensi teknis untuk mempermudah identifikasi kerusakan awal dan kemungkinan dapat berbeda dengan kejadian nyata di lapangan. Kerusakan sebenarnya dapat dipengaruhi oleh riwayat jatuh, cairan, jalur interposer putus, atau kerusakan komponen pasif di motherboard. Gunakan sebagai acuan pendukung, bukan vonis mutlak.
+		<div class="min-w-0">
+			<div
+				class="leading-relaxed transition-all duration-300 ease-in-out {disclaimerExpanded ? '' : 'line-clamp-2'}"
+			>
+				<strong class="text-[var(--ttx-text-main)] font-semibold">Pemberitahuan & Disclaimer:</strong>
+				Hasil analisa dan solusi yang disarankan di sini merupakan panduan referensi teknis untuk mempermudah identifikasi kerusakan awal dan kemungkinan dapat berbeda dengan kejadian nyata di lapangan. Kerusakan sebenarnya dapat dipengaruhi oleh riwayat jatuh, cairan, jalur interposer putus, atau kerusakan komponen pasif di motherboard. Gunakan sebagai acuan pendukung, bukan vonis mutlak.
+			</div>
+			<button
+				type="button"
+				onclick={() => (disclaimerExpanded = !disclaimerExpanded)}
+				class="mt-1 text-amber-400 hover:text-amber-300 font-semibold transition-colors focus:outline-none focus-visible:underline"
+			>
+				{disclaimerExpanded ? 'Sembunyikan' : 'Baca selengkapnya'}
+			</button>
 		</div>
 	</div>
 
